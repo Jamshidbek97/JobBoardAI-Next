@@ -23,3 +23,17 @@ export enum JobLocation {
 	JEJU = 'JEJU',
 	REMOTE = 'REMOTE',
 }
+
+export enum EducationLevel {
+	HIGH_SCHOOL = 'HIGH_SCHOOL',
+	BACHELOR = 'BACHELOR',
+	MASTER = 'MASTER',
+	DOCTORATE = 'DOCTORATE',
+}
+
+export enum EmploymentLevel {
+	JUNIOR = 'JUNIOR',
+	MID = 'MID',
+	SENIOR = 'SENIOR',
+	LEAD = 'LEAD',
+}
