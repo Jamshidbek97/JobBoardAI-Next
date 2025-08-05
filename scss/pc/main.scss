@@ -1,0 +1,482 @@
+// Variables
+$primary-color: #3b82f6;
+$primary-dark: #2563eb;
+$secondary-color: #64748b;
+$background-light: #ffffff;
+$background-dark: #0f172a;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$border-light: rgba(226, 232, 240, 0.8);
+$shadow-light: rgba(0, 0, 0, 0.1);
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$border-radius: 12px;
+
+// Mixins
+@mixin glassmorphism {
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin button-hover($color: $primary-color) {
+	transition: $transition-smooth;
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba($color, 0.3);
+	}
+}
+
+@mixin mobile-breakpoint {
+	@media (max-width: 768px) {
+		@content;
+	}
+}
+
+@mixin tablet-breakpoint {
+	@media (max-width: 1024px) {
+		@content;
+	}
+}
+
+// Main styles targeting the #top container
+#pc-wrap {
+	#top {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		transition: $transition-smooth;
+
+		.top-navbar {
+			width: 100%;
+			padding: 0;
+			background: transparent;
+			transition: $transition-smooth;
+
+			&.scrolled {
+				@include glassmorphism;
+				box-shadow: 0 4px 20px $shadow-light;
+
+				.navbar-container {
+					padding: 12px 0;
+				}
+
+				.navbar-logo img {
+					height: 32px;
+				}
+			}
+
+			.navbar-container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px 24px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				transition: $transition-smooth;
+
+				@include mobile-breakpoint {
+					padding: 16px 20px;
+				}
+			}
+
+			// Logo Section
+			.navbar-logo {
+				flex-shrink: 0;
+				z-index: 10;
+
+				a {
+					display: block;
+					text-decoration: none;
+				}
+
+				img {
+					height: 40px;
+					width: auto;
+					transition: $transition-smooth;
+					filter: brightness(0) invert(1); // Make logo white for dark backgrounds
+
+					@include mobile-breakpoint {
+						height: 32px;
+					}
+				}
+			}
+
+			// Desktop Navigation
+			.desktop-nav {
+				display: flex;
+				align-items: center;
+				gap: 32px;
+
+				@include tablet-breakpoint {
+					display: none;
+				}
+
+				a {
+					text-decoration: none;
+					position: relative;
+
+					span {
+						color: rgba(255, 255, 255, 0.9);
+						font-weight: 500;
+						font-size: 15px;
+						transition: $transition-smooth;
+						padding: 8px 16px;
+						border-radius: 8px;
+						position: relative;
+
+						&:hover,
+						&.active {
+							color: #ffffff;
+							background: rgba(255, 255, 255, 0.1);
+							backdrop-filter: blur(10px);
+						}
+
+						&.active::after {
+							content: '';
+							position: absolute;
+							bottom: -6px;
+							left: 50%;
+							transform: translateX(-50%);
+							width: 6px;
+							height: 6px;
+							background: $primary-color;
+							border-radius: 50%;
+						}
+					}
+				}
+			}
+
+			// Right Side Actions
+			.navbar-actions {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+
+				// Language Selector
+				.language-selector {
+					position: relative;
+
+					.lang-button {
+						min-width: auto;
+						padding: 8px 12px;
+						border-radius: 8px;
+						background: rgba(255, 255, 255, 0.1);
+						color: rgba(255, 255, 255, 0.9);
+						transition: $transition-smooth;
+
+						&:hover {
+							background: rgba(255, 255, 255, 0.2);
+							color: #ffffff;
+						}
+
+						.flag-icon {
+							width: 20px;
+							height: 15px;
+							object-fit: cover;
+							border-radius: 2px;
+							margin-right: 8px;
+						}
+					}
+
+					.flag-icon-menu {
+						width: 18px;
+						height: 13px;
+						object-fit: cover;
+						border-radius: 2px;
+						margin-right: 12px;
+					}
+				}
+
+				// User Actions (Logged in)
+				.user-actions {
+					display: flex;
+					align-items: center;
+					gap: 12px;
+
+					.notification-btn {
+						color: rgba(255, 255, 255, 0.9);
+						background: rgba(255, 255, 255, 0.1);
+						backdrop-filter: blur(10px);
+						transition: $transition-smooth;
+
+						&:hover {
+							color: #ffffff;
+							background: rgba(255, 255, 255, 0.2);
+							transform: translateY(-1px);
+						}
+					}
+
+					.user-profile {
+						cursor: pointer;
+						transition: $transition-smooth;
+
+						&:hover {
+							transform: translateY(-2px);
+						}
+
+						.profile-image {
+							width: 36px;
+							height: 36px;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 2px solid rgba(255, 255, 255, 0.3);
+							transition: $transition-smooth;
+
+							&:hover {
+								border-color: rgba(255, 255, 255, 0.8);
+							}
+						}
+					}
+				}
+
+				// Auth Actions (Not logged in)
+				.auth-actions {
+					display: flex;
+					align-items: center;
+					gap: 12px;
+
+					@include mobile-breakpoint {
+						display: none;
+					}
+
+					.login-btn {
+						padding: 8px 20px;
+						border-radius: 8px;
+						border: 1px solid rgba(255, 255, 255, 0.3);
+						color: rgba(255, 255, 255, 0.9);
+						font-weight: 500;
+						text-transform: none;
+						@include button-hover(rgba(255, 255, 255, 0.8));
+
+						&:hover {
+							border-color: rgba(255, 255, 255, 0.8);
+							color: #ffffff;
+							background: rgba(255, 255, 255, 0.1);
+							transform: translateY(-1px);
+						}
+					}
+
+					.register-btn {
+						padding: 8px 20px;
+						border-radius: 8px;
+						background: $primary-color;
+						color: #ffffff;
+						font-weight: 600;
+						text-transform: none;
+						@include button-hover($primary-color);
+
+						&:hover {
+							background: $primary-dark;
+						}
+					}
+				}
+
+				// Mobile Menu Toggle
+				.mobile-menu-toggle {
+					display: none;
+					color: rgba(255, 255, 255, 0.9);
+					background: rgba(255, 255, 255, 0.1);
+					backdrop-filter: blur(10px);
+
+					@include tablet-breakpoint {
+						display: flex;
+					}
+
+					&:hover {
+						color: #ffffff;
+						background: rgba(255, 255, 255, 0.2);
+					}
+				}
+			}
+
+			// Mobile Drawer
+			.mobile-drawer {
+				.MuiDrawer-paper {
+					width: 300px;
+					background: $background-light;
+					padding: 0;
+				}
+
+				.mobile-menu {
+					height: 100%;
+					display: flex;
+					flex-direction: column;
+
+					.mobile-menu-header {
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						padding: 20px;
+						border-bottom: 1px solid $border-light;
+
+						img {
+							height: 32px;
+							filter: none; // Reset filter for mobile menu
+						}
+					}
+
+					.mobile-nav-list {
+						flex: 1;
+						padding: 20px 0;
+
+						.MuiListItem-root {
+							margin: 0 20px 8px;
+							border-radius: 8px;
+							transition: $transition-smooth;
+
+							&:hover {
+								background: rgba($primary-color, 0.08);
+							}
+
+							.MuiListItemText-primary {
+								font-weight: 500;
+								color: $text-primary;
+							}
+						}
+					}
+
+					.mobile-auth-actions {
+						padding: 20px;
+						display: flex;
+						flex-direction: column;
+						gap: 12px;
+						border-top: 1px solid $border-light;
+
+						.MuiButton-root {
+							padding: 12px;
+							border-radius: 8px;
+							font-weight: 600;
+							text-transform: none;
+
+							&.MuiButton-outlined {
+								border-color: $border-light;
+								color: $text-primary;
+
+								&:hover {
+									background: rgba($primary-color, 0.08);
+									border-color: $primary-color;
+								}
+							}
+
+							&.MuiButton-contained {
+								background: $primary-color;
+								@include button-hover($primary-color);
+
+								&:hover {
+									background: $primary-dark;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Dark theme adjustments for scrolled state
+		&.scrolled {
+			.top-navbar {
+				.navbar-logo img {
+					filter: none; // Remove white filter when scrolled
+				}
+
+				.desktop-nav a span {
+					color: $text-primary;
+
+					&:hover,
+					&.active {
+						color: $primary-color;
+						background: rgba($primary-color, 0.08);
+					}
+				}
+
+				.navbar-actions {
+					.language-selector .lang-button {
+						background: rgba($secondary-color, 0.1);
+						color: $text-primary;
+
+						&:hover {
+							background: rgba($primary-color, 0.1);
+							color: $primary-color;
+						}
+					}
+
+					.user-actions {
+						.notification-btn {
+							color: $text-secondary;
+							background: rgba($secondary-color, 0.1);
+
+							&:hover {
+								color: $primary-color;
+								background: rgba($primary-color, 0.1);
+							}
+						}
+
+						.user-profile .profile-image {
+							border-color: rgba($secondary-color, 0.3);
+
+							&:hover {
+								border-color: $primary-color;
+							}
+						}
+					}
+
+					.mobile-menu-toggle {
+						color: $text-secondary;
+						background: rgba($secondary-color, 0.1);
+
+						&:hover {
+							color: $primary-color;
+							background: rgba($primary-color, 0.1);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Animation keyframes
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideInRight {
+	from {
+		opacity: 0;
+		transform: translateX(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+// Apply animations
+#pc-wrap #top .top-navbar {
+	animation: fadeInUp 0.6s ease-out;
+
+	.navbar-actions > * {
+		animation: slideInRight 0.6s ease-out;
+		animation-fill-mode: both;
+
+		&:nth-child(1) {
+			animation-delay: 0.1s;
+		}
+		&:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+		&:nth-child(3) {
+			animation-delay: 0.3s;
+		}
+	}
+}
