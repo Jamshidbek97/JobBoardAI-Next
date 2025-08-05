@@ -31,7 +31,7 @@ const withAdminLayout = (Component: ComponentType) => {
 		const [title, setTitle] = useState('admin');
 		const [loading, setLoading] = useState(true);
 
-		/** LIFECYCLE **/
+		/** LIFECYCLES **/
 		useEffect(() => {
 			const jwt = getJwtToken();
 			if (jwt) updateUserInfo(jwt);

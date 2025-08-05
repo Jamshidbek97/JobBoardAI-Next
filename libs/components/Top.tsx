@@ -1,262 +1,290 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useState } from 'react';
+import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { MenuItem, Button, Menu, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Stack, Box } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import { alpha, styled } from '@mui/material/styles';
+import Menu, { MenuProps } from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { CaretDown } from 'phosphor-react';
+import useDeviceDetect from '../hooks/useDeviceDetect';
+import Link from 'next/link';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import Link from 'next/link';
+import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 
-const StyledMenu = styled(Menu)(({ theme }) => ({
-	'& .MuiPaper-root': {
-		borderRadius: 12,
-		marginTop: theme.spacing(1),
-		minWidth: 180,
-		backgroundColor: 'rgba(255, 255, 255, 0.95)',
-		backdropFilter: 'blur(10px)',
-		border: '1px solid rgba(255, 255, 255, 0.2)',
-		boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05)',
-		'& .MuiMenuItem-root': {
-			padding: '12px 16px',
-			fontSize: '14px',
-			fontWeight: 500,
-			'&:hover': {
-				backgroundColor: 'rgba(59, 130, 246, 0.08)',
-			},
-		},
-	},
-}));
-
-const Top: React.FC = () => {
+const Top = () => {
+	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
+	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
+	const [lang, setLang] = useState<string | null>('en');
+	const drop = Boolean(anchorEl2);
+	const [colorChange, setColorChange] = useState(false);
+	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
+	let open = Boolean(anchorEl);
+	const [bgColor, setBgColor] = useState<boolean>(false);
+	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
+	const logoutOpen = Boolean(logoutAnchor);
 
-	// State management
-	const [scrolled, setScrolled] = useState(false);
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
-	const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
-	const [currentLang, setCurrentLang] = useState<string>('en');
-
-	// Menu states
-	const langMenuOpen = Boolean(langMenuAnchor);
-	const userMenuOpen = Boolean(userMenuAnchor);
-
-	// Navigation items
-	const navigationItems = [
-		{ href: '/', label: t('Home') },
-		{ href: '/jobs', label: t('Jobs') },
-		{ href: '/companies', label: t('Companies') },
-		{ href: '/talent', label: t('Talent') },
-		{ href: '/resources', label: t('Resources') },
-		...(user?._id ? [{ href: '/dashboard', label: t('Dashboard') }] : []),
-	];
-
-	const languages = [
-		{ code: 'en', label: t('English'), flag: '/img/flag/langen.png' },
-		{ code: 'kr', label: t('Korean'), flag: '/img/flag/langkr.png' },
-		{ code: 'ru', label: t('Russian'), flag: '/img/flag/langru.png' },
-	];
-
-	// Effects
+	/** LIFECYCLES **/
 	useEffect(() => {
-		const handleScroll = () => {
-			setScrolled(window.scrollY > 20);
-		};
-
-		window.addEventListener('scroll', handleScroll);
-		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
+		if (localStorage.getItem('locale') === null) {
+			localStorage.setItem('locale', 'en');
+			setLang('en');
+		} else {
+			setLang(localStorage.getItem('locale'));
+		}
+	}, [router]);
 
 	useEffect(() => {
-		const savedLang = localStorage.getItem('locale') || 'en';
-		setCurrentLang(savedLang);
-	}, []);
+		switch (router.pathname) {
+			case '/property/detail':
+				setBgColor(true);
+				break;
+			default:
+				break;
+		}
+	}, [router]);
 
 	useEffect(() => {
 		const jwt = getJwtToken();
 		if (jwt) updateUserInfo(jwt);
 	}, []);
 
-	// Handlers
-	const handleLanguageChange = useCallback(
-		async (langCode: string) => {
-			setCurrentLang(langCode);
-			localStorage.setItem('locale', langCode);
-			setLangMenuAnchor(null);
-			await router.push(router.asPath, router.asPath, { locale: langCode });
+	/** HANDLERS **/
+	const langClick = (e: any) => {
+		setAnchorEl2(e.currentTarget);
+	};
+
+	const langClose = () => {
+		setAnchorEl2(null);
+	};
+
+	const langChoice = useCallback(
+		async (e: any) => {
+			setLang(e.target.id);
+			localStorage.setItem('locale', e.target.id);
+			setAnchorEl2(null);
+			await router.push(router.asPath, router.asPath, { locale: e.target.id });
 		},
 		[router],
 	);
 
-	const handleLogout = () => {
-		logOut();
-		setUserMenuAnchor(null);
+	const changeNavbarColor = () => {
+		if (window.scrollY >= 50) {
+			setColorChange(true);
+		} else {
+			setColorChange(false);
+		}
 	};
 
-	const toggleMobileMenu = () => {
-		setMobileMenuOpen(!mobileMenuOpen);
+	const handleClose = () => {
+		setAnchorEl(null);
 	};
 
-	return (
-		<div className={`top-navbar ${scrolled ? 'scrolled' : ''}`}>
-			<div className="navbar-container">
-				{/* Logo */}
-				<div className="navbar-logo">
-					<Link href="/">
-						<img src="/img/logo/jobBoardAI-logo.svg" alt="JobBoardAI" />
-					</Link>
-				</div>
+	const handleHover = (event: any) => {
+		if (anchorEl !== event.currentTarget) {
+			setAnchorEl(event.currentTarget);
+		} else {
+			setAnchorEl(null);
+		}
+	};
 
-				{/* Desktop Navigation */}
-				<nav className="navbar-nav desktop-nav">
-					{navigationItems.map((item) => (
-						<Link key={item.href} href={item.href}>
-							<span className={router.pathname === item.href ? 'active' : ''}>{item.label}</span>
-						</Link>
-					))}
-				</nav>
+	const StyledMenu = styled((props: MenuProps) => (
+		<Menu
+			elevation={0}
+			anchorOrigin={{
+				vertical: 'bottom',
+				horizontal: 'right',
+			}}
+			transformOrigin={{
+				vertical: 'top',
+				horizontal: 'right',
+			}}
+			{...props}
+		/>
+	))(({ theme }) => ({
+		'& .MuiPaper-root': {
+			top: '109px',
+			borderRadius: 6,
+			marginTop: theme.spacing(1),
+			minWidth: 160,
+			color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+			boxShadow:
+				'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+			'& .MuiMenu-list': {
+				padding: '4px 0',
+			},
+			'& .MuiMenuItem-root': {
+				'& .MuiSvgIcon-root': {
+					fontSize: 18,
+					color: theme.palette.text.secondary,
+					marginRight: theme.spacing(1.5),
+				},
+				'&:active': {
+					backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+				},
+			},
+		},
+	}));
 
-				{/* Right Side Actions */}
-				<div className="navbar-actions">
-					{/* Language Selector */}
-					<div className="language-selector">
-						<Button
-							className="lang-button"
-							onClick={(e: any) => setLangMenuAnchor(e.currentTarget)}
-							endIcon={<CaretDown size={14} />}
-						>
-							<img
-								src={languages.find((lang) => lang.code === currentLang)?.flag || '/img/flag/langen.png'}
-								alt=""
-								className="flag-icon"
-							/>
-						</Button>
+	if (typeof window !== 'undefined') {
+		window.addEventListener('scroll', changeNavbarColor);
+	}
 
-						<StyledMenu anchorEl={langMenuAnchor} open={langMenuOpen} onClose={() => setLangMenuAnchor(null)}>
-							{languages.map((lang) => (
-								<MenuItem
-									key={lang.code}
-									onClick={() => handleLanguageChange(lang.code)}
-									selected={currentLang === lang.code}
+	if (device == 'mobile') {
+		return (
+			<Stack className={'top'}>
+				<Link href={'/'}>
+					<div>{t('Home')}</div>
+				</Link>
+				<Link href={'/property'}>
+					<div>{t('Properties')}</div>
+				</Link>
+				<Link href={'/agent'}>
+					<div> {t('Agents')} </div>
+				</Link>
+				<Link href={'/community?articleCategory=FREE'}>
+					<div> {t('Community')} </div>
+				</Link>
+				<Link href={'/cs'}>
+					<div> {t('CS')} </div>
+				</Link>
+			</Stack>
+		);
+	} else {
+		return (
+			<Stack className={'navbar'}>
+				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
+					<Stack className={'container'}>
+						<Box component={'div'} className={'logo-box'}>
+							<Link href={'/'}>
+								<img src="/img/logo/logoWhite.svg" alt="" />
+							</Link>
+						</Box>
+						<Box component={'div'} className={'router-box'}>
+							<Link href={'/'}>
+								<div>{t('Home')}</div>
+							</Link>
+							<Link href={'/property'}>
+								<div>{t('Properties')}</div>
+							</Link>
+							<Link href={'/agent'}>
+								<div> {t('Agents')} </div>
+							</Link>
+							<Link href={'/community?articleCategory=FREE'}>
+								<div> {t('Community')} </div>
+							</Link>
+							{user?._id && (
+								<Link href={'/mypage'}>
+									<div> {t('My Page')} </div>
+								</Link>
+							)}
+							<Link href={'/cs'}>
+								<div> {t('CS')} </div>
+							</Link>
+						</Box>
+						<Box component={'div'} className={'user-box'}>
+							{user?._id ? (
+								<>
+									<div className={'login-user'} onClick={(event: any) => setLogoutAnchor(event.currentTarget)}>
+										<img
+											src={
+												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
+											}
+											alt=""
+										/>
+									</div>
+
+									<Menu
+										id="basic-menu"
+										anchorEl={logoutAnchor}
+										open={logoutOpen}
+										onClose={() => {
+											setLogoutAnchor(null);
+										}}
+										sx={{ mt: '5px' }}
+									>
+										<MenuItem onClick={() => logOut()}>
+											<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
+											Logout
+										</MenuItem>
+									</Menu>
+								</>
+							) : (
+								<Link href={'/account/join'}>
+									<div className={'join-box'}>
+										<AccountCircleOutlinedIcon />
+										<span>
+											{t('Login')} / {t('Register')}
+										</span>
+									</div>
+								</Link>
+							)}
+
+							<div className={'lan-box'}>
+								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} />}
+								<Button
+									disableRipple
+									className="btn-lang"
+									onClick={langClick}
+									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
 								>
-									<img src={lang.flag} alt="" className="flag-icon-menu" />
-									{lang.label}
-								</MenuItem>
-							))}
-						</StyledMenu>
-					</div>
+									<Box component={'div'} className={'flag'}>
+										{lang !== null ? (
+											<img src={`/img/flag/lang${lang}.png`} alt={'usaFlag'} />
+										) : (
+											<img src={`/img/flag/langen.png`} alt={'usaFlag'} />
+										)}
+									</Box>
+								</Button>
 
-					{/* User Actions */}
-					{user?._id ? (
-						<div className="user-actions">
-							<IconButton className="notification-btn">
-								<NotificationsOutlinedIcon />
-							</IconButton>
-
-							<div className="user-profile" onClick={(e) => setUserMenuAnchor(e.currentTarget)}>
-								<img
-									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
-									alt="Profile"
-									className="profile-image"
-								/>
+								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
+									<MenuItem disableRipple onClick={langChoice} id="en">
+										<img
+											className="img-flag"
+											src={'/img/flag/langen.png'}
+											onClick={langChoice}
+											id="en"
+											alt={'usaFlag'}
+										/>
+										{t('English')}
+									</MenuItem>
+									<MenuItem disableRipple onClick={langChoice} id="kr">
+										<img
+											className="img-flag"
+											src={'/img/flag/langkr.png'}
+											onClick={langChoice}
+											id="uz"
+											alt={'koreanFlag'}
+										/>
+										{t('Korean')}
+									</MenuItem>
+									<MenuItem disableRipple onClick={langChoice} id="ru">
+										<img
+											className="img-flag"
+											src={'/img/flag/langru.png'}
+											onClick={langChoice}
+											id="ru"
+											alt={'russiaFlag'}
+										/>
+										{t('Russian')}
+									</MenuItem>
+								</StyledMenu>
 							</div>
-
-							<StyledMenu anchorEl={userMenuAnchor} open={userMenuOpen} onClose={() => setUserMenuAnchor(null)}>
-								<MenuItem onClick={() => router.push('/profile')}>
-									<AccountCircleOutlinedIcon sx={{ mr: 1.5, fontSize: 18 }} />
-									{t('Profile')}
-								</MenuItem>
-								<MenuItem onClick={handleLogout}>
-									<LogoutIcon sx={{ mr: 1.5, fontSize: 18 }} />
-									{t('Logout')}
-								</MenuItem>
-							</StyledMenu>
-						</div>
-					) : (
-						<div className="auth-actions">
-							<Link href="/auth/login">
-								<Button className="login-btn" variant="outlined">
-									{t('Login')}
-								</Button>
-							</Link>
-							<Link href="/auth/register">
-								<Button className="register-btn" variant="contained">
-									{t('Get Started')}
-								</Button>
-							</Link>
-						</div>
-					)}
-
-					{/* Mobile Menu Toggle */}
-					<IconButton className="mobile-menu-toggle" onClick={toggleMobileMenu}>
-						{mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-					</IconButton>
-				</div>
-			</div>
-
-			{/* Mobile Menu Drawer */}
-			<Drawer anchor="right" open={mobileMenuOpen} onClose={toggleMobileMenu} className="mobile-drawer">
-				<div className="mobile-menu">
-					<div className="mobile-menu-header">
-						<img src="/img/logo/jobBoardAI-logo.svg" alt="JobBoardAI" />
-						<IconButton onClick={toggleMobileMenu}>
-							<CloseIcon />
-						</IconButton>
-					</div>
-
-					<List className="mobile-nav-list">
-						{navigationItems.map((item) => (
-							<ListItem
-								key={item.href}
-								button
-								onClick={() => {
-									router.push(item.href);
-									setMobileMenuOpen(false);
-								}}
-							>
-								<ListItemText primary={item.label} />
-							</ListItem>
-						))}
-					</List>
-
-					{!user?._id && (
-						<div className="mobile-auth-actions">
-							<Button
-								fullWidth
-								variant="outlined"
-								onClick={() => {
-									router.push('/auth/login');
-									setMobileMenuOpen(false);
-								}}
-							>
-								{t('Login')}
-							</Button>
-							<Button
-								fullWidth
-								variant="contained"
-								onClick={() => {
-									router.push('/auth/register');
-									setMobileMenuOpen(false);
-								}}
-							>
-								{t('Get Started')}
-							</Button>
-						</div>
-					)}
-				</div>
-			</Drawer>
-		</div>
-	);
+						</Box>
+					</Stack>
+				</Stack>
+			</Stack>
+		);
+	}
 };
 
-export default Top;
+export default withRouter(Top);
