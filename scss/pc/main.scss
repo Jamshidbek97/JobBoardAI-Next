@@ -436,6 +436,589 @@ $border-radius: 12px;
 			}
 		}
 	}
+
+	$primary-color: #3b82f6 !default;
+	$primary-dark: #2563eb !default;
+	$secondary-color: #64748b !default;
+	$success-color: #10b981 !default;
+	$warning-color: #f59e0b !default;
+	$error-color: #ef4444 !default;
+	$background-light: #ffffff !default;
+	$background-gray: #f8fafc !default;
+	$text-primary: #1e293b !default;
+	$text-secondary: #64748b !default;
+	$text-muted: #94a3b8 !default;
+	$border-light: #e2e8f0 !default;
+	$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05) !default;
+	$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07) !default;
+	$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1) !default;
+	$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1) !default;
+	$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !default;
+	$border-radius-sm: 6px !default;
+	$border-radius-md: 8px !default;
+	$border-radius-lg: 12px !default;
+	$border-radius-xl: 16px !default;
+
+	// Mixins for Header Filter
+	@mixin glassmorphism($opacity: 0.95) {
+		background: rgba(255, 255, 255, $opacity);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	@mixin button-hover($color: $primary-color, $scale: 1.02) {
+		transition: $transition-smooth;
+		&:hover {
+			transform: translateY(-2px) scale($scale);
+			box-shadow: 0 8px 25px rgba($color, 0.25);
+		}
+	}
+
+	@mixin mobile-breakpoint {
+		@media (max-width: 768px) {
+			@content;
+		}
+	}
+
+	@mixin tablet-breakpoint {
+		@media (max-width: 1024px) {
+			@content;
+		}
+	}
+
+	// Header Filter Styles
+	.header-main {
+		position: relative;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		min-height: 500px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+
+		@include mobile-breakpoint {
+			min-height: 400px;
+			padding: 20px 0;
+		}
+
+		// Add animated background elements
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: url('/img/patterns/job-pattern.svg') repeat;
+			opacity: 0.1;
+			animation: float 20s ease-in-out infinite;
+		}
+
+		.container {
+			position: relative;
+			z-index: 10;
+			max-width: 1200px;
+			width: 100%;
+			padding: 0 24px;
+
+			@include mobile-breakpoint {
+				padding: 0 20px;
+			}
+
+			// Job Search Box - Desktop
+			.job-search-box {
+				background: rgba(255, 255, 255, 0.95);
+				backdrop-filter: blur(20px);
+				border-radius: $border-radius-xl;
+				padding: 32px;
+				box-shadow: $shadow-xl;
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				max-width: 900px;
+				margin: 0 auto;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				position: relative;
+
+				@include mobile-breakpoint {
+					display: none;
+				}
+
+				// Main Search Input
+				.main-search-input {
+					position: relative;
+					display: flex;
+					align-items: center;
+					background: $background-gray;
+					border: 2px solid $border-light;
+					border-radius: $border-radius-lg;
+					padding: 0 20px;
+					transition: $transition-smooth;
+
+					&:focus-within {
+						border-color: $primary-color;
+						box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+					}
+
+					.search-icon {
+						color: $text-secondary;
+						margin-right: 12px;
+						font-size: 20px;
+					}
+
+					input {
+						flex: 1;
+						border: none;
+						outline: none;
+						background: transparent;
+						font-size: 16px;
+						font-weight: 500;
+						color: $text-primary;
+						padding: 18px 0;
+
+						&::placeholder {
+							color: $text-muted;
+							font-weight: 400;
+						}
+					}
+				}
+
+				// Filter Boxes Row
+				.job-select-box {
+					display: flex;
+					gap: 16px;
+					flex-direction: row;
+
+					@include tablet-breakpoint {
+						flex-wrap: wrap;
+						gap: 12px;
+					}
+
+					.filter-box {
+						flex: 1;
+						display: flex;
+						align-items: center;
+						padding: 16px 20px;
+						background: $background-light;
+						border: 2px solid $border-light;
+						border-radius: $border-radius-lg;
+						cursor: pointer;
+						transition: $transition-smooth;
+						min-width: 180px;
+						position: relative;
+
+						@include tablet-breakpoint {
+							min-width: 150px;
+						}
+
+						&:hover {
+							border-color: $primary-color;
+							transform: translateY(-2px);
+							box-shadow: $shadow-md;
+						}
+
+						&.active {
+							border-color: $primary-color;
+							background: rgba($primary-color, 0.05);
+							box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+						}
+
+						.box-icon {
+							color: $primary-color;
+							margin-right: 12px;
+							font-size: 20px;
+						}
+
+						span {
+							flex: 1;
+							font-weight: 500;
+							color: $text-primary;
+							font-size: 15px;
+						}
+
+						.expand-icon {
+							color: $text-secondary;
+							transition: $transition-smooth;
+						}
+
+						&.active .expand-icon {
+							transform: rotate(180deg);
+							color: $primary-color;
+						}
+					}
+				}
+
+				// Action Buttons Row
+				.job-action-box {
+					display: flex;
+					gap: 16px;
+					flex-direction: row;
+					align-items: center;
+					justify-content: flex-end;
+
+					.advanced-filter-btn {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						padding: 14px 24px;
+						background: rgba($secondary-color, 0.1);
+						color: $text-primary;
+						border-radius: $border-radius-lg;
+						cursor: pointer;
+						font-weight: 500;
+						transition: $transition-smooth;
+
+						&:hover {
+							background: rgba($primary-color, 0.1);
+							color: $primary-color;
+							transform: translateY(-1px);
+						}
+
+						svg {
+							font-size: 18px;
+						}
+					}
+
+					.search-btn {
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						width: 56px;
+						height: 56px;
+						background: linear-gradient(135deg, $primary-color, $primary-dark);
+						color: white;
+						border-radius: $border-radius-lg;
+						cursor: pointer;
+						transition: $transition-smooth;
+						@include button-hover($primary-color);
+
+						&:hover {
+							background: linear-gradient(135deg, $primary-dark, $primary-color);
+						}
+
+						svg {
+							font-size: 24px;
+						}
+					}
+				}
+
+				// Dropdown Menus
+				.filter-dropdown {
+					position: absolute;
+					top: 100%;
+					left: 32px;
+					right: 32px;
+					background: $background-light;
+					border-radius: $border-radius-lg;
+					box-shadow: $shadow-xl;
+					border: 1px solid $border-light;
+					z-index: 1000;
+					opacity: 0;
+					visibility: hidden;
+					transform: translateY(-10px);
+					transition: $transition-smooth;
+					max-height: 300px;
+					overflow-y: auto;
+
+					&.active {
+						opacity: 1;
+						visibility: visible;
+						transform: translateY(8px);
+					}
+
+					.dropdown-item {
+						display: flex;
+						align-items: center;
+						padding: 16px 20px;
+						cursor: pointer;
+						transition: $transition-smooth;
+						border-bottom: 1px solid rgba($border-light, 0.5);
+
+						&:last-child {
+							border-bottom: none;
+						}
+
+						&:hover {
+							background: rgba($primary-color, 0.05);
+							color: $primary-color;
+						}
+
+						svg {
+							margin-right: 12px;
+							font-size: 18px;
+							color: $text-secondary;
+						}
+
+						&:hover svg {
+							color: $primary-color;
+						}
+
+						span {
+							font-weight: 500;
+							font-size: 15px;
+						}
+					}
+				}
+
+				// Specific dropdown positioning
+				.location-dropdown {
+					left: 32px;
+					width: 220px;
+				}
+
+				.type-dropdown {
+					left: 268px;
+					width: 200px;
+
+					@include tablet-breakpoint {
+						left: 32px;
+						top: 120%;
+					}
+				}
+
+				.category-dropdown {
+					right: 32px;
+					width: 240px;
+
+					@include tablet-breakpoint {
+						left: 32px;
+						top: 140%;
+					}
+				}
+			}
+
+			// Mobile Job Filter
+			.mobile-job-filter {
+				display: none;
+				flex-direction: column;
+				gap: 16px;
+				background: rgba(255, 255, 255, 0.95);
+				backdrop-filter: blur(20px);
+				border-radius: $border-radius-xl;
+				padding: 24px;
+				box-shadow: $shadow-xl;
+
+				@include mobile-breakpoint {
+					display: flex;
+				}
+
+				.mobile-search-input {
+					display: flex;
+					align-items: center;
+					background: $background-gray;
+					border: 2px solid $border-light;
+					border-radius: $border-radius-lg;
+					padding: 0 16px;
+
+					svg {
+						color: $text-secondary;
+						margin-right: 12px;
+					}
+
+					input {
+						flex: 1;
+						border: none;
+						outline: none;
+						background: transparent;
+						font-size: 16px;
+						padding: 16px 0;
+						color: $text-primary;
+
+						&::placeholder {
+							color: $text-muted;
+						}
+					}
+				}
+
+				.mobile-filter-btn {
+					background: linear-gradient(135deg, $primary-color, $primary-dark);
+					color: white;
+					padding: 16px;
+					border-radius: $border-radius-lg;
+					font-weight: 600;
+					text-transform: none;
+					gap: 8px;
+					@include button-hover($primary-color);
+				}
+			}
+
+			// Advanced Filter Modal Styles
+			.advanced-job-filter-modal {
+				width: 600px;
+				max-width: 90vw;
+				padding: 32px;
+
+				@include mobile-breakpoint {
+					width: 95vw;
+					padding: 24px;
+				}
+
+				.modal-header {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 24px;
+
+					h2 {
+						color: $text-primary;
+						font-size: 24px;
+						font-weight: 700;
+						margin: 0;
+					}
+
+					.close-btn {
+						cursor: pointer;
+						color: $text-secondary;
+						transition: $transition-smooth;
+
+						&:hover {
+							color: $error-color;
+						}
+					}
+				}
+
+				.modal-content {
+					.filter-section {
+						margin-bottom: 32px;
+
+						h3 {
+							color: $text-primary;
+							font-size: 18px;
+							font-weight: 600;
+							margin-bottom: 16px;
+						}
+
+						.experience-chips,
+						.benefits-grid {
+							display: flex;
+							flex-wrap: wrap;
+							gap: 8px;
+
+							.MuiChip-root {
+								transition: $transition-smooth;
+
+								&.selected {
+									background-color: $primary-color;
+									color: white;
+								}
+
+								&:hover {
+									transform: translateY(-1px);
+									box-shadow: $shadow-md;
+								}
+							}
+						}
+
+						.salary-range {
+							.salary-labels {
+								display: flex;
+								justify-content: space-between;
+								margin-bottom: 16px;
+								font-weight: 600;
+								color: $text-primary;
+							}
+
+							.MuiSlider-root {
+								color: $primary-color;
+							}
+						}
+					}
+				}
+
+				.modal-footer {
+					display: flex;
+					gap: 16px;
+					justify-content: flex-end;
+
+					@include mobile-breakpoint {
+						flex-direction: column;
+					}
+
+					.MuiButton-root {
+						padding: 12px 24px;
+						border-radius: $border-radius-lg;
+						font-weight: 600;
+						text-transform: none;
+						transition: $transition-smooth;
+
+						&.MuiButton-outlined {
+							border-color: $border-light;
+							color: $text-secondary;
+
+							&:hover {
+								background: rgba($error-color, 0.05);
+								border-color: $error-color;
+								color: $error-color;
+							}
+						}
+
+						&.MuiButton-contained {
+							background: linear-gradient(135deg, $primary-color, $primary-dark);
+							@include button-hover($primary-color);
+
+							&:hover {
+								background: linear-gradient(135deg, $primary-dark, $primary-color);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Animation keyframes
+	@keyframes float {
+		0%,
+		100% {
+			transform: translateY(0px);
+		}
+		50% {
+			transform: translateY(-20px);
+		}
+	}
+
+	// Apply fade-in animation to header filter
+	.header-main {
+		animation: fadeInUp 0.8s ease-out;
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	// Responsive typography adjustments
+	@include mobile-breakpoint {
+		.header-main .container .job-search-box {
+			.main-search-input input {
+				font-size: 14px;
+			}
+
+			.filter-box span {
+				font-size: 14px;
+			}
+		}
+	}
+
+	// Additional utility classes
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
 }
 
 // Animation keyframes
