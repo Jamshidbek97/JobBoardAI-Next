@@ -16,18 +16,22 @@ const style = {
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
 	width: 'auto',
-	maxWidth: '90%',
+	maxWidth: '95%',
+	maxHeight: '90vh',
 	bgcolor: 'background.paper',
-	borderRadius: '12px',
+	borderRadius: '20px',
 	outline: 'none',
-	boxShadow: 24,
-	p: 3,
+	boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+	p: 0,
+	overflow: 'hidden',
 };
 
 const MenuProps = {
 	PaperProps: {
 		style: {
 			maxHeight: '200px',
+			borderRadius: '12px',
+			boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
 		},
 	},
 };
@@ -288,67 +292,149 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 
 	return (
 		<>
-			<Stack className={'job-search-box'}>
-				<Stack className={'select-box'}>
-					<Box className={`box ${openLocation ? 'on' : ''}`} onClick={locationStateChangeHandler} ref={locationRef}>
-						<span>
-							{searchFilter?.search?.locationList?.length ? searchFilter.search.locationList[0] : t('Location')}
-						</span>
-						<ExpandMoreIcon />
-					</Box>
-
-					<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler} ref={typeRef}>
-						<span>{searchFilter?.search?.typeList?.length ? searchFilter.search.typeList[0] : t('Job Type')}</span>
-						<ExpandMoreIcon />
-					</Box>
-
-					<Box className={`box ${openSalary ? 'on' : ''}`} onClick={salaryStateChangeHandler} ref={salaryRef}>
-						<span>
-							{searchFilter?.search?.salaryRange
-								? `$${searchFilter.search.salaryRange.start.toLocaleString()}+`
-								: t('Salary')}
-						</span>
-						<ExpandMoreIcon />
-					</Box>
-				</Stack>
-
-				<Stack className={'search-box-other'}>
-					<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
-						<img src="/img/icons/tune.svg" alt="Filter" />
-						<span>{t('Advanced')}</span>
-					</Box>
-					<Box className={'search-btn'} onClick={pushSearchHandler}>
-						<img src="/img/icons/search_white.svg" alt="Search" />
-					</Box>
-				</Stack>
-
-				{/* LOCATION MENU */}
-				<div className={`filter-location ${openLocation ? 'on' : ''}`}>
-					{jobLocations.map((location) => (
-						<div key={location} onClick={() => jobLocationSelectHandler(location)}>
-							<span>{location}</span>
+			<div className="job-search-container">
+				<div className="job-search-card">
+					<div className="search-filters">
+						<div
+							className={`filter-item location-filter ${openLocation ? 'active' : ''}`}
+							onClick={locationStateChangeHandler}
+							ref={locationRef}
+						>
+							<div className="filter-content">
+								<div className="filter-icon">
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<path
+											d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+											stroke="currentColor"
+											strokeWidth="2"
+											fill="none"
+										/>
+										<circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none" />
+									</svg>
+								</div>
+								<div className="filter-text">
+									<span className="filter-label">Location</span>
+									<span className="filter-value">
+										{searchFilter?.search?.locationList?.length
+											? searchFilter.search.locationList[0]
+											: t('Any location')}
+									</span>
+								</div>
+							</div>
+							<ExpandMoreIcon className="expand-icon" />
 						</div>
-					))}
-				</div>
 
-				{/* JOB TYPE MENU */}
-				<div className={`filter-type ${openType ? 'on' : ''}`}>
-					{jobTypes.map((type) => (
-						<div key={type} onClick={() => jobTypeSelectHandler(type)}>
-							<span>{type}</span>
+						<div
+							className={`filter-item type-filter ${openType ? 'active' : ''}`}
+							onClick={typeStateChangeHandler}
+							ref={typeRef}
+						>
+							<div className="filter-content">
+								<div className="filter-icon">
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<rect
+											x="3"
+											y="4"
+											width="18"
+											height="18"
+											rx="2"
+											ry="2"
+											stroke="currentColor"
+											strokeWidth="2"
+											fill="none"
+										/>
+										<line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
+										<line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
+										<line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
+									</svg>
+								</div>
+								<div className="filter-text">
+									<span className="filter-label">Job Type</span>
+									<span className="filter-value">
+										{searchFilter?.search?.typeList?.length ? searchFilter.search.typeList[0] : t('Any type')}
+									</span>
+								</div>
+							</div>
+							<ExpandMoreIcon className="expand-icon" />
 						</div>
-					))}
-				</div>
 
-				{/* SALARY MENU */}
-				<div className={`filter-salary ${openSalary ? 'on' : ''}`}>
-					{salaryOptions.map((salary) => (
-						<span key={salary} onClick={() => salarySelectHandler(salary)}>
-							${salary.toLocaleString()}+
-						</span>
-					))}
+						<div
+							className={`filter-item salary-filter ${openSalary ? 'active' : ''}`}
+							onClick={salaryStateChangeHandler}
+							ref={salaryRef}
+						>
+							<div className="filter-content">
+								<div className="filter-icon">
+									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" strokeWidth="2" />
+										<path
+											d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+											stroke="currentColor"
+											strokeWidth="2"
+											fill="none"
+										/>
+									</svg>
+								</div>
+								<div className="filter-text">
+									<span className="filter-label">Salary</span>
+									<span className="filter-value">
+										{searchFilter?.search?.salaryRange
+											? `$${searchFilter.search.salaryRange.start.toLocaleString()}+`
+											: t('Any salary')}
+									</span>
+								</div>
+							</div>
+							<ExpandMoreIcon className="expand-icon" />
+						</div>
+					</div>
+
+					<div className="action-buttons">
+						<button className="advanced-filter-btn" onClick={() => advancedFilterHandler(true)}>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<polygon
+									points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"
+									stroke="currentColor"
+									strokeWidth="2"
+									fill="none"
+								/>
+							</svg>
+							<span>{t('Filters')}</span>
+						</button>
+						<button className="search-btn" onClick={pushSearchHandler}>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+								<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
+							</svg>
+							<span>Search</span>
+						</button>
+					</div>
+
+					{/* DROPDOWN MENUS */}
+					<div className={`dropdown-menu location-dropdown ${openLocation ? 'show' : ''}`}>
+						{jobLocations.map((location) => (
+							<div key={location} className="dropdown-item" onClick={() => jobLocationSelectHandler(location)}>
+								<span>{location}</span>
+							</div>
+						))}
+					</div>
+
+					<div className={`dropdown-menu type-dropdown ${openType ? 'show' : ''}`}>
+						{jobTypes.map((type) => (
+							<div key={type} className="dropdown-item" onClick={() => jobTypeSelectHandler(type)}>
+								<span>{type}</span>
+							</div>
+						))}
+					</div>
+
+					<div className={`dropdown-menu salary-dropdown ${openSalary ? 'show' : ''}`}>
+						{salaryOptions.map((salary) => (
+							<div key={salary} className="dropdown-item" onClick={() => salarySelectHandler(salary)}>
+								<span>${salary.toLocaleString()}+</span>
+							</div>
+						))}
+					</div>
 				</div>
-			</Stack>
+			</div>
 
 			{/* ADVANCED FILTER MODAL */}
 			<Modal
@@ -357,149 +443,193 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				aria-labelledby="advanced-job-filter"
 			>
 				<Box sx={style}>
-					<Box className={'advanced-filter-modal'}>
-						<div className={'close'} onClick={() => advancedFilterHandler(false)}>
-							<CloseIcon />
+					<div className="advanced-modal">
+						<div className="modal-header">
+							<h2>{t('Advanced Job Filters')}</h2>
+							<button className="close-btn" onClick={() => advancedFilterHandler(false)}>
+								<CloseIcon />
+							</button>
 						</div>
 
-						<div className={'top'}>
-							<span>{t('Find your dream job')}</span>
-							<div className={'search-input-box'}>
-								<img src="/img/icons/search.svg" alt="Search" />
-								<input
-									value={searchFilter?.search?.text ?? ''}
-									type="text"
-									placeholder={t('Job title, company, or keywords')}
-									onChange={(e) => {
-										setSearchFilter({
-											...searchFilter,
-											search: { ...searchFilter.search, text: e.target.value },
-										});
-									}}
-								/>
+						<div className="modal-content">
+							<div className="search-section">
+								<div className="search-input-wrapper">
+									<svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
+										<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+										<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
+									</svg>
+									<input
+										className="search-input"
+										value={searchFilter?.search?.text ?? ''}
+										type="text"
+										placeholder={t('Job title, company, or keywords...')}
+										onChange={(e) => {
+											setSearchFilter({
+												...searchFilter,
+												search: { ...searchFilter.search, text: e.target.value },
+											});
+										}}
+									/>
+								</div>
 							</div>
-						</div>
 
-						<Divider sx={{ my: 3 }} />
+							<div className="filters-grid">
+								<div className="filter-group">
+									<h4 className="filter-title">{t('Salary Range')}</h4>
+									<div className="range-inputs">
+										<FormControl className="range-input">
+											<Select
+												value={searchFilter.search.salaryRange?.start || 0}
+												onChange={salaryMinHandler}
+												displayEmpty
+												MenuProps={MenuProps}
+											>
+												{salaryOptions.map((option) => (
+													<MenuItem key={`min-${option}`} value={option}>
+														${option.toLocaleString()}
+													</MenuItem>
+												))}
+											</Select>
+										</FormControl>
+										<span className="range-separator">to</span>
+										<FormControl className="range-input">
+											<Select
+												value={searchFilter.search.salaryRange?.end || 1000000}
+												onChange={salaryMaxHandler}
+												displayEmpty
+												MenuProps={MenuProps}
+											>
+												{[...salaryOptions, 200000].map((option) => (
+													<MenuItem key={`max-${option}`} value={option}>
+														{option === 200000 ? '$200,000+' : `$${option.toLocaleString()}`}
+													</MenuItem>
+												))}
+											</Select>
+										</FormControl>
+									</div>
+								</div>
 
-						<div className={'middle'}>
-							<div className="filter-section">
-								<h4>{t('Salary Range')}</h4>
-								<div className="range-selectors">
+								<div className="filter-group">
+									<h4 className="filter-title">{t('Experience Level')}</h4>
 									<FormControl fullWidth>
 										<Select
-											value={searchFilter.search.salaryRange?.start || 0}
-											onChange={salaryMinHandler}
-											displayEmpty
+											value={searchFilter.search.experienceRange || 0}
+											onChange={experienceHandler}
+											MenuProps={MenuProps}
 										>
-											{salaryOptions.map((option) => (
-												<MenuItem key={`min-${option}`} value={option}>
-													${option.toLocaleString()}
-												</MenuItem>
-											))}
-										</Select>
-									</FormControl>
-									<span className="range-divider">-</span>
-									<FormControl fullWidth>
-										<Select
-											value={searchFilter.search.salaryRange?.end || 1000000}
-											onChange={salaryMaxHandler}
-											displayEmpty
-										>
-											{[...salaryOptions, 200000].map((option) => (
-												<MenuItem key={`max-${option}`} value={option}>
-													{option === 200000 ? '$200,000+' : `$${option.toLocaleString()}`}
+											<MenuItem value={0}>{t('Any experience')}</MenuItem>
+											{experienceOptions.map((exp) => (
+												<MenuItem key={`exp-${exp}`} value={exp}>
+													{exp === 0 ? t('Entry level') : `${exp}+ ${t('years')}`}
 												</MenuItem>
 											))}
 										</Select>
 									</FormControl>
 								</div>
-							</div>
 
-							<div className="filter-section">
-								<h4>{t('Experience')}</h4>
-								<FormControl fullWidth>
-									<Select value={searchFilter.search.experienceRange || 0} onChange={experienceHandler}>
-										<MenuItem value={0}>{t('Any experience')}</MenuItem>
-										{experienceOptions.map((exp) => (
-											<MenuItem key={`exp-${exp}`} value={exp}>
-												{exp === 0 ? t('Entry level') : `${exp}+ ${t('years')}`}
-											</MenuItem>
+								<div className="filter-group">
+									<h4 className="filter-title">{t('Education Level')}</h4>
+									<div className="checkbox-list">
+										{Object.values(EducationLevel).map((level) => (
+											<FormControlLabel
+												key={level}
+												className="checkbox-item"
+												control={
+													<Checkbox
+														checked={searchFilter.search.educationLevelList?.includes(level) || false}
+														onChange={() => educationLevelHandler(level)}
+														color="primary"
+													/>
+												}
+												label={level}
+											/>
 										))}
-									</Select>
-								</FormControl>
-							</div>
-
-							<div className="filter-section">
-								<h4>{t('Education Level')}</h4>
-								<div className="checkbox-group">
-									{Object.values(EducationLevel).map((level) => (
-										<FormControlLabel
-											key={level}
-											control={
-												<Checkbox
-													checked={searchFilter.search.educationLevelList?.includes(level) || false}
-													onChange={() => educationLevelHandler(level)}
-												/>
-											}
-											label={level}
-										/>
-									))}
+									</div>
 								</div>
-							</div>
 
-							<div className="filter-section">
-								<h4>{t('Employment Level')}</h4>
-								<div className="checkbox-group">
-									{Object.values(EmploymentLevel).map((level) => (
-										<FormControlLabel
-											key={level}
-											control={
-												<Checkbox
-													checked={searchFilter.search.employmentLevels.includes(level)}
-													onChange={() => employmentLevelHandler(level)}
-												/>
-											}
-											label={level}
-										/>
-									))}
+								<div className="filter-group">
+									<h4 className="filter-title">{t('Employment Level')}</h4>
+									<div className="checkbox-list">
+										{Object.values(EmploymentLevel).map((level) => (
+											<FormControlLabel
+												key={level}
+												className="checkbox-item"
+												control={
+													<Checkbox
+														checked={searchFilter.search.employmentLevels.includes(level)}
+														onChange={() => employmentLevelHandler(level)}
+														color="primary"
+													/>
+												}
+												label={level}
+											/>
+										))}
+									</div>
 								</div>
-							</div>
 
-							<div className="filter-section">
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={searchFilter.search.isRemote || false}
-											onChange={(e) => remoteHandler(e.target.checked)}
-										/>
-									}
-									label={t('Remote only')}
-								/>
+								<div className="filter-group remote-filter">
+									<FormControlLabel
+										className="remote-checkbox"
+										control={
+											<Checkbox
+												checked={searchFilter.search.isRemote || false}
+												onChange={(e) => remoteHandler(e.target.checked)}
+												color="primary"
+											/>
+										}
+										label={
+											<span className="remote-label">
+												<svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+													<path
+														d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+														stroke="currentColor"
+														strokeWidth="2"
+														fill="none"
+													/>
+													<path
+														d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+														stroke="currentColor"
+														strokeWidth="2"
+														fill="none"
+													/>
+												</svg>
+												{t('Remote Work Only')}
+											</span>
+										}
+									/>
+								</div>
 							</div>
 						</div>
 
-						<Divider sx={{ my: 3 }} />
-
-						<div className={'bottom'}>
+						<div className="modal-footer">
 							<Button
 								variant="outlined"
-								className={'reset-btn'}
+								className="reset-button"
 								onClick={resetFilterHandler}
-								startIcon={<img src="/img/icons/reset.svg" alt="Reset" />}
+								startIcon={
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+										<polyline points="1,4 1,10 7,10" stroke="currentColor" strokeWidth="2" />
+										<path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" strokeWidth="2" />
+									</svg>
+								}
 							>
-								{t('Reset filters')}
+								{t('Reset All')}
 							</Button>
 							<Button
 								variant="contained"
-								className={'search-btn'}
+								className="apply-button"
 								onClick={pushSearchHandler}
-								startIcon={<img src="/img/icons/search_white.svg" alt="Search" />}
+								startIcon={
+									<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+										<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+										<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
+									</svg>
+								}
 							>
-								{t('Search jobs')}
+								{t('Apply Filters')}
 							</Button>
 						</div>
-					</Box>
+					</div>
 				</Box>
 			</Modal>
 		</>

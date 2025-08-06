@@ -19,7 +19,7 @@ const withLayoutMain = (Component: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
 
-		/** LIFECYCLES **/
+		/** LIFECYCLE **/
 		useEffect(() => {
 			const jwt = getJwtToken();
 			if (jwt) updateUserInfo(jwt);
@@ -27,60 +27,36 @@ const withLayoutMain = (Component: any) => {
 
 		/** HANDLERS **/
 
-		if (device == 'mobile') {
-			return (
-				<>
-					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
-					</Head>
-					<Stack id="mobile-wrap">
-						<Stack id={'top'}>
-							<Top />
-						</Stack>
+		return (
+			<>
+				<Head>
+					<title>Nestar</title>
+					<meta name={'title'} content={`Nestar`} />
+				</Head>
+				<Stack id="pc-wrap">
+					<Stack id={'top'}>
+						<Top />
+					</Stack>
 
-						<Stack id={'main'}>
-							<Component {...props} />
-						</Stack>
-
-						<Stack id={'footer'}>
-							<Footer />
+					<Stack className={'header-main'}>
+						<FiberContainer />
+						<Stack className={'container'}>
+							<HeaderFilter />
 						</Stack>
 					</Stack>
-				</>
-			);
-		} else {
-			return (
-				<>
-					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
-					</Head>
-					<Stack id="pc-wrap">
-						<Stack id={'top'}>
-							<Top />
-						</Stack>
 
-						<Stack className={'header-main'}>
-							<FiberContainer />
-							<Stack className={'container'}>
-								<HeaderFilter />
-							</Stack>
-						</Stack>
-
-						<Stack id={'main'}>
-							<Component {...props} />
-						</Stack>
-
-						{user?._id && <Chat />}
-
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+					<Stack id={'main'}>
+						<Component {...props} />
 					</Stack>
-				</>
-			);
-		}
+
+					{user?._id && <Chat />}
+
+					<Stack id={'footer'}>
+						<Footer />
+					</Stack>
+				</Stack>
+			</>
+		);
 	};
 };
 
