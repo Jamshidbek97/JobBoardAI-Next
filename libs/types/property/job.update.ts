@@ -1,6 +1,6 @@
 import { EducationLevel, JobLocation, JobStatus, JobType } from '../../enums/job.enum';
 
-export interface PropertyUpdate {
+export interface JobUpdate {
 	_id: string;
 	jobType?: JobType;
 	jobStatus?: JobStatus;

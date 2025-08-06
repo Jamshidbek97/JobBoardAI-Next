@@ -25,11 +25,11 @@ interface JISearch {
 	typeList?: JobType[];
 	options?: string[];
 	salaryRange?: Range;
-	experienceRange: Range;
+	experienceRange?: number;
 	periodsRange?: PeriodsRange;
 	educationLevelList?: EducationLevel[];
 	employmentLevels: EmploymentLevel[];
-	skillsRequired: string[];
+	skillsRequired?: string[];
 	isRemote: boolean;
 	text?: string;
 }
@@ -59,7 +59,7 @@ interface ALJISearch {
 	jobLocation?: JobLocation[];
 }
 
-export interface AllPropertiesInquiry {
+export interface AllJobsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;
