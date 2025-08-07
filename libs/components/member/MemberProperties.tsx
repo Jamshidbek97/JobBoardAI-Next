@@ -3,20 +3,20 @@ import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from '../mypage/PropertyCard';
-import { Property } from '../../types/job/property';
-import { PropertiesInquiry } from '../../types/job/property.input';
 import { T } from '../../types/common';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import { GET_PROPERTIES } from '../../../apollo/user/query';
 import { Direction } from '../../enums/common.enum';
+import { JobInquiry } from '../../types/job/job.input';
+import { Job } from '../../types/job/job';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const { memberId } = router.query;
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>({ ...initialInput });
-	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
+	const [searchFilter, setSearchFilter] = useState<JobInquiry>({ ...initialInput });
+	const [agentProperties, setAgentProperties] = useState<Job[]>([]);
 	const [total, setTotal] = useState<number>(0);
 
 	/** APOLLO REQUESTS **/
@@ -52,7 +52,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return <div>JobBoardAI PROPERTIES MOBILE</div>;
 	} else {
 		return (
 			<div id="member-properties-page">
@@ -77,7 +77,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 								<p>No Property found!</p>
 							</div>
 						)}
-						{agentProperties?.map((property: Property) => {
+						{agentProperties?.map((property: Job) => {
 							return <PropertyCard property={property} memberPage={true} key={property?._id} />;
 						})}
 

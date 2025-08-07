@@ -19,7 +19,7 @@ const withLayoutFull = (Component: any) => {
 		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
 
-		/** LIFECYCLES **/
+		/** LIFECYCLE **/
 		useEffect(() => {
 			const jwt = getJwtToken();
 			if (jwt) updateUserInfo(jwt);
@@ -31,8 +31,8 @@ const withLayoutFull = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>JobBoardAI</title>
+						<meta name={'title'} content={`JobBoardAI`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -53,8 +53,8 @@ const withLayoutFull = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>JobBoardAI</title>
+						<meta name={'title'} content={`JobBoardAI`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>

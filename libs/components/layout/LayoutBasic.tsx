@@ -81,7 +81,7 @@ const withLayoutBasic = (Component: any) => {
 			return { title, desc, bgImage };
 		}, [router.pathname]);
 
-		/** LIFECYCLES **/
+		/** LIFECYCLE **/
 		useEffect(() => {
 			const jwt = getJwtToken();
 			if (jwt) updateUserInfo(jwt);
@@ -93,8 +93,8 @@ const withLayoutBasic = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>JobBoardAI</title>
+						<meta name={'title'} content={`JobBoardAI`} />
 					</Head>
 					<Stack id="mobile-wrap">
 						<Stack id={'top'}>
@@ -115,8 +115,8 @@ const withLayoutBasic = (Component: any) => {
 			return (
 				<>
 					<Head>
-						<title>Nestar</title>
-						<meta name={'title'} content={`Nestar`} />
+						<title>JobBoardAI</title>
+						<meta name={'title'} content={`JobBoardAI`} />
 					</Head>
 					<Stack id="pc-wrap">
 						<Stack id={'top'}>

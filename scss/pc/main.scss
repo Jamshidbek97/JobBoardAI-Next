@@ -46,125 +46,275 @@ body::-webkit-scrollbar {
 #pc-wrap {
 	#top {
 		.navbar {
-			.navbar-main {
-				position: fixed;
-				padding: 22px 0px;
-				width: 100%;
-				height: 87px;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: 1000;
+			background: transparent;
+			padding: 20px 0;
+			transition: all 0.3s ease;
+			box-shadow: none;
+
+			&.scrolled {
+				background: #ffffff;
+				padding: 12px 0;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+			}
+
+			.container {
 				display: flex;
-				flex-direction: row;
-				box-sizing: border-box;
-				z-index: 99;
 				align-items: center;
-				border-top: 1px solid rgba(255, 255, 255, 0.07);
-				&.transparent {
-					background-color: #181a209e;
+				justify-content: space-between;
+				max-width: 1400px;
+				margin: 0 auto;
+				padding: 0 40px;
+			}
+
+			.logo {
+				font-size: 28px;
+				font-weight: 700;
+				color: #1890ff;
+
+				span {
+					cursor: pointer;
+					transition: all 0.3s ease;
+
+					&:hover {
+						opacity: 0.9;
+					}
 				}
-				.container {
-					flex-direction: row;
+
+				.ai {
+					color: #ff4d4f;
+					font-weight: 800;
+				}
+			}
+
+			.main-nav {
+				display: flex;
+				gap: 35px;
+				margin-left: 40px;
+
+				a {
+					font-size: 16px;
+					font-weight: 500;
+					color: #2d3748;
+					text-decoration: none;
+					position: relative;
+					padding: 5px 0;
+					transition: color 0.3s ease;
+
+					&:hover {
+						color: #1890ff;
+					}
+
+					&.active {
+						color: #1890ff;
+						font-weight: 600;
+
+						&::after {
+							content: '';
+							position: absolute;
+							bottom: 0;
+							left: 0;
+							width: 100%;
+							height: 3px;
+							background: #1890ff;
+							border-radius: 2px;
+						}
+					}
+				}
+			}
+
+			.user-actions {
+				display: flex;
+				align-items: center;
+				gap: 25px;
+
+				.notification-badge {
+					cursor: pointer;
+					transition: all 0.3s ease;
+
+					&:hover {
+						transform: translateY(-2px);
+					}
+				}
+
+				.lang-selector {
+					display: flex;
 					align-items: center;
-					justify-content: space-between;
-					.logo-box {
-						img {
-							width: 150px;
-							cursor: pointer;
+					gap: 8px;
+					cursor: pointer;
+					padding: 8px 12px;
+					border-radius: 8px;
+					transition: all 0.3s ease;
+
+					&:hover {
+						background: #f0f7ff;
+					}
+
+					.flag {
+						display: inline-block;
+						width: 24px;
+						height: 18px;
+						border-radius: 2px;
+						background-size: cover;
+
+						&-en {
+							background-image: url('/img/flag/langen.png');
+						}
+						&-kr {
+							background-image: url('/img/flag/langkr.png');
+						}
+						&-ru {
+							background-image: url('/img/flag/langru.png');
 						}
 					}
-					.router-box {
-						position: relative;
-						width: 617px;
-						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						div {
-							position: relative;
-							color: #eeeeeeed;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-							cursor: pointer;
-							.community_menu {
-								position: absolute;
-								left: -177%;
-								top: 30px;
-								width: 434px;
-								height: 33px;
-								background: white;
-								transition: all ease 2s;
-								&:before {
-									content: '';
-									display: block;
-									position: absolute;
-									top: 0;
-									right: 50%;
-									width: 10px;
-									height: 10px;
-									background: white;
-									transform: translateY(-50%) rotate(45deg);
-									z-index: 0;
-								}
-							}
+				}
+
+				.user-profile {
+					display: flex;
+					align-items: center;
+					gap: 10px;
+					cursor: pointer;
+					padding: 6px 12px;
+					border-radius: 50px;
+					transition: all 0.3s ease;
+
+					&:hover {
+						background: #f0f7ff;
+					}
+
+					.avatar {
+						width: 36px;
+						height: 36px;
+						border: 2px solid #1890ff;
+					}
+
+					.user-name {
+						font-weight: 500;
+						color: #2d3748;
+						max-width: 120px;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+
+				.auth-buttons {
+					display: flex;
+					gap: 15px;
+
+					.signup-btn {
+						background: #1890ff;
+						color: white;
+						font-weight: 600;
+						padding: 8px 20px;
+						border-radius: 8px;
+						transition: all 0.3s ease;
+
+						&:hover {
+							background: #40a9ff;
+							transform: translateY(-2px);
+							box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
 						}
 					}
-					.user-box {
-						width: 270px;
-						display: flex;
-						flex-direction: row;
-						justify-content: flex-end;
-						.join-box {
-							width: 184px;
-							height: 47px;
-							display: flex;
-							align-items: center;
-							justify-content: center;
-							border-radius: 60px;
-							border: 1px solid #ffffff;
-							cursor: pointer;
-							svg {
-								color: #ffffff;
-								margin-right: 10px;
-							}
-							span {
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-								color: #ffffff;
-							}
-						}
-						.login-user {
-							img {
-								width: 42px;
-								height: 42px;
-								border-radius: 50%;
-								object-fit: cover;
-							}
-						}
-					}
-					.lan-box {
-						margin-left: 28px;
+				}
+			}
+
+			.lang-menu,
+			.user-menu {
+				margin-top: 15px;
+				border-radius: 12px;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+				.MuiPaper-root {
+					border-radius: 12px;
+					padding: 10px;
+					min-width: 180px;
+
+					.MuiMenuItem-root {
+						padding: 12px 20px;
+						border-radius: 8px;
+						margin: 4px 0;
 						display: flex;
 						align-items: center;
-						.notification-icon {
-							color: white;
+						gap: 12px;
+						transition: all 0.2s ease;
+
+						&:hover {
+							background: #f0f7ff;
 						}
-						.btn-lang {
-							border-radius: 4px;
-							img {
-								width: 24px;
-								height: 17px;
-								border-radius: 2px;
-							}
-						}
-						.img-flag {
-							width: 24px;
-							height: 17px;
+
+						.flag {
+							width: 20px;
+							height: 15px;
 							border-radius: 2px;
-							margin-right: 8px;
+							display: inline-block;
 						}
+
+						.logout-icon {
+							color: #ff4d4f;
+						}
+					}
+				}
+			}
+
+			@media (max-width: 1024px) {
+				.container {
+					padding: 0 30px !important;
+				}
+
+				.main-nav {
+					gap: 25px !important;
+					margin-left: 20px !important;
+				}
+
+				.user-actions {
+					gap: 20px !important;
+				}
+			}
+
+			@media (max-width: 768px) {
+				padding: 15px 0 !important;
+
+				&.scrolled {
+					padding: 10px 0 !important;
+				}
+
+				.container {
+					padding: 0 20px !important;
+				}
+
+				.logo {
+					font-size: 24px;
+				}
+
+				.main-nav {
+					display: none;
+				}
+
+				.user-actions {
+					.lang-selector {
+						padding: 6px 10px;
+					}
+
+					.user-profile {
+						.user-name {
+							max-width: 80px;
+						}
+					}
+				}
+			}
+
+			@media (max-width: 480px) {
+				.auth-buttons {
+					flex-direction: column;
+					gap: 8px !important;
+
+					.signup-btn {
+						padding: 6px 15px !important;
+						font-size: 14px;
 					}
 				}
 			}
@@ -499,10 +649,6 @@ body::-webkit-scrollbar {
 				}
 			}
 
-
-
-
-
 			// Animations
 			@keyframes slideUp {
 				from {
@@ -551,8 +697,6 @@ body::-webkit-scrollbar {
 					background: #94a3b8;
 				}
 			}
-
-
 
 			// Focus states for accessibility
 			button:focus-visible,

@@ -1,290 +1,171 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useState } from 'react';
-import { useRouter, withRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack, Box } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
-import { alpha, styled } from '@mui/material/styles';
-import Menu, { MenuProps } from '@mui/material/Menu';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { CaretDown } from 'phosphor-react';
-import useDeviceDetect from '../hooks/useDeviceDetect';
+import { Box, Menu, MenuItem, Button, Avatar, Badge, Divider } from '@mui/material';
+import { CaretDown, Bell } from 'phosphor-react';
 import Link from 'next/link';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 
 const Top = () => {
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
-	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [lang, setLang] = useState<string | null>('en');
-	const drop = Boolean(anchorEl2);
-	const [colorChange, setColorChange] = useState(false);
-	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
-	let open = Boolean(anchorEl);
-	const [bgColor, setBgColor] = useState<boolean>(false);
-	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
-	const logoutOpen = Boolean(logoutAnchor);
+	const [lang, setLang] = useState<string>('en');
+	const [scrolled, setScrolled] = useState(false);
+	const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
+	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
 
-	/** LIFECYCLES **/
-	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
-			localStorage.setItem('locale', 'en');
-			setLang('en');
-		} else {
-			setLang(localStorage.getItem('locale'));
-		}
-	}, [router]);
+	// Navigation items
+	const navItems = [
+		{ label: t('Home'), path: '/' },
+		{ label: t('Jobs'), path: '/jobs' },
+		{ label: t('Companies'), path: '/companies' },
+		{ label: t('Community'), path: '/community?articleCategory=FREE' },
+		{ label: t('CS'), path: '/cs' }, // Changed from Resources to CS
+	];
 
 	useEffect(() => {
-		switch (router.pathname) {
-			case '/property/detail':
-				setBgColor(true);
-				break;
-			default:
-				break;
-		}
-	}, [router]);
+		const storedLang = localStorage.getItem('locale') || 'en';
+		setLang(storedLang);
 
-	useEffect(() => {
+		const handleScroll = () => {
+			setScrolled(window.scrollY > 20);
+		};
+
+		window.addEventListener('scroll', handleScroll);
+
+		// Initialize user if token exists
 		const jwt = getJwtToken();
 		if (jwt) updateUserInfo(jwt);
+
+		return () => window.removeEventListener('scroll', handleScroll);
 	}, []);
 
-	/** HANDLERS **/
-	const langClick = (e: any) => {
-		setAnchorEl2(e.currentTarget);
+	const handleLangChange = async (newLang: string) => {
+		setLang(newLang);
+		localStorage.setItem('locale', newLang);
+		setLangMenuAnchor(null);
+		await router.push(router.asPath, router.asPath, { locale: newLang });
 	};
 
-	const langClose = () => {
-		setAnchorEl2(null);
+	const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+		setUserMenuAnchor(event.currentTarget);
 	};
 
-	const langChoice = useCallback(
-		async (e: any) => {
-			setLang(e.target.id);
-			localStorage.setItem('locale', e.target.id);
-			setAnchorEl2(null);
-			await router.push(router.asPath, router.asPath, { locale: e.target.id });
-		},
-		[router],
-	);
-
-	const changeNavbarColor = () => {
-		if (window.scrollY >= 50) {
-			setColorChange(true);
-		} else {
-			setColorChange(false);
-		}
+	const handleUserMenuClose = () => {
+		setUserMenuAnchor(null);
 	};
 
-	const handleClose = () => {
-		setAnchorEl(null);
+	const handleLogout = () => {
+		logOut();
+		handleUserMenuClose();
+		router.push('/');
 	};
 
-	const handleHover = (event: any) => {
-		if (anchorEl !== event.currentTarget) {
-			setAnchorEl(event.currentTarget);
-		} else {
-			setAnchorEl(null);
-		}
-	};
+	return (
+		<header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+			<div className="container">
+				<div className="logo">
+					<Link href="/">
+						<span>
+							JobBoard<span className="ai">AI</span>
+						</span>
+					</Link>
+				</div>
 
-	const StyledMenu = styled((props: MenuProps) => (
-		<Menu
-			elevation={0}
-			anchorOrigin={{
-				vertical: 'bottom',
-				horizontal: 'right',
-			}}
-			transformOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-			{...props}
-		/>
-	))(({ theme }) => ({
-		'& .MuiPaper-root': {
-			top: '109px',
-			borderRadius: 6,
-			marginTop: theme.spacing(1),
-			minWidth: 160,
-			color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-			boxShadow:
-				'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-			'& .MuiMenu-list': {
-				padding: '4px 0',
-			},
-			'& .MuiMenuItem-root': {
-				'& .MuiSvgIcon-root': {
-					fontSize: 18,
-					color: theme.palette.text.secondary,
-					marginRight: theme.spacing(1.5),
-				},
-				'&:active': {
-					backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-				},
-			},
-		},
-	}));
+				<nav className="main-nav">
+					{navItems.map((item) => (
+						<Link key={item.path} href={item.path} className={router.pathname === item.path ? 'active' : ''}>
+							{item.label}
+						</Link>
+					))}
+					{/* Add "My Page" when user is logged in */}
+					{user?._id && (
+						<Link href="/mypage" className={router.pathname === '/mypage' ? 'active' : ''}>
+							{t('My Page')}
+						</Link>
+					)}
+				</nav>
 
-	if (typeof window !== 'undefined') {
-		window.addEventListener('scroll', changeNavbarColor);
-	}
+				<div className="user-actions">
+					{user?._id && (
+						<Badge badgeContent={3} color="error" className="notification-badge">
+							<Bell size={24} weight="duotone" />
+						</Badge>
+					)}
 
-	if (device == 'mobile') {
-		return (
-			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('Home')}</div>
-				</Link>
-				<Link href={'/property'}>
-					<div>{t('Properties')}</div>
-				</Link>
-				<Link href={'/agent'}>
-					<div> {t('Agents')} </div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div> {t('Community')} </div>
-				</Link>
-				<Link href={'/cs'}>
-					<div> {t('CS')} </div>
-				</Link>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'navbar'}>
-				<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
-					<Stack className={'container'}>
-						<Box component={'div'} className={'logo-box'}>
-							<Link href={'/'}>
-								<img src="/img/logo/logoWhite.svg" alt="" />
-							</Link>
-						</Box>
-						<Box component={'div'} className={'router-box'}>
-							<Link href={'/'}>
-								<div>{t('Home')}</div>
-							</Link>
-							<Link href={'/property'}>
-								<div>{t('Properties')}</div>
-							</Link>
-							<Link href={'/agent'}>
-								<div> {t('Agents')} </div>
-							</Link>
-							<Link href={'/community?articleCategory=FREE'}>
-								<div> {t('Community')} </div>
-							</Link>
-							{user?._id && (
-								<Link href={'/mypage'}>
-									<div> {t('My Page')} </div>
-								</Link>
-							)}
-							<Link href={'/cs'}>
-								<div> {t('CS')} </div>
-							</Link>
-						</Box>
-						<Box component={'div'} className={'user-box'}>
-							{user?._id ? (
-								<>
-									<div className={'login-user'} onClick={(event: any) => setLogoutAnchor(event.currentTarget)}>
-										<img
-											src={
-												user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
-											}
-											alt=""
-										/>
-									</div>
+					<div className="lang-selector" onClick={(e) => setLangMenuAnchor(e.currentTarget)}>
+						<span className={`flag flag-${lang}`}></span>
+						<CaretDown size={14} weight="bold" />
+					</div>
 
-									<Menu
-										id="basic-menu"
-										anchorEl={logoutAnchor}
-										open={logoutOpen}
-										onClose={() => {
-											setLogoutAnchor(null);
-										}}
-										sx={{ mt: '5px' }}
-									>
-										<MenuItem onClick={() => logOut()}>
-											<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
-											Logout
-										</MenuItem>
-									</Menu>
-								</>
-							) : (
-								<Link href={'/account/join'}>
-									<div className={'join-box'}>
-										<AccountCircleOutlinedIcon />
-										<span>
-											{t('Login')} / {t('Register')}
-										</span>
-									</div>
-								</Link>
-							)}
-
-							<div className={'lan-box'}>
-								{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} />}
-								<Button
-									disableRipple
-									className="btn-lang"
-									onClick={langClick}
-									endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
-								>
-									<Box component={'div'} className={'flag'}>
-										{lang !== null ? (
-											<img src={`/img/flag/lang${lang}.png`} alt={'usaFlag'} />
-										) : (
-											<img src={`/img/flag/langen.png`} alt={'usaFlag'} />
-										)}
-									</Box>
+					{user?._id ? (
+						<div className="user-profile" onClick={handleUserMenuOpen}>
+							<Avatar
+								src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'}
+								className="avatar"
+							/>
+							<span className="user-name">{user.memberNick}</span>
+							<CaretDown size={14} weight="bold" />
+						</div>
+					) : (
+						<div className="auth-buttons">
+							<Link href="/account/login">
+								<Button variant="text">{t('Login')}</Button>
+							</Link>
+							<Link href="/account/join">
+								<Button variant="contained" className="signup-btn">
+									{t('Register')}
 								</Button>
+							</Link>
+						</div>
+					)}
+				</div>
+			</div>
 
-								<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
-									<MenuItem disableRipple onClick={langChoice} id="en">
-										<img
-											className="img-flag"
-											src={'/img/flag/langen.png'}
-											onClick={langChoice}
-											id="en"
-											alt={'usaFlag'}
-										/>
-										{t('English')}
-									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="kr">
-										<img
-											className="img-flag"
-											src={'/img/flag/langkr.png'}
-											onClick={langChoice}
-											id="uz"
-											alt={'koreanFlag'}
-										/>
-										{t('Korean')}
-									</MenuItem>
-									<MenuItem disableRipple onClick={langChoice} id="ru">
-										<img
-											className="img-flag"
-											src={'/img/flag/langru.png'}
-											onClick={langChoice}
-											id="ru"
-											alt={'russiaFlag'}
-										/>
-										{t('Russian')}
-									</MenuItem>
-								</StyledMenu>
-							</div>
-						</Box>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+			{/* Language Selector Menu */}
+			<Menu
+				anchorEl={langMenuAnchor}
+				open={Boolean(langMenuAnchor)}
+				onClose={() => setLangMenuAnchor(null)}
+				className="lang-menu"
+			>
+				<MenuItem onClick={() => handleLangChange('en')}>
+					<span className="flag flag-en"></span>
+					{t('English')}
+				</MenuItem>
+				<MenuItem onClick={() => handleLangChange('kr')}>
+					<span className="flag flag-kr"></span>
+					{t('Korean')}
+				</MenuItem>
+				<MenuItem onClick={() => handleLangChange('ru')}>
+					<span className="flag flag-ru"></span>
+					{t('Russian')}
+				</MenuItem>
+			</Menu>
+
+			{/* User Menu */}
+			<Menu
+				anchorEl={userMenuAnchor}
+				open={Boolean(userMenuAnchor)}
+				onClose={handleUserMenuClose}
+				className="user-menu"
+			>
+				<MenuItem onClick={() => router.push('/mypage')}>{t('My Profile')}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage/applications')}>{t('My Applications')}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage/settings')}>{t('Account Settings')}</MenuItem>
+				<Divider />
+				<MenuItem onClick={handleLogout}>
+					<Logout fontSize="small" className="logout-icon" />
+					{t('Logout')}
+				</MenuItem>
+			</Menu>
+		</header>
+	);
 };
 
-export default withRouter(Top);
+export default Top;

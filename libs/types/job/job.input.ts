@@ -46,7 +46,7 @@ interface AJISearch {
 	jobStatus?: JobStatus;
 }
 
-export interface AgentPropertiesInquiry {
+export interface AgentJobsInquiry {
 	page: number;
 	limit: number;
 	sort?: string;

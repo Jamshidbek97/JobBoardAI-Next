@@ -4,20 +4,20 @@ import { Pagination, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { PropertyCard } from './PropertyCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
-import { Property } from '../../types/job/property';
-import { AgentPropertiesInquiry } from '../../types/job/property.input';
 import { T } from '../../types/common';
-import { PropertyStatus } from '../../enums/property.enum';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
 import { UPDATE_PROPERTY } from '../../../apollo/user/mutation';
 import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
+import { Job } from '../../types/job/job';
+import { AgentJobsInquiry } from '../../types/job/job.input';
+import { JobStatus } from '../../enums/job.enum';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<AgentPropertiesInquiry>(initialInput);
-	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
+	const [searchFilter, setSearchFilter] = useState<AgentJobsInquiry>(initialInput);
+	const [agentProperties, setAgentProperties] = useState<Job[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
@@ -44,8 +44,8 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	const changeStatusHandler = (value: PropertyStatus) => {
-		setSearchFilter({ ...searchFilter, search: { propertyStatus: value } });
+	const changeStatusHandler = (value: JobStatus) => {
+		setSearchFilter({ ...searchFilter, search: { jobStatus: value } });
 	};
 
 	const deletePropertyHandler = async (id: string) => {
@@ -90,7 +90,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	}
 
 	if (device === 'mobile') {
-		return <div>NESTAR PROPERTIES MOBILE</div>;
+		return <div>JobBoardAI PROPERTIES MOBILE</div>;
 	} else {
 		return (
 			<div id="my-property-page">
@@ -103,14 +103,14 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 				<Stack className="property-list-box">
 					<Stack className="tab-name-box">
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.ACTIVE)}
-							className={searchFilter.search.propertyStatus === 'ACTIVE' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(JobStatus.OPEN)}
+							className={searchFilter.search.jobStatus === 'OPEN' ? 'active-tab-name' : 'tab-name'}
 						>
 							On Sale
 						</Typography>
 						<Typography
-							onClick={() => changeStatusHandler(PropertyStatus.SOLD)}
-							className={searchFilter.search.propertyStatus === 'SOLD' ? 'active-tab-name' : 'tab-name'}
+							onClick={() => changeStatusHandler(JobStatus.CLOSED)}
+							className={searchFilter.search.jobStatus === 'CLOSED' ? 'active-tab-name' : 'tab-name'}
 						>
 							On Sold
 						</Typography>
@@ -121,9 +121,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 							<Typography className="title-text">Date Published</Typography>
 							<Typography className="title-text">Status</Typography>
 							<Typography className="title-text">View</Typography>
-							{searchFilter.search.propertyStatus === 'ACTIVE' && (
-								<Typography className="title-text">Action</Typography>
-							)}
+							{searchFilter.search.jobStatus === 'OPEN' && <Typography className="title-text">Action</Typography>}
 						</Stack>
 
 						{agentProperties?.length === 0 ? (
@@ -132,7 +130,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 								<p>No Property found!</p>
 							</div>
 						) : (
-							agentProperties.map((property: Property) => {
+							agentProperties.map((property: Job) => {
 								return (
 									<PropertyCard
 										property={property}
