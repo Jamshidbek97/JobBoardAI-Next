@@ -22,19 +22,18 @@ const Footer = () => {
 	return (
 		<div className="footer-container">
 			<div className="footer-grid">
-				{/* Column 1: Brand and contact */}
 				<div className="footer-column brand-column">
 					<div className="brand-section">
 						<h2>
 							JobBoard<span className="ai">AI</span>
 						</h2>
-						<p className="tagline">{t('footer.tagline')}</p>
+						<p className="tagline">{t('Tagline')}</p>
 					</div>
 
 					<div className="contact-section">
 						<div className="contact-item">
-							<span className="contact-label">{t('footer.customer_care')}</span>
-							<a href="tel:+821048672909" className="contact-value">
+							<span className="contact-label">{t('Customer Care')}</span>
+							<a href="tel:+821056291297" className="contact-value">
 								+82 10 5629 1297
 							</a>
 						</div>
@@ -53,10 +52,9 @@ const Footer = () => {
 					</div>
 				</div>
 
-				{/* Column 2: Newsletter */}
 				<div className="footer-column newsletter-column">
-					<h3>{t('footer.newsletter')}</h3>
-					<p className="newsletter-desc">{t('footer.newsletter_desc')}</p>
+					<h3>{t('Newsletter')}</h3>
+					<p className="newsletter-desc">{t('Newsletter description')}</p>
 
 					<div className="subscribe-form">
 						<input
@@ -67,7 +65,7 @@ const Footer = () => {
 							className="email-input"
 						/>
 						<button onClick={handleSubscribe} className="subscribe-btn" aria-label={t('footer.subscribe')}>
-							{t('footer.subscribe')}
+							{t('Subscribe')}
 							<span className="send-icon">→</span>
 						</button>
 					</div>
@@ -91,46 +89,45 @@ const Footer = () => {
 					</div>
 				</div>
 
-				{/* Column 3: Quick links */}
 				<div className="footer-column links-column">
 					<div className="links-group">
-						<h3>{t('footer.popular_searches')}</h3>
+						<h3>Popular Searches</h3>
 						<ul>
 							<li>
-								<a href="#">{t('footer.job_search1')}</a>
+								<a href="#">Frontend Developer Jobs</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.job_search2')}</a>
+								<a href="#">Remote Internships</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.job_search3')}</a>
+								<a href="#">Full-stack Developer in Seoul</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.job_search4')}</a>
+								<a href="#">Part-time React Jobs</a>
 							</li>
 						</ul>
 					</div>
 
 					<div className="links-group">
-						<h3>{t('footer.quick_links')}</h3>
+						<h3>Quick Links</h3>
 						<ul>
 							<li>
-								<a href="#">{t('footer.terms')}</a>
+								<a href="#">Terms & Conditions</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.privacy')}</a>
+								<a href="#">Privacy Policy</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.pricing')}</a>
+								<a href="#">Pricing</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.services')}</a>
+								<a href="#">Our Services</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.contact')}</a>
+								<a href="#">Contact Us</a>
 							</li>
 							<li>
-								<a href="#">{t('footer.faqs')}</a>
+								<a href="#">FAQs</a>
 							</li>
 						</ul>
 					</div>
@@ -160,6 +157,14 @@ const Footer = () => {
 							<a href="#" className="location-card">
 								<div className="location-icon">📍</div>
 								<span>Incheon</span>
+							</a>
+							<a href="#" className="location-card">
+								<div className="location-icon">📍</div>
+								<span>Suwon</span>
+							</a>
+							<a href="#" className="location-card">
+								<div className="location-icon">📍</div>
+								<span>Sokcho</span>
 							</a>
 						</div>
 					</div>
