@@ -52,7 +52,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 			...prev,
 			[jobId]: !prev[jobId],
 		}));
-		likeTargetJobs({ variables: { jobId } });
+		likeTargetJobs({ variables: { input: jobId } });
 	};
 
 	// Simplified helper functions with direct English text
