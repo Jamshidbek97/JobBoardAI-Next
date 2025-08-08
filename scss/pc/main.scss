@@ -322,7 +322,8 @@ body::-webkit-scrollbar {
 	}
 	.header-main {
 		.container {
-			// Job Search Container
+			overflow: visible;
+			
 			.job-search-container {
 				width: 100%;
 				max-width: 1200px;
@@ -361,6 +362,7 @@ body::-webkit-scrollbar {
 						grid-template-columns: 1fr 1fr 1fr;
 						gap: 1rem;
 						margin-bottom: 2rem;
+						overflow: visible;
 
 						@media (max-width: 1024px) {
 							grid-template-columns: 1fr 1fr;
@@ -385,7 +387,7 @@ body::-webkit-scrollbar {
 							display: flex;
 							align-items: center;
 							justify-content: space-between;
-							overflow: hidden;
+							overflow: visible;
 							&:hover {
 								border-color: #3b82f6;
 								transform: translateY(-2px);
@@ -463,55 +465,55 @@ body::-webkit-scrollbar {
 							}
 						}
 
-						.location-filter {
-							position: relative;
+						.location-dropdown {
+							position: absolute;
+							top: calc(100% + 8px);
+							left: 0;
+							width: 33.333%;
+							z-index: 99999;
 
-							.dropdown-menu {
-								left: 0;
-								z-index: 9999;
+							@media (max-width: 1024px) {
+								width: 50%;
+							}
 
-								@media (max-width: 768px) {
-									left: 0;
-									right: 0;
-								}
+							@media (max-width: 768px) {
+								width: 100%;
 							}
 						}
 
-						.type-filter {
-							position: relative;
+						.type-dropdown {
+							position: absolute;
+							top: calc(100% + 8px);
+							left: 33.333%;
+							width: 33.333%;
+							z-index: 99999;
 
-							.dropdown-menu {
+							@media (max-width: 1024px) {
 								left: 50%;
-								transform: translateX(-50%) translateY(-10px);
-								z-index: 9999;
-								&.show {
-									transform: translateX(-50%) translateY(0);
-								}
+								width: 50%;
+							}
 
-								@media (max-width: 768px) {
-									left: 0;
-									right: 0;
-									transform: translateY(-10px);
-
-									&.show {
-										transform: translateY(0);
-									}
-								}
+							@media (max-width: 768px) {
+								left: 0;
+								width: 100%;
 							}
 						}
 
-						.salary-filter {
-							position: relative;
+						.salary-dropdown {
+							position: absolute;
+							top: calc(100% + 8px);
+							right: 0;
+							width: 33.333%;
+							z-index: 99999;
 
-							.dropdown-menu {
-								z-index: 9999;
+							@media (max-width: 1024px) {
 								right: 0;
-								left: auto;
+								width: 50%;
+							}
 
-								@media (max-width: 768px) {
-									left: 0;
-									right: 0;
-								}
+							@media (max-width: 768px) {
+								right: 0;
+								width: 100%;
 							}
 						}
 					}
@@ -572,27 +574,22 @@ body::-webkit-scrollbar {
 
 					.dropdown-menu {
 						position: absolute;
-						top: calc(100% + 0.5rem);
+						top: calc(100% + 8px);
 						left: 0;
 						right: 0;
 						background: white;
 						border: 1px solid #e2e8f0;
 						border-radius: 16px;
 						box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-						z-index: 9999;
+						z-index: 99999;
 						backdrop-filter: blur(8px);
-						opacity: 0;
-						visibility: hidden;
-						transform: translateY(-10px);
+						opacity: 1;
+						visibility: visible;
+						transform: translateY(0);
 						transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 						max-height: 300px;
 						overflow-y: auto;
-
-						&.show {
-							opacity: 1;
-							visibility: visible;
-							transform: translateY(0);
-						}
+						width: 100%;
 
 						&::-webkit-scrollbar {
 							width: 6px;
@@ -675,7 +672,7 @@ body::-webkit-scrollbar {
 			}
 
 			.dropdown-menu.show {
-				z-index: 1000;
+				z-index: 99999;
 				animation: fadeIn 0.3s ease-out;
 			}
 
@@ -761,7 +758,7 @@ body::-webkit-scrollbar {
 				}
 
 				.dropdown-menu {
-					z-index: 1000;
+					z-index: 99999;
 					background: #1e293b;
 					border-color: #475569;
 				}
