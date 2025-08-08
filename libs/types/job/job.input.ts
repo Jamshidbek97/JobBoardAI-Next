@@ -64,7 +64,7 @@ export interface AllJobsInquiry {
 	limit: number;
 	sort?: string;
 	direction?: Direction;
-	search: ALJISearch;
+	search?: ALJISearch;
 }
 
 interface Range {

@@ -410,29 +410,35 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					</div>
 
 					{/* DROPDOWN MENUS */}
-					<div className={`dropdown-menu location-dropdown ${openLocation ? 'show' : ''}`}>
-						{jobLocations.map((location) => (
-							<div key={location} className="dropdown-item" onClick={() => jobLocationSelectHandler(location)}>
-								<span>{location}</span>
-							</div>
-						))}
-					</div>
+					{openLocation && (
+						<div className="dropdown-menu location-dropdown show">
+							{jobLocations.map((location) => (
+								<div key={location} className="dropdown-item" onClick={() => jobLocationSelectHandler(location)}>
+									<span>{location}</span>
+								</div>
+							))}
+						</div>
+					)}
 
-					<div className={`dropdown-menu type-dropdown ${openType ? 'show' : ''}`}>
-						{jobTypes.map((type) => (
-							<div key={type} className="dropdown-item" onClick={() => jobTypeSelectHandler(type)}>
-								<span>{type}</span>
-							</div>
-						))}
-					</div>
+					{openType && (
+						<div className="dropdown-menu type-dropdown show">
+							{jobTypes.map((type) => (
+								<div key={type} className="dropdown-item" onClick={() => jobTypeSelectHandler(type)}>
+									<span>{type}</span>
+								</div>
+							))}
+						</div>
+					)}
 
-					<div className={`dropdown-menu salary-dropdown ${openSalary ? 'show' : ''}`}>
-						{salaryOptions.map((salary) => (
-							<div key={salary} className="dropdown-item" onClick={() => salarySelectHandler(salary)}>
-								<span>${salary.toLocaleString()}+</span>
-							</div>
-						))}
-					</div>
+					{openSalary && (
+						<div className="dropdown-menu salary-dropdown show">
+							{salaryOptions.map((salary) => (
+								<div key={salary} className="dropdown-item" onClick={() => salarySelectHandler(salary)}>
+									<span>${salary.toLocaleString()}+</span>
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 			</div>
 
