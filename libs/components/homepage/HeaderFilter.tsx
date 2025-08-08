@@ -411,9 +411,17 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 
 					{/* DROPDOWN MENUS */}
 					{openLocation && (
-						<div className="dropdown-menu location-dropdown show">
+						<div className="dropdown-menu location-dropdown show" style={{ pointerEvents: 'auto' }}>
 							{jobLocations.map((location) => (
-								<div key={location} className="dropdown-item" onClick={() => jobLocationSelectHandler(location)}>
+								<div 
+									key={location} 
+									className="dropdown-item" 
+									onClick={() => {
+										console.log('Location clicked:', location);
+										jobLocationSelectHandler(location);
+									}}
+									style={{ cursor: 'pointer' }}
+								>
 									<span>{location}</span>
 								</div>
 							))}
@@ -421,9 +429,17 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					)}
 
 					{openType && (
-						<div className="dropdown-menu type-dropdown show">
+						<div className="dropdown-menu type-dropdown show" style={{ pointerEvents: 'auto' }}>
 							{jobTypes.map((type) => (
-								<div key={type} className="dropdown-item" onClick={() => jobTypeSelectHandler(type)}>
+								<div 
+									key={type} 
+									className="dropdown-item" 
+									onClick={() => {
+										console.log('Type clicked:', type);
+										jobTypeSelectHandler(type);
+									}}
+									style={{ cursor: 'pointer' }}
+								>
 									<span>{type}</span>
 								</div>
 							))}
@@ -431,9 +447,17 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					)}
 
 					{openSalary && (
-						<div className="dropdown-menu salary-dropdown show">
+						<div className="dropdown-menu salary-dropdown show" style={{ pointerEvents: 'auto' }}>
 							{salaryOptions.map((salary) => (
-								<div key={salary} className="dropdown-item" onClick={() => salarySelectHandler(salary)}>
+								<div 
+									key={salary} 
+									className="dropdown-item" 
+									onClick={() => {
+										console.log('Salary clicked:', salary);
+										salarySelectHandler(salary);
+									}}
+									style={{ cursor: 'pointer' }}
+								>
 									<span>${salary.toLocaleString()}+</span>
 								</div>
 							))}

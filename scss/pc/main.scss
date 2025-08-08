@@ -469,52 +469,25 @@ body::-webkit-scrollbar {
 							position: absolute;
 							top: calc(100% + 8px);
 							left: 0;
-							width: 33.333%;
-							z-index: 99999;
-
-							@media (max-width: 1024px) {
-								width: 50%;
-							}
-
-							@media (max-width: 768px) {
-								width: 100%;
-							}
+							width: 250px;
+							z-index: 10;
 						}
 
 						.type-dropdown {
 							position: absolute;
 							top: calc(100% + 8px);
-							left: 33.333%;
-							width: 33.333%;
-							z-index: 99999;
-
-							@media (max-width: 1024px) {
-								left: 50%;
-								width: 50%;
-							}
-
-							@media (max-width: 768px) {
-								left: 0;
-								width: 100%;
-							}
+							left: 50%;
+							transform: translateX(-50%);
+							width: 250px;
+							z-index: 10;
 						}
 
 						.salary-dropdown {
 							position: absolute;
 							top: calc(100% + 8px);
 							right: 0;
-							width: 33.333%;
-							z-index: 99999;
-
-							@media (max-width: 1024px) {
-								right: 0;
-								width: 50%;
-							}
-
-							@media (max-width: 768px) {
-								right: 0;
-								width: 100%;
-							}
+							width: 250px;
+							z-index: 10;
 						}
 					}
 					.action-buttons {
@@ -575,21 +548,19 @@ body::-webkit-scrollbar {
 					.dropdown-menu {
 						position: absolute;
 						top: calc(100% + 8px);
-						left: 0;
-						right: 0;
 						background: white;
 						border: 1px solid #e2e8f0;
 						border-radius: 16px;
 						box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-						z-index: 99999;
+						z-index: 10;
 						backdrop-filter: blur(8px);
 						opacity: 1;
 						visibility: visible;
-						transform: translateY(0);
 						transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 						max-height: 300px;
 						overflow-y: auto;
-						width: 100%;
+						width: 250px;
+						pointer-events: auto;
 
 						&::-webkit-scrollbar {
 							width: 6px;
@@ -672,7 +643,7 @@ body::-webkit-scrollbar {
 			}
 
 			.dropdown-menu.show {
-				z-index: 99999;
+				z-index: 10;
 				animation: fadeIn 0.3s ease-out;
 			}
 
@@ -758,7 +729,7 @@ body::-webkit-scrollbar {
 				}
 
 				.dropdown-menu {
-					z-index: 99999;
+					z-index: 10;
 					background: #1e293b;
 					border-color: #475569;
 				}

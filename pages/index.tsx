@@ -6,10 +6,11 @@ import PopularProperties from '../libs/components/homepage/PopularProperties';
 import TopAgents from '../libs/components/homepage/TopAgents';
 import Events from '../libs/components/homepage/Events';
 import TrendProperties from '../libs/components/homepage/TrendProperties';
-import TopProperties from '../libs/components/homepage/TopProperties';
+import TopProperties from '../libs/components/homepage/FeaturedJobs';
 import { Stack } from '@mui/material';
 import Advertisement from '../libs/components/homepage/Advertisement';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import FeaturedJobs from '../libs/components/homepage/FeaturedJobs';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -18,31 +19,18 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const Home: NextPage = () => {
-	const device = useDeviceDetect();
-
-	if (device === 'mobile') {
-		return (
-			<Stack className={'home-page'}>
-				<TrendProperties />
-				<PopularProperties />
-				<Advertisement />
-				<TopProperties />
-				<TopAgents />
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'home-page'}>
-				<TrendProperties />
-				<PopularProperties />
-				<Advertisement />
-				<TopProperties />
-				<TopAgents />
-				<Events />
-				<CommunityBoards />
-			</Stack>
-		);
-	}
+	return (
+		<Stack className={'home-page'}>
+			<FeaturedJobs />
+			{/* <TrendProperties /> */}
+			{/* <PopularProperties /> */}
+			{/* <Advertisement /> */}
+			{/* <TopProperties /> */}
+			{/* <TopAgents /> */}
+			{/* <Events /> */}
+			{/* <CommunityBoards /> */}
+		</Stack>
+	);
 };
 
 export default withLayoutMain(Home);

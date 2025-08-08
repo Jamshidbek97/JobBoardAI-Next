@@ -10,8 +10,8 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { JobType, JobLocation, EducationLevel } from '../../enums/job.enum';
-import { useTranslation } from 'next-i18next';
 import { Job } from '../../types/job/job';
 import { AllJobsInquiry } from '../../types/job/job.input';
 import { LIKE_TARGET_JOB } from '../../../apollo/user/mutation';
@@ -25,7 +25,6 @@ interface FeaturedJobsProps {
 
 const FeaturedJobs = (props: FeaturedJobsProps) => {
 	const { initialInput } = props;
-	const { t } = useTranslation('common');
 	const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 
@@ -45,11 +44,28 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 			setFeaturedJobs(data?.getJobs?.list);
 		},
 	});
+
 	const toggleSaveJob = (jobId: string) => {
 		setSavedJobs((prev) => ({
 			...prev,
 			[jobId]: !prev[jobId],
 		}));
+	};
+
+	// Simplified helper functions with direct English text
+	const getJobTypeText = (type: JobType) => {
+		switch (type) {
+			case JobType.FULL_TIME:
+				return 'Full-time';
+			case JobType.PART_TIME:
+				return 'Part-time';
+			case JobType.CONTRACT:
+				return 'Contract';
+			case JobType.INTERN:
+				return 'Internship';
+			default:
+				return type;
+		}
 	};
 
 	const getJobLocationText = (location: JobLocation) => {
@@ -72,16 +88,26 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 	const getEducationLevelText = (level: EducationLevel) => {
 		switch (level) {
 			case EducationLevel.HIGH_SCHOOL:
-				return t('education.highschool');
+				return 'High School';
 			case EducationLevel.BACHELOR:
-				return t('education.bachelor');
+				return "Bachelor's";
 			case EducationLevel.MASTER:
-				return t('education.master');
+				return "Master's";
 			case EducationLevel.DOCTORATE:
-				return t('education.doctorate');
+				return 'PhD';
 			default:
 				return level;
 		}
+	};
+
+	const getPostedTime = (createdAt: string) => {
+		const createdDate = new Date(createdAt);
+		const now = new Date();
+		const diffDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+
+		if (diffDays === 0) return 'Today';
+		if (diffDays === 1) return '1 day ago';
+		return `${diffDays} days ago`;
 	};
 
 	const renderJobCard = (job: Job, index: number) => (
@@ -89,7 +115,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 			<div className="card-header">
 				<div className="company-logo">
 					{job.companyLogo ? (
-						<img src={job.companyLogo} alt={job.memberData?.memberNick} />
+						<img src={job.companyLogo} alt={job.memberData?.memberNick || 'Company logo'} className="logo-image" />
 					) : (
 						<div className="logo-placeholder">{job.memberData?.memberNick?.charAt(0) || 'C'}</div>
 					)}
@@ -97,7 +123,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 				<button
 					className={`save-button ${savedJobs[job._id] ? 'saved' : ''}`}
 					onClick={() => toggleSaveJob(job._id)}
-					aria-label={savedJobs[job._id] ? t('job.unsave') : t('job.save')}
+					aria-label={savedJobs[job._id] ? 'Unsave job' : 'Save job'}
 				>
 					{savedJobs[job._id] ? <BookmarkIcon /> : <BookmarkBorderIcon />}
 				</button>
@@ -105,7 +131,15 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 			<div className="job-title">{job.positionTitle}</div>
 
-			<div className="company-name">{job.memberData?.memberNick || t('job.company')}</div>
+			<div className="company-info">
+				<div className="company-name">{job.memberData?.memberNick || 'Company'}</div>
+				{job.memberData?.memberFullName && (
+					<div className="poster-name">
+						<PersonOutlineIcon fontSize="small" />
+						<span>{job.memberData.memberFullName}</span>
+					</div>
+				)}
+			</div>
 
 			<div className="job-details">
 				<div className="detail-item">
@@ -114,7 +148,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 				</div>
 				<div className="detail-item">
 					<WorkOutlineOutlinedIcon />
-					<span>{job.jobType}</span>
+					<span>{getJobTypeText(job.jobType)}</span>
 				</div>
 			</div>
 
@@ -129,18 +163,24 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 				</div>
 			</div>
 
-			<div className="skills-container">
-				{job.skillsRequired?.map((skill, i) => (
-					<span key={i} className="skill-tag">
-						{skill}
-					</span>
-				))}
-			</div>
+			{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
+				<div className="skills-container">
+					{job.skillsRequired.map((skill, i) => (
+						<span key={i} className="skill-tag">
+							{skill}
+						</span>
+					))}
+				</div>
+			)}
 
 			<div className="job-footer">
-				<span className="time-ago">{t('job.posted')}: 2d ago</span>
+				<span className="time-ago">
+					{job.createdAt
+						? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
+						: 'Recently posted'}
+				</span>
 				<Button variant="contained" className="apply-button">
-					{t('job.apply')}
+					Apply Now
 				</Button>
 			</div>
 		</div>
@@ -148,7 +188,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 	const renderSkeleton = () => (
 		<div className="featured-job-card skeleton">
-			<Skeleton variant="circular" width={60} height={60} />
+			<Skeleton variant="circular" width={70} height={70} />
 			<Skeleton variant="text" width="80%" height={30} />
 			<Skeleton variant="text" width="60%" />
 			<div className="job-details">
@@ -171,9 +211,9 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 		<Stack className="featured-jobs-section">
 			<Box className="section-header">
 				<Typography variant="h3" className="section-title">
-					{t('home.featured_jobs')}
+					Featured Job Opportunities
 				</Typography>
-				<Typography className="section-subtitle">{t('home.featured_jobs_desc')}</Typography>
+				<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
 			</Box>
 
 			<Box className="jobs-carousel-container">
@@ -199,12 +239,12 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 					breakpoints={{
 						320: { slidesPerView: 1 },
 						640: { slidesPerView: 2 },
-						960: { slidesPerView: 3 },
-						1280: { slidesPerView: 4 },
+						960: { slidesPerView: 3 }, // 3 per row on desktop
+						1280: { slidesPerView: 3 }, // Consistent 3 per row on large screens
 					}}
 				>
 					{getJobsLoading
-						? Array.from({ length: 4 }).map((_, index) => <SwiperSlide key={index}>{renderSkeleton()}</SwiperSlide>)
+						? Array.from({ length: 3 }).map((_, index) => <SwiperSlide key={index}>{renderSkeleton()}</SwiperSlide>)
 						: featuredJobs.map((job: any, index: any) => (
 								<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
 						  ))}
@@ -213,7 +253,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 			<Box className="view-all-container">
 				<Button variant="outlined" className="view-all-button">
-					{t('home.view_all_jobs')} <EastIcon className="arrow-icon" />
+					View All Jobs <EastIcon className="arrow-icon" />
 				</Button>
 			</Box>
 		</Stack>

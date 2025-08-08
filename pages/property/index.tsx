@@ -1,10 +1,10 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
-import PropertyCard from '../../libs/components/property/PropertyCard';
+import PropertyCard from '../../libs/components/job/PropertyCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import Filter from '../../libs/components/property/Filter';
+import Filter from '../../libs/components/job/Filter';
 import { useRouter } from 'next/router';
 import { PropertiesInquiry } from '../../libs/types/job/property.input';
 import { Property } from '../../libs/types/job/property';
