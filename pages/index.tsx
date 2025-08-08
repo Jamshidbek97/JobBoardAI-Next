@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 			{/* <Advertisement /> */}
 			{/* <TopProperties /> */}
 			{/* <TopAgents /> */}
-			{/* <Events /> */}
+			<Events />
 			{/* <CommunityBoards /> */}
 		</Stack>
 	);

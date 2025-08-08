@@ -1,94 +1,218 @@
-import React from 'react';
-import { Stack, Box } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+'use client';
 
-interface EventData {
-	eventTitle: string;
-	city: string;
-	description: string;
-	imageSrc: string;
-}
-const eventsData: EventData[] = [
-	{
-		eventTitle: 'Paradise City Theme Park',
-		city: 'Incheon',
-		description:
-			'Experience magic and wonder in Incheon with a visit to the night-themed indoor theme park Wonderbox at Paradise City!',
-		imageSrc: '/img/events/INCHEON.webp',
-	},
-	{
-		eventTitle: 'Taebaeksan Snow Festival',
-		city: 'Seoul',
-		description: 'If you have the opportunity to travel to South Korea, do not miss the Taebaeksan Snow Festival!',
-		imageSrc: '/img/events/SEOUL.webp',
-	},
-	{
-		eventTitle: 'Suseong Lake Event',
-		city: 'Daegu',
-		description: 'The Suseong Lake Festival is a culture and arts festival held alongside Suseongmot Lake!',
-		imageSrc: '/img/events/DAEGU.webp',
-	},
-	{
-		eventTitle: 'Sand Festival',
-		city: 'Busan',
-		description:
-			'Haeundae Sand Festival, the nation’s largest eco-friendly exhibition on sand, is held at Haeundae Beach!',
-		imageSrc: '/img/events/BUSAN.webp',
-	},
-];
+import { useState } from 'react';
+import { Box, Button, Chip, Container, LinearProgress, Paper, Stack, Typography, Avatar } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
+// NOTE: Do NOT import a module stylesheet here —
+// your project loads all SCSS from main.scss globally.
+// Make sure you `@use` the SCSS below from main.scss.
 
-const EventCard = ({ event }: { event: EventData }) => {
-	const device = useDeviceDetect();
+export default function JobBoardAIHomeHero() {
+	const [hovered, setHovered] = useState(false);
 
-	if (device === 'mobile') {
-		return <div>EVENT CARD</div>;
-	} else {
-		return (
-			<Stack
-				className="event-card"
-				style={{
-					backgroundImage: `url(${event?.imageSrc})`,
-					backgroundSize: 'cover',
-					backgroundPosition: 'center',
-					backgroundRepeat: 'no-repeat',
-				}}
-			>
-				<Box component={'div'} className={'info'}>
-					<strong>{event?.city}</strong>
-					<span>{event?.eventTitle}</span>
-				</Box>
-				<Box component={'div'} className={'more'}>
-					<span>{event?.description}</span>
-				</Box>
-			</Stack>
-		);
-	}
-};
+	return (
+		<section className="jobboardai-home-hero">
+			<Container maxWidth="lg" className="jb-inner">
+				{/* Copy */}
+				<Box className="jb-copy">
+					<Typography component="h1" className="jb-title">
+						Still Applying the Old Way? <span>You're Already Behind.</span>
+					</Typography>
 
-const Events = () => {
-	const device = useDeviceDetect();
+					<Typography variant="body1" className="jb-subtitle">
+						Your AI Job Hunter works 24/7 — applying to jobs in real time the moment they're posted, giving you a
+						first‑mover edge in today's most competitive markets. More speed. More interviews.
+					</Typography>
 
-	if (device === 'mobile') {
-		return <div>EVENT CARD</div>;
-	} else {
-		return (
-			<Stack className={'events'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span className={'white'}>Events</span>
-							<p className={'white'}>Events waiting your attention!</p>
-						</Box>
+					<Stack direction="row" spacing={1} className="jb-cta-row">
+						<Button variant="contained" color="primary" size="large" className="jb-cta-primary">
+							Create Your AI Job Hunter
+							<svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" className="jb-cta-icon">
+								<path d="M10.293 15.707a1 1 0 010-1.414L12.586 12H4a1 1 0 110-2h8.586l-2.293-2.293a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+							</svg>
+						</Button>
+						<Button variant="outlined" size="large" className="jb-cta-secondary">
+							See a Live Demo
+						</Button>
+						<Typography variant="caption" className="jb-caption">
+							Takes less than 60 seconds.
+						</Typography>
 					</Stack>
-					<Stack className={'card-wrapper'}>
-						{eventsData.map((event: EventData) => {
-							return <EventCard event={event} key={event?.eventTitle} />;
-						})}
-					</Stack>
+				</Box>
+
+				{/* Interactive Card */}
+				<Box className="jb-card-col">
+					<motion.div
+						onMouseEnter={() => setHovered(true)}
+						onMouseLeave={() => setHovered(false)}
+						onClick={() => setHovered((s) => !s)}
+						initial={false}
+						animate={{ y: hovered ? -6 : 0 }}
+						transition={{ type: 'spring', stiffness: 220, damping: 20 }}
+					>
+						<div className="jb-card-glow" />
+
+						<Paper elevation={0} className="jb-card">
+							{/* Header */}
+							<Stack direction="row" alignItems="center" justifyContent="space-between" className="jb-card-header">
+								<Stack direction="row" spacing={1.2} alignItems="center" className="jb-agent">
+									<Avatar className="jb-avatar">SM</Avatar>
+									<Box>
+										<Typography className="jb-agent-name">Agent for Sarah M.</Typography>
+										<Typography className="jb-agent-sub">Active • Searching Now</Typography>
+									</Box>
+								</Stack>
+								<Chip label="⚡ Auto‑Apply" className="jb-badge-auto" size="small" />
+							</Stack>
+
+							{/* Target Roles + Progress */}
+							<Box className="jb-targets">
+								<Typography className="jb-label">Target Roles</Typography>
+								<Stack direction="row" spacing={1} flexWrap="wrap">
+									<Chip label="Senior Product Designer" className="jb-tag" size="small" />
+									<Chip label="Remote" className="jb-tag" size="small" />
+								</Stack>
+								<Box className="jb-progress-wrap">
+									<LinearProgress
+										variant="determinate"
+										value={hovered ? 88 : 62}
+										classes={{ root: 'jb-progress-root', bar: 'jb-progress-bar' }}
+									/>
+								</Box>
+							</Box>
+
+							{/* Panels */}
+							<Box className="jb-panels">
+								<AnimatePresence initial={false} mode="wait">
+									{!hovered ? (
+										<motion.div
+											key="summary"
+											initial={{ opacity: 0, y: 10 }}
+											animate={{ opacity: 1, y: 0 }}
+											exit={{ opacity: 0, y: -10 }}
+											transition={{ duration: 0.25 }}
+											className="jb-summary"
+										>
+											<Box className="jb-stats">
+												<Stat value={26} label="Applications" />
+												<Stat value={8} label="Responses" />
+												<Stat value={3} label="Interviews" />
+											</Box>
+
+											<Box className="jb-upcoming">
+												<Typography className="jb-section-title">Upcoming</Typography>
+												<ListItem
+													title="Senior Product Designer"
+													sub="Acme Corporation • San Francisco, CA"
+													meta="3 mins ago"
+													badge="Interview Scheduled"
+												/>
+												<ListItem
+													title="UX Researcher"
+													sub="Globex Inc • Remote"
+													meta="Applying in 2 mins"
+													badge="Applying Soon"
+												/>
+											</Box>
+										</motion.div>
+									) : (
+										<motion.div
+											key="details"
+											initial={{ opacity: 0, y: 10 }}
+											animate={{ opacity: 1, y: 0 }}
+											exit={{ opacity: 0, y: -10 }}
+											transition={{ duration: 0.25 }}
+											className="jb-details"
+										>
+											<Box className="jb-kpis">
+												<KPI label="First to Apply" value="72%" trend="up" />
+												<KPI label="Match Quality" value="86%" trend="up" />
+												<KPI label="Avg. Response" value="1.8d" trend="down" />
+												<KPI label="Interview Rate" value="11%" trend="up" />
+											</Box>
+
+											<Box className="jb-feed">
+												{[
+													{ tag: 'Applied', title: 'Senior UX Designer', time: 'Just now' },
+													{ tag: 'Saved', title: 'Product Designer – Mobile', time: '2m' },
+													{ tag: 'Response', title: 'Lead Designer • Atlas', time: '11m' },
+													{ tag: 'Follow‑up', title: 'Researcher • Lyra', time: '32m' },
+												].map((log, i) => (
+													<div key={i} className="jb-feed-row">
+														<span className="jb-dot" />
+														<div className="jb-feed-text">
+															<p className="jb-feed-title">{log.title}</p>
+															<p className="jb-feed-tag">{log.tag}</p>
+														</div>
+														<span className="jb-feed-time">{log.time}</span>
+													</div>
+												))}
+											</Box>
+										</motion.div>
+									)}
+								</AnimatePresence>
+							</Box>
+						</Paper>
+
+						<Typography variant="caption" className="jb-toggle-hint">
+							<span>Hover</span> or <span>Tap</span> to toggle details
+						</Typography>
+					</motion.div>
+				</Box>
+			</Container>
+
+			{/* Logos strip + link */}
+			<Container maxWidth="lg" className="jb-logos-wrap">
+				<Typography align="center" className="jb-social-proof">
+					Join thousands of users who have landed roles at top companies:
+				</Typography>
+				<Box className="jb-logo-row">
+					{['G', '', 'amazon', 'N', 'spotify', 'A', 'Uber', 'S', 'Meta'].map((txt, i) => (
+						<Paper key={i} className="jb-logo-chip" elevation={0}>
+							{txt}
+						</Paper>
+					))}
+				</Box>
+				<Stack direction="row" justifyContent="center" className="jb-userstories-row">
+					<a href="#stories" className="jb-userstories-link">
+						Read User Stories →
+					</a>
 				</Stack>
-			</Stack>
-		);
-	}
-};
+			</Container>
+		</section>
+	);
+}
 
-export default Events;
+function Stat({ value, label }: { value: number; label: string }) {
+	return (
+		<Paper elevation={0} className="jb-stat">
+			<div className="jb-stat-value">{value}</div>
+			<div className="jb-stat-label">{label}</div>
+		</Paper>
+	);
+}
+
+function ListItem({ title, sub, meta, badge }: { title: string; sub: string; meta: string; badge: string }) {
+	return (
+		<Paper elevation={0} className="jb-item">
+			<div>
+				<p className="jb-item-title">{title}</p>
+				<p className="jb-item-sub">{sub}</p>
+				<p className="jb-item-meta">{meta}</p>
+			</div>
+			<Chip label={badge} size="small" className="jb-item-badge" />
+		</Paper>
+	);
+}
+
+function KPI({ label, value, trend }: { label: string; value: string; trend: 'up' | 'down' }) {
+	return (
+		<Paper elevation={0} className="jb-kpi">
+			<div className="jb-kpi-row">
+				<p className="jb-kpi-label">{label}</p>
+				<span className={trend === 'up' ? 'jb-trend-up' : 'jb-trend-down'}>{trend === 'up' ? '▲' : '▼'}</span>
+			</div>
+			<p className="jb-kpi-value">{value}</p>
+		</Paper>
+	);
+}
