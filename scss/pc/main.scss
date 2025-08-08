@@ -4,8 +4,8 @@
 
 @import '/scss/pc/homepage/homepage';
 
-@import '/scss/pc/property/property';
-@import '/scss/pc/property/detail.scss';
+@import '/scss/pc/job/job';
+@import '/scss/pc/job/detail.scss';
 
 @import '/scss/pc/agent/agent';
 @import '/scss/pc/agent/detail.scss';
@@ -323,7 +323,7 @@ body::-webkit-scrollbar {
 	.header-main {
 		.container {
 			overflow: visible;
-			
+
 			.job-search-container {
 				width: 100%;
 				max-width: 1200px;
@@ -468,9 +468,9 @@ body::-webkit-scrollbar {
 						.location-dropdown {
 							position: absolute;
 							top: calc(100% + 8px);
-							left: 0;
+							left: 2rem;
 							width: 250px;
-							z-index: 10;
+							z-index: 9999;
 						}
 
 						.type-dropdown {
@@ -479,15 +479,15 @@ body::-webkit-scrollbar {
 							left: 50%;
 							transform: translateX(-50%);
 							width: 250px;
-							z-index: 10;
+							z-index: 9999;
 						}
 
 						.salary-dropdown {
 							position: absolute;
 							top: calc(100% + 8px);
-							right: 0;
+							right: 2rem;
 							width: 250px;
-							z-index: 10;
+							z-index: 9999;
 						}
 					}
 					.action-buttons {
@@ -552,7 +552,7 @@ body::-webkit-scrollbar {
 						border: 1px solid #e2e8f0;
 						border-radius: 16px;
 						box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-						z-index: 10;
+						z-index: 9999;
 						backdrop-filter: blur(8px);
 						opacity: 1;
 						visibility: visible;

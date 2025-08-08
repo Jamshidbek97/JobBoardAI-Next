@@ -123,7 +123,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						locationList: [value],
 					},
 				});
-				locationStateChangeHandler();
+				setOpenLocation(false);
 			} catch (err) {
 				console.error('jobLocationSelectHandler:', err);
 			}
@@ -141,7 +141,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						typeList: [value],
 					},
 				});
-				typeStateChangeHandler();
+				setOpenType(false);
 			} catch (err) {
 				console.error('jobTypeSelectHandler:', err);
 			}
@@ -162,7 +162,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						} as { start: number; end: number },
 					},
 				});
-				disableAllStateHandler();
+				setOpenSalary(false);
 			} catch (err) {
 				console.error('salarySelectHandler:', err);
 			}

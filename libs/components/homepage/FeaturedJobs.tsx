@@ -4,13 +4,15 @@ import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import WorkOutlineOutlinedIcon from '@mui/icons-material/WorkOutlineOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import { JobType, JobLocation, EducationLevel } from '../../enums/job.enum';
 import { Job } from '../../types/job/job';
 import { AllJobsInquiry } from '../../types/job/job.input';
@@ -25,7 +27,7 @@ interface FeaturedJobsProps {
 
 const FeaturedJobs = (props: FeaturedJobsProps) => {
 	const { initialInput } = props;
-	const [savedJobs, setSavedJobs] = useState<Record<string, boolean>>({});
+	const [likedJobs, setLikedJobs] = useState<Record<string, boolean>>({});
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 
 	// Apollo requests
@@ -45,11 +47,12 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 		},
 	});
 
-	const toggleSaveJob = (jobId: string) => {
-		setSavedJobs((prev) => ({
+	const toggleLikeJob = (jobId: string) => {
+		setLikedJobs((prev) => ({
 			...prev,
 			[jobId]: !prev[jobId],
 		}));
+		likeTargetJobs({ variables: { jobId } });
 	};
 
 	// Simplified helper functions with direct English text
@@ -121,11 +124,11 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 					)}
 				</div>
 				<button
-					className={`save-button ${savedJobs[job._id] ? 'saved' : ''}`}
-					onClick={() => toggleSaveJob(job._id)}
-					aria-label={savedJobs[job._id] ? 'Unsave job' : 'Save job'}
+					className={`like-button ${likedJobs[job._id] ? 'liked' : ''}`}
+					onClick={() => toggleLikeJob(job._id)}
+					aria-label={likedJobs[job._id] ? 'Unlike job' : 'Like job'}
 				>
-					{savedJobs[job._id] ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+					{likedJobs[job._id] ? <FavoriteIcon style={{ color: '#ff4d4f' }} /> : <FavoriteBorderIcon />}
 				</button>
 			</div>
 
@@ -163,6 +166,18 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 				</div>
 			</div>
 
+			{/* Engagement stats */}
+			<div className="engagement-stats">
+				<div className="stat-item">
+					<VisibilityOutlinedIcon fontSize="small" />
+					<span>{job.jobViews || 0} views</span>
+				</div>
+				<div className="stat-item">
+					<FavoriteOutlinedIcon fontSize="small" />
+					<span>{job.jobLikes || 0} likes</span>
+				</div>
+			</div>
+
 			{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
 				<div className="skills-container">
 					{job.skillsRequired.map((skill, i) => (
@@ -188,7 +203,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 	const renderSkeleton = () => (
 		<div className="featured-job-card skeleton">
-			<Skeleton variant="circular" width={70} height={70} />
+			<Skeleton variant="circular" width={80} height={80} />
 			<Skeleton variant="text" width="80%" height={30} />
 			<Skeleton variant="text" width="60%" />
 			<div className="job-details">
@@ -228,7 +243,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 				<Swiper
 					modules={[Navigation, Pagination, Autoplay]}
-					spaceBetween={25}
+					spaceBetween={30}
 					slidesPerView={'auto'}
 					navigation={{
 						prevEl: '.swiper-button-prev',
@@ -239,8 +254,8 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 					breakpoints={{
 						320: { slidesPerView: 1 },
 						640: { slidesPerView: 2 },
-						960: { slidesPerView: 3 }, // 3 per row on desktop
-						1280: { slidesPerView: 3 }, // Consistent 3 per row on large screens
+						960: { slidesPerView: 3 },
+						1280: { slidesPerView: 3 },
 					}}
 				>
 					{getJobsLoading
