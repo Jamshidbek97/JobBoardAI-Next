@@ -180,29 +180,28 @@ export const UPDATE_PROPERTY = gql`
 	}
 `;
 
-export const LIKE_TARGET_PROPERTY = gql`
-	mutation LikeTargetProperty($input: String!) {
-		likeTargetProperty(propertyId: $input) {
+export const LIKE_TARGET_JOB = gql`
+	mutation LikeTargetJob($input: String!) {
+		likeTargetJob(jobId: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			jobType
+			jobStatus
+			jobLocation
+			positionTitle
+			jobSalary
+			skillsRequired
+			experienceYears
+			educationLevel
+			jobViews
+			jobLikes
+			jobComments
+			jobRank
+			jobImages
+			companyLogo
+			jobDesc
 			memberId
-			soldAt
+			closedAt
 			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
 		}
