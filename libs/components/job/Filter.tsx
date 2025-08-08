@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { SelectChangeEvent } from '@mui/material';
 import {
 	Stack,
 	Typography,
@@ -36,7 +37,7 @@ interface FilterType {
 	initialInput: JobInquiry;
 }
 
-const Filter = (props: FilterType) => {
+const JobFilter = (props: FilterType) => {
 	const { searchFilter, setSearchFilter, initialInput } = props;
 	const router = useRouter();
 	const [searchText, setSearchText] = useState<string>('');
@@ -247,8 +248,8 @@ const Filter = (props: FilterType) => {
 	);
 
 	const handleExperienceChange = useCallback(
-		(event: React.ChangeEvent<HTMLInputElement>) => {
-			const value = parseInt(event.target.value) || 0;
+		(event: SelectChangeEvent<number>) => {
+			const value = Number(event.target.value) || 0;
 			setSearchFilter({
 				...searchFilter,
 				search: { ...searchFilter.search, experienceRange: value },
@@ -269,341 +270,249 @@ const Filter = (props: FilterType) => {
 		}));
 	};
 
-	if (device === 'mobile') {
-		return <div>PROPERTIES FILTER</div>;
-	} else {
-		return (
-			<Stack className={'filter-main'}>
-				<Stack className={'find-your-home'} mb={'40px'}>
-					<Typography className={'title-main'}>Find Your Home</Typography>
-					<Stack className={'input-box'}>
-						<OutlinedInput
-							value={searchText}
-							type={'text'}
-							className={'search-input'}
-							placeholder={'What are you looking for?'}
-							onChange={(e: any) => setSearchText(e.target.value)}
-							onKeyDown={(event: any) => {
-								if (event.key == 'Enter') {
-									setSearchFilter({
-										...searchFilter,
-										search: { ...searchFilter.search, text: searchText },
-									});
-								}
-							}}
-							endAdornment={
-								<>
-									<CancelRoundedIcon
-										onClick={() => {
-											setSearchText('');
-											setSearchFilter({
-												...searchFilter,
-												search: { ...searchFilter.search, text: '' },
-											});
-										}}
-									/>
-								</>
-							}
-						/>
-						<img src={'/img/icons/search_icon.png'} alt={''} />
-						<Tooltip title="Reset">
-							<IconButton onClick={refreshHandler}>
-								<RefreshIcon />
-							</IconButton>
-						</Tooltip>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<p className={'title'} style={{ textShadow: '0px 3px 4px #b9b9b9' }}>
+	const salaryMarks = [
+		{ value: 0, label: '0' },
+		{ value: 50000, label: '50K' },
+		{ value: 100000, label: '100K' },
+		{ value: 150000, label: '150K' },
+		{ value: 200000, label: '200K+' },
+	];
+
+	return (
+		<Stack className="job-filter-container">
+			{/* Search Section */}
+			<Box className="filter-section">
+				<Typography variant="h6" className="section-title">
+					Find Your Dream Job
+				</Typography>
+				<Box className="search-box">
+					<OutlinedInput
+						fullWidth
+						value={searchText}
+						type="text"
+						placeholder="Job title, company, or keywords"
+						onChange={(e) => setSearchText(e.target.value)}
+						onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+						endAdornment={
+							searchText && (
+								<IconButton size="small" onClick={() => setSearchText('')}>
+									<CancelRoundedIcon fontSize="small" />
+								</IconButton>
+							)
+						}
+					/>
+					<Button variant="contained" className="search-button" onClick={handleSearch}>
+						Search
+					</Button>
+					<Tooltip title="Reset filters">
+						<IconButton onClick={refreshHandler} className="reset-button">
+							<RefreshIcon />
+						</IconButton>
+					</Tooltip>
+				</Box>
+			</Box>
+
+			{/* Location Filter */}
+			<Box className="filter-section">
+				<Box className="section-header" onClick={() => toggleSection('location')}>
+					<Typography variant="h6" className="section-title">
 						Location
-					</p>
-					<Stack
-						className={`property-location`}
-						style={{ height: showMore ? '253px' : '115px' }}
-						onMouseEnter={() => setShowMore(true)}
-						onMouseLeave={() => {
-							if (!searchFilter?.search?.locationList) {
-								setShowMore(false);
-							}
-						}}
-					>
-						{propertyLocation.map((location: string) => {
-							return (
-								<Stack className={'input-box'} key={location}>
-									<Checkbox
-										id={location}
-										className="property-checkbox"
-										color="default"
-										size="small"
-										value={location}
-										checked={(searchFilter?.search?.locationList || []).includes(location as PropertyLocation)}
-										onChange={propertyLocationSelectHandler}
-									/>
-									<label htmlFor={location} style={{ cursor: 'pointer' }}>
-										<Typography className="property-type">{location}</Typography>
-									</label>
-								</Stack>
-							);
-						})}
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Property Type</Typography>
-					{propertyType.map((type: string) => (
-						<Stack className={'input-box'} key={type}>
-							<Checkbox
-								id={type}
-								className="property-checkbox"
-								color="default"
-								size="small"
-								value={type}
-								onChange={propertyTypeSelectHandler}
-								checked={(searchFilter?.search?.typeList || []).includes(type as PropertyType)}
-							/>
-							<label style={{ cursor: 'pointer' }}>
-								<Typography className="property_type">{type}</Typography>
-							</label>
-						</Stack>
-					))}
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Rooms</Typography>
-					<Stack className="button-group">
-						<Button
-							sx={{
-								borderRadius: '12px 0 0 12px',
-								border: !searchFilter?.search?.roomsList ? '2px solid #181A20' : '1px solid #b9b9b9',
-							}}
-							onClick={() => propertyRoomSelectHandler(0)}
-						>
-							Any
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(1) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(1) ? undefined : 'none',
-							}}
-							onClick={() => propertyRoomSelectHandler(1)}
-						>
-							1
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(2) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(2) ? undefined : 'none',
-							}}
-							onClick={() => propertyRoomSelectHandler(2)}
-						>
-							2
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(3) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(3) ? undefined : 'none',
-							}}
-							onClick={() => propertyRoomSelectHandler(3)}
-						>
-							3
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.roomsList?.includes(4) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
-								borderRight: searchFilter?.search?.roomsList?.includes(4) ? undefined : 'none',
-							}}
-							onClick={() => propertyRoomSelectHandler(4)}
-						>
-							4
-						</Button>
-						<Button
-							sx={{
-								borderRadius: '0 12px 12px 0',
-								border: searchFilter?.search?.roomsList?.includes(5) ? '2px solid #181A20' : '1px solid #b9b9b9',
-							}}
-							onClick={() => propertyRoomSelectHandler(5)}
-						>
-							5+
-						</Button>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Bedrooms</Typography>
-					<Stack className="button-group">
-						<Button
-							sx={{
-								borderRadius: '12px 0 0 12px',
-								border: !searchFilter?.search?.bedsList ? '2px solid #181A20' : '1px solid #b9b9b9',
-							}}
-							onClick={() => propertyBedSelectHandler(0)}
-						>
-							Any
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(1) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(1) ? undefined : 'none',
-							}}
-							onClick={() => propertyBedSelectHandler(1)}
-						>
-							1
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(2) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(2) ? undefined : 'none',
-							}}
-							onClick={() => propertyBedSelectHandler(2)}
-						>
-							2
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(3) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(3) ? undefined : 'none',
-							}}
-							onClick={() => propertyBedSelectHandler(3)}
-						>
-							3
-						</Button>
-						<Button
-							sx={{
-								borderRadius: 0,
-								border: searchFilter?.search?.bedsList?.includes(4) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(4) ? undefined : 'none',
-								// borderRight: false ? undefined : 'none',
-							}}
-							onClick={() => propertyBedSelectHandler(4)}
-						>
-							4
-						</Button>
-						<Button
-							sx={{
-								borderRadius: '0 12px 12px 0',
-								border: searchFilter?.search?.bedsList?.includes(5) ? '2px solid #181A20' : '1px solid #b9b9b9',
-								borderLeft: searchFilter?.search?.bedsList?.includes(5) ? undefined : 'none',
-							}}
-							onClick={() => propertyBedSelectHandler(5)}
-						>
-							5+
-						</Button>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Options</Typography>
-					<Stack className={'input-box'}>
-						<Checkbox
-							id={'Barter'}
-							className="property-checkbox"
-							color="default"
-							size="small"
-							value={'propertyBarter'}
-							checked={(searchFilter?.search?.options || []).includes('propertyBarter')}
-							onChange={propertyOptionSelectHandler}
-						/>
-						<label htmlFor={'Barter'} style={{ cursor: 'pointer' }}>
-							<Typography className="property-type">Barter</Typography>
-						</label>
-					</Stack>
-					<Stack className={'input-box'}>
-						<Checkbox
-							id={'Rent'}
-							className="property-checkbox"
-							color="default"
-							size="small"
-							value={'propertyRent'}
-							checked={(searchFilter?.search?.options || []).includes('propertyRent')}
-							onChange={propertyOptionSelectHandler}
-						/>
-						<label htmlFor={'Rent'} style={{ cursor: 'pointer' }}>
-							<Typography className="property-type">Rent</Typography>
-						</label>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Square meter</Typography>
-					<Stack className="square-year-input">
-						<FormControl>
-							<InputLabel id="demo-simple-select-label">Min</InputLabel>
-							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								value={searchFilter?.search?.squaresRange?.start ?? 0}
-								label="Min"
-								onChange={(e: any) => propertySquareHandler(e, 'start')}
-								MenuProps={MenuProps}
-							>
-								{propertySquare.map((square: number) => (
-									<MenuItem
-										value={square}
-										disabled={(searchFilter?.search?.squaresRange?.end || 0) < square}
-										key={square}
-									>
-										{square}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-						<div className="central-divider"></div>
-						<FormControl>
-							<InputLabel id="demo-simple-select-label">Max</InputLabel>
-							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								value={searchFilter?.search?.squaresRange?.end ?? 500}
-								label="Max"
-								onChange={(e: any) => propertySquareHandler(e, 'end')}
-								MenuProps={MenuProps}
-							>
-								{propertySquare.map((square: number) => (
-									<MenuItem
-										value={square}
-										disabled={(searchFilter?.search?.squaresRange?.start || 0) > square}
-										key={square}
-									>
-										{square}
-									</MenuItem>
-								))}
-							</Select>
-						</FormControl>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'}>
-					<Typography className={'title'}>Price Range</Typography>
-					<Stack className="square-year-input">
-						<input
-							type="number"
-							placeholder="$ min"
+					</Typography>
+					<span className="toggle-icon">{expandedSections.location ? '−' : '+'}</span>
+				</Box>
+
+				{expandedSections.location && (
+					<Box className="filter-options">
+						{Object.values(JobLocation).map((location) => (
+							<Box key={location} className="filter-option">
+								<Checkbox
+									checked={(searchFilter.search.locationList || []).includes(location)}
+									onChange={() => handleLocationChange(location)}
+									size="small"
+								/>
+								<Typography>{location}</Typography>
+							</Box>
+						))}
+					</Box>
+				)}
+			</Box>
+
+			<Divider className="section-divider" />
+
+			{/* Job Type Filter */}
+			<Box className="filter-section">
+				<Box className="section-header" onClick={() => toggleSection('jobType')}>
+					<Typography variant="h6" className="section-title">
+						Job Type
+					</Typography>
+					<span className="toggle-icon">{expandedSections.jobType ? '−' : '+'}</span>
+				</Box>
+
+				{expandedSections.jobType && (
+					<Box className="filter-options">
+						{Object.values(JobType).map((type) => (
+							<Box key={type} className="filter-option">
+								<Checkbox
+									checked={(searchFilter.search.typeList || []).includes(type)}
+									onChange={() => handleJobTypeChange(type)}
+									size="small"
+								/>
+								<Typography>
+									{type === JobType.FULL_TIME
+										? 'Full-time'
+										: type === JobType.PART_TIME
+										? 'Part-time'
+										: type === JobType.CONTRACT
+										? 'Contact'
+										: type === JobType.INTERN
+										? 'Internship'
+										: type}
+								</Typography>
+							</Box>
+						))}
+					</Box>
+				)}
+			</Box>
+
+			<Divider className="section-divider" />
+
+			{/* Salary Range */}
+			<Box className="filter-section">
+				<Box className="section-header" onClick={() => toggleSection('salary')}>
+					<Typography variant="h6" className="section-title">
+						Salary Range
+					</Typography>
+					<span className="toggle-icon">{expandedSections.salary ? '−' : '+'}</span>
+				</Box>
+
+				{expandedSections.salary && (
+					<Box className="slider-container">
+						<Slider
+							value={[searchFilter.search.salaryRange?.start || 0, searchFilter.search.salaryRange?.end || 200000]}
+							onChange={handleSalaryChange}
+							valueLabelDisplay="auto"
 							min={0}
-							value={searchFilter?.search?.pricesRange?.start ?? 0}
-							onChange={(e: any) => {
-								if (e.target.value >= 0) {
-									propertyPriceHandler(e.target.value, 'start');
-								}
-							}}
+							max={200000}
+							step={10000}
+							marks={salaryMarks}
+							valueLabelFormat={(value: any) => `$${value.toLocaleString()}`}
 						/>
-						<div className="central-divider"></div>
-						<input
-							type="number"
-							placeholder="$ max"
-							value={searchFilter?.search?.pricesRange?.end ?? 0}
-							onChange={(e: any) => {
-								if (e.target.value >= 0) {
-									propertyPriceHandler(e.target.value, 'end');
-								}
-							}}
-						/>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+						<Box className="salary-range-display">
+							<Chip label={`Min: $${(searchFilter.search.salaryRange?.start || 0).toLocaleString()}`} size="small" />
+							<Chip label={`Max: $${(searchFilter.search.salaryRange?.end || 200000).toLocaleString()}`} size="small" />
+						</Box>
+					</Box>
+				)}
+			</Box>
+
+			<Divider className="section-divider" />
+
+			{/* Experience Level */}
+			<Box className="filter-section">
+				<Box className="section-header" onClick={() => toggleSection('experience')}>
+					<Typography variant="h6" className="section-title">
+						Experience Level
+					</Typography>
+					<span className="toggle-icon">{expandedSections.experience ? '−' : '+'}</span>
+				</Box>
+
+				{expandedSections.experience && (
+					<Box className="filter-options">
+						<FormControl fullWidth>
+							<InputLabel>Minimum Experience</InputLabel>
+							<Select
+								value={searchFilter.search.experienceRange || 0}
+								onChange={handleExperienceChange}
+								label="Minimum Experience"
+								MenuProps={MenuProps}
+							>
+								<MenuItem value={0}>Any experience</MenuItem>
+								<MenuItem value={1}>1+ years</MenuItem>
+								<MenuItem value={2}>2+ years</MenuItem>
+								<MenuItem value={3}>3+ years</MenuItem>
+								<MenuItem value={5}>5+ years</MenuItem>
+								<MenuItem value={10}>10+ years</MenuItem>
+							</Select>
+						</FormControl>
+
+						<Box className="filter-options">
+							{Object.values(EmploymentLevel).map((level) => (
+								<Box key={level} className="filter-option">
+									<Checkbox
+										checked={(searchFilter.search.employmentLevels || []).includes(level)}
+										onChange={() => handleEmploymentLevelChange(level)}
+										size="small"
+									/>
+									<Typography>{level}</Typography>
+								</Box>
+							))}
+						</Box>
+					</Box>
+				)}
+			</Box>
+
+			<Divider className="section-divider" />
+
+			{/* Education Level */}
+			<Box className="filter-section">
+				<Box className="section-header" onClick={() => toggleSection('education')}>
+					<Typography variant="h6" className="section-title">
+						Education
+					</Typography>
+					<span className="toggle-icon">{expandedSections.education ? '−' : '+'}</span>
+				</Box>
+
+				{expandedSections.education && (
+					<Box className="filter-options">
+						{Object.values(EducationLevel).map((level) => (
+							<Box key={level} className="filter-option">
+								<Checkbox
+									checked={(searchFilter.search.educationLevelList || []).includes(level)}
+									onChange={() => handleEducationChange(level)}
+									size="small"
+								/>
+								<Typography>
+									{level === EducationLevel.HIGH_SCHOOL
+										? 'High School'
+										: level === EducationLevel.BACHELOR
+										? "Bachelor's"
+										: level === EducationLevel.MASTER
+										? "Master's"
+										: level === EducationLevel.DOCTORATE
+										? 'PhD'
+										: level}
+								</Typography>
+							</Box>
+						))}
+					</Box>
+				)}
+			</Box>
+
+			<Divider className="section-divider" />
+
+			{/* Remote Work */}
+			<Box className="filter-section">
+				<Box className="filter-option">
+					<Checkbox
+						checked={searchFilter.search.isRemote || false}
+						onChange={(e) => handleRemoteChange(e.target.checked)}
+						size="small"
+					/>
+					<Typography>Remote only</Typography>
+				</Box>
+			</Box>
+
+			{/* Action Buttons */}
+			<Box className="action-buttons">
+				<Button variant="outlined" fullWidth onClick={refreshHandler} className="reset-btn">
+					Reset Filters
+				</Button>
+				<Button variant="contained" fullWidth onClick={() => router.push('/jobs')} className="apply-btn">
+					Apply Filters
+				</Button>
+			</Box>
+		</Stack>
+	);
 };
 
-export default Filter;
+export default JobFilter;
