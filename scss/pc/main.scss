@@ -323,7 +323,9 @@ body::-webkit-scrollbar {
 	.header-main {
 		position: relative;
 		overflow: hidden;
-		background: linear-gradient(to top right, #fff7ed, $indigo-50);
+		background-color: linear-gradient(to top right, #fff7ed, $indigo-50);
+		background: url('/img/background.jpg');
+		background-size: cover;
 		padding-top: 5rem;
 		padding-bottom: 4rem;
 
