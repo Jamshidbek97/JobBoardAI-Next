@@ -576,7 +576,24 @@
 				box-shadow: $shadow-lg;
 				border-radius: 0.75rem;
 				text-transform: none;
-				font-weight: 700;
+				background: linear-gradient(90deg, #ff4d4f, #ff7a45, #1890ff);
+				background-size: 200% 100%;
+				color: #fff;
+				font-weight: 800;
+				border-radius: 10px;
+				padding: 10px 10px;
+				min-width: auto;
+				width: auto;
+				text-transform: none;
+				box-shadow: 0 10px 24px rgba(24, 144, 255, 0.25);
+				transition: background-position 0.35s ease, transform 0.15s ease, box-shadow 0.2s ease;
+				cursor: pointer;
+
+				&:hover {
+					background-position: 100% 0;
+					transform: translateY(-2px);
+					box-shadow: 0 14px 28px rgba(24, 144, 255, 0.35);
+				}
 			}
 			.jb-cta-secondary {
 				border-radius: 0.75rem;
@@ -836,29 +853,62 @@
 
 			/* Logos */
 			.jb-logos-wrap {
-				margin-top: 2rem;
+				margin-top: 3rem;
 			}
 			.jb-social-proof {
 				color: $slate-700;
-				margin-bottom: 1rem;
+				margin-top: 2rem;
+				margin-bottom: 1.2rem;
 			}
+			/* SCSS tweaks for a classy, monochrome strip */
 			.jb-logo-row {
 				display: grid;
 				grid-template-columns: repeat(9, minmax(0, 1fr));
 				gap: 0.75rem;
 				align-items: center;
 			}
+
 			.jb-logo-chip {
-				text-align: center;
-				border-radius: 0.75rem;
-				padding: 0.75rem 0;
-				font-weight: 800;
-				color: $slate-400;
-				background: $white;
-				border: 1px solid $slate-100;
+				display: grid;
+				place-items: center;
+				height: 56px;
+				border: 1px solid #e9edf4;
+				border-radius: 12px;
+				background: #fff;
+				transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+				a {
+					display: grid;
+					place-items: center;
+					width: 100%;
+					height: 100%;
+				}
+
+				.jb-logo-img {
+					display: inline-flex;
+					filter: grayscale(1) saturate(0) opacity(0.65);
+					transition: filter 0.2s ease, transform 0.2s ease;
+				}
+
+				&:hover {
+					transform: translateY(-2px);
+					border-color: #dfe6f2;
+					box-shadow: 0 8px 22px rgba(2, 8, 23, 0.08);
+
+					.jb-logo-img {
+						filter: grayscale(0) saturate(1) opacity(1);
+						transform: scale(1.02);
+					}
+				}
+
+				&:focus-within {
+					outline: 2px solid #1890ff33;
+					outline-offset: 2px;
+				}
 			}
+
 			.jb-userstories-row {
-				margin-top: 1rem;
+				margin-top: 1.5rem;
 			}
 			.jb-userstories-link {
 				color: $indigo-600;

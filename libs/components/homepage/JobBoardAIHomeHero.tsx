@@ -3,6 +3,20 @@
 import { useState } from 'react';
 import { Box, Button, Chip, Container, LinearProgress, Paper, Stack, Typography, Avatar } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+
+const logos = [
+	{ name: 'Google', src: '/img/brands/google.png', w: 88, h: 28 },
+	{ name: 'Apple', src: '/img/brands/apple.png', w: 28, h: 34 },
+	{ name: 'Amazon', src: '/img/brands/amazon.png', w: 90, h: 28 },
+	{ name: 'Netflix', src: '/img/brands/netflix.png', w: 90, h: 24 },
+	{ name: 'Spotify', src: '/img/brands/spotify.png', w: 90, h: 26 },
+	{ name: 'Airbnb', src: '/img/brands/airbnb.png', w: 84, h: 28 },
+	{ name: 'Uber', src: '/img/brands/uber.png', w: 74, h: 28 },
+	{ name: 'Stripe', src: '/img/brands/stripe.png', w: 80, h: 28 },
+	{ name: 'Meta', src: '/img/brands/meta.png', w: 76, h: 28 },
+];
 // NOTE: Do NOT import a module stylesheet here —
 // your project loads all SCSS from main.scss globally.
 // Make sure you `@use` the SCSS below from main.scss.
@@ -53,7 +67,6 @@ export default function JobBoardAIHomeHero() {
 						<div className="jb-card-glow" />
 
 						<Paper elevation={0} className="jb-card">
-							{/* Header */}
 							<Stack direction="row" alignItems="center" justifyContent="space-between" className="jb-card-header">
 								<Stack direction="row" spacing={1.2} alignItems="center" className="jb-agent">
 									<Avatar className="jb-avatar">SM</Avatar>
@@ -166,10 +179,15 @@ export default function JobBoardAIHomeHero() {
 				<Typography align="center" className="jb-social-proof">
 					Join thousands of users who have landed roles at top companies:
 				</Typography>
-				<Box className="jb-logo-row">
-					{['G', '', 'amazon', 'N', 'spotify', 'A', 'Uber', 'S', 'Meta'].map((txt, i) => (
-						<Paper key={i} className="jb-logo-chip" elevation={0}>
-							{txt}
+				<Box className="jb-logo-row" role="list">
+					{logos.map((l, i) => (
+						<Paper key={i} className="jb-logo-chip" elevation={0} role="listitem">
+							{/* Optional: link to a filtered jobs page per company */}
+							<Link href={`/jobs?company=${encodeURIComponent(l.name)}`} aria-label={`View ${l.name} jobs`}>
+								<span className="jb-logo-img">
+									<Image src={l.src} alt={`${l.name} logo`} width={l.w} height={l.h} />
+								</span>
+							</Link>
 						</Paper>
 					))}
 				</Box>
