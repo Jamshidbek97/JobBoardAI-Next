@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Stack, Box, Button, Skeleton, Typography } from '@mui/material';
+import { Stack, Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
 import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -25,37 +27,25 @@ interface FeaturedJobsProps {
 	initialInput: AllJobsInquiry;
 }
 
-const FeaturedJobs = (props: FeaturedJobsProps) => {
-	const { initialInput } = props;
+const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 	const [likedJobs, setLikedJobs] = useState<Record<string, boolean>>({});
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 
-	// Apollo requests
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
 
-	const {
-		loading: getJobsLoading,
-		data: getJobsData,
-		error: getJobsError,
-		refetch: getJobsRefetch,
-	} = useQuery(GET_JOBS, {
+	const { loading: getJobsLoading } = useQuery(GET_JOBS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setFeaturedJobs(data?.getJobs?.list);
-		},
+		onCompleted: (data: T) => setFeaturedJobs(data?.getJobs?.list),
 	});
 
 	const toggleLikeJob = (jobId: string) => {
-		setLikedJobs((prev) => ({
-			...prev,
-			[jobId]: !prev[jobId],
-		}));
+		setLikedJobs((prev) => ({ ...prev, [jobId]: !prev[jobId] }));
 		likeTargetJobs({ variables: { input: jobId } });
 	};
 
-	// Simplified helper functions with direct English text
+	// === Helpers ===
 	const getJobTypeText = (type: JobType) => {
 		switch (type) {
 			case JobType.FULL_TIME:
@@ -107,7 +97,6 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 		const createdDate = new Date(createdAt);
 		const now = new Date();
 		const diffDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-
 		if (diffDays === 0) return 'Today';
 		if (diffDays === 1) return '1 day ago';
 		return `${diffDays} days ago`;
@@ -115,6 +104,8 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 	const renderJobCard = (job: Job, index: number) => (
 		<div className="featured-job-card" key={job._id || index}>
+			<div className="featured-badge">Featured</div>
+
 			<div className="card-header">
 				<div className="company-logo">
 					{job.companyLogo ? (
@@ -128,7 +119,7 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 					onClick={() => toggleLikeJob(job._id)}
 					aria-label={likedJobs[job._id] ? 'Unlike job' : 'Like job'}
 				>
-					{likedJobs[job._id] ? <FavoriteIcon style={{ color: '#ff4d4f' }} /> : <FavoriteBorderIcon />}
+					{likedJobs[job._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 				</button>
 			</div>
 
@@ -166,7 +157,6 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 				</div>
 			</div>
 
-			{/* Engagement stats */}
 			<div className="engagement-stats">
 				<div className="stat-item">
 					<VisibilityOutlinedIcon fontSize="small" />
@@ -180,11 +170,12 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 			{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
 				<div className="skills-container">
-					{job.skillsRequired.map((skill, i) => (
-						<span key={i} className="skill-tag">
-							{skill}
-						</span>
+					{job.skillsRequired.slice(0, 6).map((skill, i) => (
+						<Chip key={i} label={skill} size="small" className="skill-tag" />
 					))}
+					{job.skillsRequired.length > 6 && (
+						<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 6}`} />
+					)}
 				</div>
 			)}
 
@@ -203,86 +194,81 @@ const FeaturedJobs = (props: FeaturedJobsProps) => {
 
 	const renderSkeleton = () => (
 		<div className="featured-job-card skeleton">
-			<Skeleton variant="circular" width={80} height={80} />
-			<Skeleton variant="text" width="80%" height={30} />
-			<Skeleton variant="text" width="60%" />
+			<div className="s-row">
+				<Skeleton variant="circular" width={96} height={96} />
+			</div>
+			<Skeleton variant="text" width="90%" height={28} />
+			<Skeleton variant="text" width="55%" />
 			<div className="job-details">
 				<Skeleton variant="text" width="40%" />
 				<Skeleton variant="text" width="40%" />
 			</div>
 			<div className="skills-container">
-				<Skeleton variant="text" width="60px" />
-				<Skeleton variant="text" width="70px" />
-				<Skeleton variant="text" width="50px" />
+				<Skeleton variant="rounded" width={60} height={24} />
+				<Skeleton variant="rounded" width={70} height={24} />
+				<Skeleton variant="rounded" width={50} height={24} />
 			</div>
 			<div className="job-footer">
-				<Skeleton variant="text" width="80px" />
-				<Skeleton variant="rectangular" width="100px" height={36} />
+				<Skeleton variant="text" width={80} />
+				<Skeleton variant="rounded" width={110} height={36} />
 			</div>
 		</div>
 	);
 
 	return (
-		<Stack className="featured-jobs-section">
-			<Box className="section-header">
-				<Typography variant="h3" className="section-title">
-					Featured Job Opportunities
-				</Typography>
-				<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
-			</Box>
+		<section className="featured-job">
+			<div className="featured-jobs-container">
+				<Box className="section-header">
+					<Typography variant="h3" className="section-title">
+						Featured Job Opportunities
+					</Typography>
+					<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
+				</Box>
 
-			<Box className="jobs-carousel-container">
-				<div className="navigation-buttons">
-					<button className="swiper-button-prev">
-						<WestIcon />
-					</button>
-					<button className="swiper-button-next">
-						<EastIcon />
-					</button>
-				</div>
+				<Box className="jobs-carousel-container">
+					<div className="navigation-buttons">
+						<button className="fj-prev">
+							<WestIcon />
+						</button>
+						<button className="fj-next">
+							<EastIcon />
+						</button>
+					</div>
 
-				<Swiper
-					modules={[Navigation, Pagination, Autoplay]}
-					spaceBetween={30}
-					slidesPerView={'auto'}
-					navigation={{
-						prevEl: '.swiper-button-prev',
-						nextEl: '.swiper-button-next',
-					}}
-					pagination={{ clickable: true }}
-					autoplay={{ delay: 5000, disableOnInteraction: false }}
-					breakpoints={{
-						320: { slidesPerView: 1 },
-						640: { slidesPerView: 2 },
-						960: { slidesPerView: 3 },
-						1280: { slidesPerView: 3 },
-					}}
-				>
-					{getJobsLoading
-						? Array.from({ length: 3 }).map((_, index) => <SwiperSlide key={index}>{renderSkeleton()}</SwiperSlide>)
-						: featuredJobs.map((job: any, index: any) => (
-								<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
-						  ))}
-				</Swiper>
-			</Box>
+					<Swiper
+						modules={[Navigation, Pagination, Autoplay]}
+						spaceBetween={40}
+						slidesPerView={'auto'}
+						navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
+						pagination={{ clickable: true }}
+						autoplay={{ delay: 5000, disableOnInteraction: false }}
+						breakpoints={{
+							320: { slidesPerView: 1 },
+							640: { slidesPerView: 2 },
+							960: { slidesPerView: 3 },
+							1280: { slidesPerView: 3 },
+						}}
+					>
+						{getJobsLoading
+							? Array.from({ length: 3 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
+							: featuredJobs.map((job: any, index: any) => (
+									<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
+							  ))}
+					</Swiper>
+				</Box>
 
-			<Box className="view-all-container">
-				<Button variant="outlined" className="view-all-button">
-					View All Jobs <EastIcon className="arrow-icon" />
-				</Button>
-			</Box>
-		</Stack>
+				<Box className="view-all-container">
+					<Button variant="outlined" className="view-all-button">
+						View All Jobs <EastIcon className="arrow-icon" />
+					</Button>
+				</Box>
+			</div>
+		</section>
 	);
 };
 
 FeaturedJobs.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 8,
-		sort: 'jobRank',
-		direction: 'DESC',
-		search: {},
-	},
+	initialInput: { page: 1, limit: 8, sort: 'jobRank', direction: 'DESC', search: {} },
 };
 
 export default FeaturedJobs;

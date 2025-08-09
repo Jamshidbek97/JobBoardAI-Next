@@ -154,9 +154,9 @@ export default function JobBoardAIHomeHero() {
 							</Box>
 						</Paper>
 
-						<Typography variant="caption" className="jb-toggle-hint">
+						{/* <Typography variant="caption" className="jb-toggle-hint">
 							<span>Hover</span> or <span>Tap</span> to toggle details
-						</Typography>
+						</Typography> */}
 					</motion.div>
 				</Box>
 			</Container>
