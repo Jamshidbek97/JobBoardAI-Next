@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
 import Top from '../Top';
 import Footer from '../Footer';
@@ -16,7 +15,6 @@ import 'swiper/css/navigation';
 const withLayoutFull = (Component: any) => {
 	return (props: any) => {
 		const router = useRouter();
-		const device = useDeviceDetect();
 		const user = useReactiveVar(userVar);
 
 		/** LIFECYCLE **/
@@ -27,53 +25,29 @@ const withLayoutFull = (Component: any) => {
 
 		/** HANDLERS **/
 
-		if (device == 'mobile') {
-			return (
-				<>
-					<Head>
-						<title>JobBoardAI</title>
-						<meta name={'title'} content={`JobBoardAI`} />
-					</Head>
-					<Stack id="mobile-wrap">
-						<Stack id={'top'}>
-							<Top />
-						</Stack>
-
-						<Stack id={'main'}>
-							<Component {...props} />
-						</Stack>
-
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+		return (
+			<>
+				<Head>
+					<title>JobBoardAI</title>
+					<meta name={'title'} content={`JobBoardAI`} />
+				</Head>
+				<Stack id="pc-wrap">
+					<Stack id={'top'}>
+						<Top />
 					</Stack>
-				</>
-			);
-		} else {
-			return (
-				<>
-					<Head>
-						<title>JobBoardAI</title>
-						<meta name={'title'} content={`JobBoardAI`} />
-					</Head>
-					<Stack id="pc-wrap">
-						<Stack id={'top'}>
-							<Top />
-						</Stack>
 
-						<Stack id={'main'}>
-							<Component {...props} />
-						</Stack>
-
-						{user?._id && <Chat />}
-
-						<Stack id={'footer'}>
-							<Footer />
-						</Stack>
+					<Stack id={'main'}>
+						<Component {...props} />
 					</Stack>
-				</>
-			);
-		}
+
+					{user?._id && <Chat />}
+
+					<Stack id={'footer'}>
+						<Footer />
+					</Stack>
+				</Stack>
+			</>
+		);
 	};
 };
 

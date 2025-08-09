@@ -92,7 +92,6 @@ const AuthView: NextPage = () => {
 
 			<Stack className="auth__container">
 				<Box className="auth__split">
-					{/* Left – Card */}
 					<Paper elevation={0} className="auth__card">
 						{/* Logo */}
 						<Box className="auth__logo">
@@ -100,7 +99,6 @@ const AuthView: NextPage = () => {
 							<span>JobBoardAI</span>
 						</Box>
 
-						{/* Title */}
 						<Box className="auth__title">
 							<Typography variant="h4">{isLogin ? 'Welcome back' : 'Create your account'}</Typography>
 							<Typography className="auth__subtitle">
@@ -110,7 +108,6 @@ const AuthView: NextPage = () => {
 							</Typography>
 						</Box>
 
-						{/* Form */}
 						<Stack
 							className="auth__form"
 							spacing={1.75}
@@ -198,7 +195,7 @@ const AuthView: NextPage = () => {
 														onChange={() => handleInput('type', 'AGENT')}
 													/>
 												}
-												label="Agent"
+												label="Company"
 											/>
 										</FormGroup>
 									</div>

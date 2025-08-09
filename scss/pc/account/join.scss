@@ -49,7 +49,6 @@
 			}
 		}
 
-		/* Left card */
 		.auth__card {
 			border: 1px solid #e9edf4;
 			border-radius: 18px;
@@ -87,7 +86,6 @@
 				}
 			}
 
-			/* More air between inputs */
 			.auth__form {
 				margin-top: 10px;
 			}
@@ -158,7 +156,6 @@
 				margin: 12px 0;
 			}
 
-			/* Providers split left/right */
 			.auth__providers {
 				display: flex;
 				justify-content: space-between;
@@ -193,7 +190,6 @@
 			}
 		}
 
-		/* Right visual */
 		.auth__right {
 			position: relative;
 			border-radius: 22px;
@@ -242,7 +238,6 @@
 					}
 				}
 
-				/* subtle hover lift */
 				&:hover {
 					transform: translateY(-4px);
 					box-shadow: 0 26px 64px rgba(2, 8, 23, 0.18);
