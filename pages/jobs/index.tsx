@@ -6,16 +6,18 @@ import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/job/Filter';
 import { useRouter } from 'next/router';
-import { PropertiesInquiry } from '../../libs/types/job/property.input';
-import { Property } from '../../libs/types/job/property';
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_PROPERTIES } from '../../apollo/user/query';
+
 import { T } from '../../libs/types/common';
-import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { AllJobsInquiry } from '../../libs/types/job/job.input';
+import { Job } from '../../libs/types/job/job';
+import { LIKE_TARGET_JOB } from '../../apollo/user/mutation';
+import { GET_JOBS } from '../../apollo/user/query';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -26,10 +28,10 @@ export const getStaticProps = async ({ locale }: any) => ({
 const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(
+	const [searchFilter, setSearchFilter] = useState<AllJobsInquiry>(
 		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
 	);
-	const [properties, setProperties] = useState<Property[]>([]);
+	const [properties, setProperties] = useState<Job[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -37,13 +39,13 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const [filterSortName, setFilterSortName] = useState('New');
 
 	/** APOLLO REQUESTS **/
-	const [likeTargetProperty] = useMutation(LIKE_TARGET_PROPERTY);
+	const [likeTargetJob] = useMutation(LIKE_TARGET_JOB);
 	const {
 		loading: getPropertiesLoading,
 		data: getPropertiesData,
 		error: getPropertiesError,
 		refetch: getPropertiesRefetch,
-	} = useQuery(GET_PROPERTIES, {
+	} = useQuery(GET_JOBS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
@@ -83,7 +85,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-			await likeTargetProperty({ variables: { input: id } });
+			await likeTargetJob({ variables: { input: id } });
 			await getPropertiesRefetch({ input: initialInput });
 
 			await sweetTopSmallSuccessAlert('success', 800);
@@ -174,7 +176,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 										<p>No Properties found!</p>
 									</div>
 								) : (
-									properties.map((property: Property) => {
+									properties.map((property: Job) => {
 										return (
 											<PropertyCard property={property} likePropertyHandler={likePropertyHandler} key={property?._id} />
 										);
