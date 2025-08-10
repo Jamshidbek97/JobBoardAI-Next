@@ -104,20 +104,22 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 	};
 
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
-		switch (e.currentTarget.id) {
-			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.DESC });
-				setFilterSortName('New');
-				break;
-			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'jobSalary', direction: Direction.ASC });
-				setFilterSortName('Lowest Salary');
-				break;
-			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'jobSalary', direction: Direction.DESC });
-				setFilterSortName('Highest Salary');
-				break;
-		}
+		const id = e.currentTarget.id as 'new' | 'lowest' | 'highest' | 'likes' | 'views' | 'rank' | 'updated';
+
+		const map = {
+			new: { sort: 'createdAt' as const, direction: Direction.DESC, label: 'New' },
+			updated: { sort: 'updatedAt' as const, direction: Direction.DESC, label: 'Recently Updated' },
+			lowest: { sort: 'salaryRange' as const, direction: Direction.ASC, label: 'Lowest Salary' },
+			highest: { sort: 'salaryRange' as const, direction: Direction.DESC, label: 'Highest Salary' },
+			likes: { sort: 'jobLikes' as const, direction: Direction.DESC, label: 'Most Liked' },
+			views: { sort: 'jobViews' as const, direction: Direction.DESC, label: 'Most Viewed' },
+			rank: { sort: 'jobRank' as const, direction: Direction.DESC, label: 'Top Rank' },
+		};
+
+		const cfg = map[id] ?? map.new;
+
+		setSearchFilter((prev) => ({ ...prev, page: 1, sort: cfg.sort, direction: cfg.direction }));
+		setFilterSortName(cfg.label);
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
@@ -132,29 +134,26 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 							{filterSortName}
 						</Button>
 						<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-							<MenuItem
-								onClick={sortingHandler}
-								id={'new'}
-								disableRipple
-								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-							>
+							<MenuItem id="new" onClick={sortingHandler} disableRipple>
 								New
 							</MenuItem>
-							<MenuItem
-								onClick={sortingHandler}
-								id={'lowest'}
-								disableRipple
-								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-							>
-								Lowest Price
+							<MenuItem id="updated" onClick={sortingHandler} disableRipple>
+								Recently Updated
 							</MenuItem>
-							<MenuItem
-								onClick={sortingHandler}
-								id={'highest'}
-								disableRipple
-								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-							>
-								Highest Price
+							<MenuItem id="lowest" onClick={sortingHandler} disableRipple>
+								Lowest Salary
+							</MenuItem>
+							<MenuItem id="highest" onClick={sortingHandler} disableRipple>
+								Highest Salary
+							</MenuItem>
+							<MenuItem id="likes" onClick={sortingHandler} disableRipple>
+								Most Liked
+							</MenuItem>
+							<MenuItem id="views" onClick={sortingHandler} disableRipple>
+								Most Viewed
+							</MenuItem>
+							<MenuItem id="rank" onClick={sortingHandler} disableRipple>
+								Top Rank
 							</MenuItem>
 						</Menu>
 					</div>
