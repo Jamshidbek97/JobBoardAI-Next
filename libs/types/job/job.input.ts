@@ -30,7 +30,7 @@ interface JISearch {
 	educationLevelList?: EducationLevel[];
 	employmentLevels: EmploymentLevel[];
 	skillsRequired?: string[];
-	isRemote: boolean;
+	isRemote?: boolean;
 	text?: string;
 }
 
