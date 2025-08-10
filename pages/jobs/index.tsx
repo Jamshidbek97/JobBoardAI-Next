@@ -1,7 +1,6 @@
 import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, Menu, MenuItem, Pagination, Stack, Typography } from '@mui/material';
-import PropertyCard from '../../libs/components/job/PropertyCard';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Filter from '../../libs/components/job/Filter';
@@ -18,6 +17,7 @@ import { AllJobsInquiry } from '../../libs/types/job/job.input';
 import { Job } from '../../libs/types/job/job';
 import { LIKE_TARGET_JOB } from '../../apollo/user/mutation';
 import { GET_JOBS } from '../../apollo/user/query';
+import JobRow from '../../libs/components/job/JobRow';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -50,8 +50,8 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setProperties(data?.getProperties?.list);
-			setTotal(data?.getProperties?.metaCounter[0]?.total);
+			setProperties(data?.getJobs?.list);
+			setTotal(data?.getJobs?.metaCounter[0]?.total);
 		},
 	});
 
@@ -168,42 +168,21 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 							{/* @ts-ignore */}
 							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
 						</Stack>
-						<Stack className="main-config" mb={'76px'}>
-							<Stack className={'list-config'}>
-								{properties?.length === 0 ? (
-									<div className={'no-data'}>
-										<img src="/img/icons/icoAlert.svg" alt="" />
-										<p>No Properties found!</p>
-									</div>
-								) : (
-									properties.map((property: Job) => {
-										return (
-											<PropertyCard property={property} likePropertyHandler={likePropertyHandler} key={property?._id} />
-										);
-									})
-								)}
-							</Stack>
-							<Stack className="pagination-config">
-								{properties.length !== 0 && (
-									<Stack className="pagination-box">
-										<Pagination
-											page={currentPage}
-											count={Math.ceil(total / searchFilter.limit)}
-											onChange={handlePaginationChange}
-											shape="circular"
-											color="primary"
-										/>
-									</Stack>
-								)}
-
-								{properties.length !== 0 && (
-									<Stack className="total-result">
-										<Typography>
-											Total {total} property{total > 1 ? 'ies' : 'y'} available
-										</Typography>
-									</Stack>
-								)}
-							</Stack>
+						<Stack className={'list-config'}>
+							{properties?.length === 0 ? (
+								<div className={'no-data'}>
+									<img src="/img/icons/icoAlert.svg" alt="" />
+									<p>No jobs found!</p>
+								</div>
+							) : (
+								properties.map((job: Job) => (
+									<JobRow
+										key={job._id}
+										job={job}
+										onLike={(id: any) => likePropertyHandler({} as any, id)} // hook your real user if needed
+									/>
+								))
+							)}
 						</Stack>
 					</Stack>
 				</div>
@@ -215,19 +194,10 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 PropertyList.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 3,
+		limit: 8,
 		sort: 'createdAt',
 		direction: 'DESC',
-		search: {
-			squaresRange: {
-				start: 0,
-				end: 500,
-			},
-			pricesRange: {
-				start: 0,
-				end: 2000000,
-			},
-		},
+		search: {},
 	},
 };
 

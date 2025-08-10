@@ -1,7 +1,5 @@
-'use client';
-
 import React, { useState } from 'react';
-import { Stack, Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
+import { Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
 import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import { Swiper, SwiperSlide } from 'swiper/react';

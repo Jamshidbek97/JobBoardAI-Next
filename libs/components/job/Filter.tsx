@@ -301,9 +301,9 @@ const JobFilter = (props: FilterType) => {
 							)
 						}
 					/>
-					<Button variant="contained" className="search-button" onClick={handleSearch}>
+					{/* <Button variant="contained" className="search-button" onClick={handleSearch}>
 						Search
-					</Button>
+					</Button> */}
 					<Tooltip title="Reset filters">
 						<IconButton onClick={refreshHandler} className="reset-button">
 							<RefreshIcon />
