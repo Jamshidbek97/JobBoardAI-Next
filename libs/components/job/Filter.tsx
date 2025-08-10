@@ -285,6 +285,7 @@ const JobFilter = (props: FilterType) => {
 				<Typography variant="h6" className="section-title">
 					Find Your Dream Job
 				</Typography>
+
 				<Box className="search-box">
 					<OutlinedInput
 						fullWidth
@@ -304,11 +305,6 @@ const JobFilter = (props: FilterType) => {
 					{/* <Button variant="contained" className="search-button" onClick={handleSearch}>
 						Search
 					</Button> */}
-					<Tooltip title="Reset filters">
-						<IconButton onClick={refreshHandler} className="reset-button">
-							<RefreshIcon />
-						</IconButton>
-					</Tooltip>
 				</Box>
 			</Box>
 

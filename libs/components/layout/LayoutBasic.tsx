@@ -11,15 +11,12 @@ import { userVar } from '../../../apollo/store';
 import { useTranslation } from 'next-i18next';
 
 type LayoutOverrides = {
-	/** Hide the hero band entirely (e.g., auth pages) */
 	hideHero?: boolean;
-	/** Custom title/desc to override route map */
 	title?: string;
 	desc?: string;
 };
 
 type LayoutWrappedComponent = React.ComponentType & {
-	/** Optional per-page layout overrides */
 	layoutOverrides?: LayoutOverrides;
 };
 
@@ -67,8 +64,7 @@ const withLayoutBasic = (Component: LayoutWrappedComponent) => {
 		const finalTitle = overrides.title ?? title;
 		const finalDesc = overrides.desc ?? desc;
 
-		// Hide hero on auth screens (or when overridden)
-		const hideHero = overrides.hideHero ?? router.pathname.startsWith('/account'); // your new auth page already has its own header
+		const hideHero = overrides.hideHero ?? router.pathname.startsWith('/account');
 
 		return (
 			<>

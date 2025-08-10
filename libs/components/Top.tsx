@@ -84,11 +84,11 @@ const Top = () => {
 						</Link>
 					))}
 					{/* Add "My Page" when user is logged in */}
-					{user?._id && (
+					{/* {user?._id && (
 						<Link href="/mypage" className={router.pathname === '/mypage' ? 'active' : ''}>
 							{t('My Page')}
 						</Link>
-					)}
+					)} */}
 				</nav>
 
 				<div className="user-actions">

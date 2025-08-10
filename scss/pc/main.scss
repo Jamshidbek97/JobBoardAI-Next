@@ -1598,12 +1598,17 @@ body::-webkit-scrollbar {
 }
 
 #footer {
+	display: block;
+	width: 100%;
+	align-self: stretch;
+	clear: both;
+	position: relative;
 	background: linear-gradient(135deg, #1a2a4f 0%, #0d1b33 100%);
 	color: #ffffff;
 	padding: 60px 0 30px;
 	font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-	position: relative;
 	overflow: hidden;
+	z-index: 1;
 
 	&::before {
 		content: '';
@@ -1616,9 +1621,10 @@ body::-webkit-scrollbar {
 	}
 
 	.footer-container {
-		max-width: 1400px;
+		max-width: 1300px;
+		width: 100%;
 		margin: 0 auto;
-		padding: 0 30px;
+		padding: 24px 30px;
 		position: relative;
 		z-index: 1;
 	}
@@ -1946,7 +1952,7 @@ body::-webkit-scrollbar {
 	// Responsive styles
 	@media (max-width: 1024px) {
 		.footer-grid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: 1fr 1fr;
 			gap: 30px;
 		}
 	}

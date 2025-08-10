@@ -25,7 +25,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
+const JobList: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<AllJobsInquiry>(
@@ -70,13 +70,9 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	/** HANDLERS **/
 	const handlePaginationChange = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
-		await router.push(
-			`/property?input=${JSON.stringify(searchFilter)}`,
-			`/property?input=${JSON.stringify(searchFilter)}`,
-			{
-				scroll: false,
-			},
-		);
+		await router.push(`/jobs?input=${JSON.stringify(searchFilter)}`, `/jobs?input=${JSON.stringify(searchFilter)}`, {
+			scroll: false,
+		});
 		setCurrentPage(value);
 	};
 
@@ -86,7 +82,7 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
 			await likeTargetJob({ variables: { input: id } });
-			await getPropertiesRefetch({ input: initialInput });
+			await getPropertiesRefetch({ input: searchFilter });
 
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
@@ -108,66 +104,65 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
 		switch (e.currentTarget.id) {
 			case 'new':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.ASC });
+				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: Direction.DESC });
 				setFilterSortName('New');
 				break;
 			case 'lowest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.ASC });
-				setFilterSortName('Lowest Price');
+				setSearchFilter({ ...searchFilter, sort: 'jobSalary', direction: Direction.ASC });
+				setFilterSortName('Lowest Salary');
 				break;
 			case 'highest':
-				setSearchFilter({ ...searchFilter, sort: 'propertyPrice', direction: Direction.DESC });
-				setFilterSortName('Highest Price');
+				setSearchFilter({ ...searchFilter, sort: 'jobSalary', direction: Direction.DESC });
+				setFilterSortName('Highest Salary');
+				break;
 		}
 		setSortingOpen(false);
 		setAnchorEl(null);
 	};
 
-	if (device === 'mobile') {
-		return <h1>PROPERTIES MOBILE</h1>;
-	} else {
-		return (
-			<div id="property-list-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Box component={'div'} className={'right'}>
-						<span>Sort by</span>
-						<div>
-							<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-								{filterSortName}
-							</Button>
-							<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'new'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									New
-								</MenuItem>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'lowest'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									Lowest Price
-								</MenuItem>
-								<MenuItem
-									onClick={sortingHandler}
-									id={'highest'}
-									disableRipple
-									sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
-								>
-									Highest Price
-								</MenuItem>
-							</Menu>
-						</div>
-					</Box>
-					<Stack className={'property-page'}>
-						<Stack className={'filter-config'}>
-							{/* @ts-ignore */}
-							<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
-						</Stack>
+	return (
+		<div id="property-list-page" style={{ position: 'relative' }}>
+			<div className="container">
+				<Box component={'div'} className={'right'}>
+					<span>Sort by</span>
+					<div>
+						<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
+							{filterSortName}
+						</Button>
+						<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'new'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								New
+							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'lowest'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								Lowest Price
+							</MenuItem>
+							<MenuItem
+								onClick={sortingHandler}
+								id={'highest'}
+								disableRipple
+								sx={{ boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+							>
+								Highest Price
+							</MenuItem>
+						</Menu>
+					</div>
+				</Box>
+				<Stack className={'property-page'}>
+					<Stack className={'filter-config'}>
+						{/* @ts-ignore */}
+						<Filter searchFilter={searchFilter} setSearchFilter={setSearchFilter} initialInput={initialInput} />
+					</Stack>
+					<div className="list-list">
 						<Stack className={'list-config'}>
 							{properties?.length === 0 ? (
 								<div className={'no-data'}>
@@ -179,19 +174,39 @@ const PropertyList: NextPage = ({ initialInput, ...props }: any) => {
 									<JobRow
 										key={job._id}
 										job={job}
-										onLike={(id: any) => likePropertyHandler({} as any, id)} // hook your real user if needed
+										onLike={(id) => likePropertyHandler({} as any, id)}
+										onApply={(id) => router.push(`/job/${id}#apply`)}
 									/>
 								))
 							)}
 						</Stack>
-					</Stack>
-				</div>
+						{properties.length > 0 && (
+							<Stack className="pagination-config" mt={2}>
+								<Stack className="pagination-box">
+									<Pagination
+										page={currentPage}
+										count={Math.ceil(total / searchFilter.limit)}
+										onChange={handlePaginationChange}
+										shape="circular"
+										color="primary"
+									/>
+								</Stack>
+
+								<Stack className="total-result">
+									<Typography>
+										Total {total} job{total > 1 ? 's' : ''} available
+									</Typography>
+								</Stack>
+							</Stack>
+						)}
+					</div>
+				</Stack>
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
-PropertyList.defaultProps = {
+JobList.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 8,
@@ -201,4 +216,4 @@ PropertyList.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(PropertyList);
+export default withLayoutBasic(JobList);
