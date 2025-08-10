@@ -6,19 +6,29 @@ import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
 import { Button } from '@mui/material';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Job } from '../../types/job/job';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
+import { getJwtToken, updateUserInfo } from '../../auth';
 
 export type JobRowProps = {
+	likePropertyHandler?: any;
 	job: Job;
 	onLike?: (id: string) => void;
 	onApply?: (id: string) => void;
 };
 
-export default React.memo(function JobRow({ job, onLike, onApply }: JobRowProps) {
+export default React.memo(function JobRow({ job, onApply, likePropertyHandler }: JobRowProps) {
 	const statusClosed = job.jobStatus === 'CLOSED';
 	const salaryYr = job.jobSalary ? `$${job.jobSalary.toLocaleString()}/yr` : '—';
 	const salaryMo = job.jobSalary ? `$${Math.round(job.jobSalary / 12).toLocaleString()}/mo` : '';
+	const user = useReactiveVar(userVar);
+	useEffect(() => {
+		const jwt = getJwtToken();
+		if (jwt && !user?._id) updateUserInfo(jwt);
+	}, [user?._id]);
+	console.log('User', user);
 
 	const locationMap: Record<string, string> = {
 		SEOUL: 'Seoul',
@@ -40,9 +50,10 @@ export default React.memo(function JobRow({ job, onLike, onApply }: JobRowProps)
 	const days = job.createdAt ? Math.floor((Date.now() - new Date(job.createdAt as any).getTime()) / 86400000) : 0;
 	const ago = days <= 0 ? 'Today' : days === 1 ? '1 day ago' : `${days} days ago`;
 
+	const isLiked = Array.isArray(job?.meLiked) && job.meLiked.length > 0 && job.meLiked[0]?.myFavorite === true;
+
 	return (
 		<div className={`job-row ${statusClosed ? 'is-closed' : ''}`}>
-			{/* Logo (fallback if you don’t have uploads yet) */}
 			<div className="job-row__logo">
 				{job.companyLogo && job.companyLogo !== 'logo' ? (
 					<Image src={job.companyLogo} alt={`${job.companyName} logo`} width={44} height={44} />
@@ -81,9 +92,10 @@ export default React.memo(function JobRow({ job, onLike, onApply }: JobRowProps)
 				<button
 					className={`like ${job.jobLikes ? 'is-liked' : ''}`}
 					aria-label="Like job"
-					onClick={() => onLike?.(job._id)}
+					onClick={() => likePropertyHandler?.(user, job._id)}
 				>
-					{job.jobLikes ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+					{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+
 					<span className="count">{job.jobLikes || 0}</span>
 				</button>
 				<Button className="apply" variant="contained" disabled={statusClosed} onClick={() => onApply?.(job._id)}>

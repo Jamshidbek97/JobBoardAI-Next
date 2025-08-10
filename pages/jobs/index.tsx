@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { Direction, Message } from '../../libs/enums/common.enum';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 
 import { T } from '../../libs/types/common';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
@@ -18,6 +18,7 @@ import { Job } from '../../libs/types/job/job';
 import { LIKE_TARGET_JOB } from '../../apollo/user/mutation';
 import { GET_JOBS } from '../../apollo/user/query';
 import JobRow from '../../libs/components/job/JobRow';
+import { userVar } from '../../apollo/store';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -37,6 +38,7 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [sortingOpen, setSortingOpen] = useState(false);
 	const [filterSortName, setFilterSortName] = useState('New');
+	const user = useReactiveVar(userVar);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetJob] = useMutation(LIKE_TARGET_JOB);
@@ -174,7 +176,7 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 									<JobRow
 										key={job._id}
 										job={job}
-										onLike={(id) => likePropertyHandler({} as any, id)}
+										likePropertyHandler={likePropertyHandler}
 										onApply={(id) => router.push(`/job/${id}#apply`)}
 									/>
 								))
