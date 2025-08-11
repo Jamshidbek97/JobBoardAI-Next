@@ -1,7 +1,9 @@
 /** IMPORTS **/
 @import 'variables.scss';
 @import 'reset.scss';
-
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
 a {
 	white-space: nowrap;
 	text-decoration: none;
