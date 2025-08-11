@@ -18,13 +18,17 @@ export const GET_AGENTS = gql`
 				memberImage
 				memberAddress
 				memberDesc
-				memberWarnings
-				memberBlocks
-				memberProperties
-				memberRank
+				memberPostedJobs
+				memberArticles
+				memberFollowers
+				memberFollowings
 				memberPoints
 				memberLikes
 				memberViews
+				memberComments
+				memberRank
+				memberWarnings
+				memberBlocks
 				deletedAt
 				createdAt
 				updatedAt
@@ -33,6 +37,11 @@ export const GET_AGENTS = gql`
 					memberId
 					likeRefId
 					myFavorite
+				}
+				meFollowed {
+					followingId
+					followerId
+					myFollowing
 				}
 			}
 			metaCounter {
@@ -99,6 +108,7 @@ export const GET_JOB = gql`
 			jobComments
 			jobRank
 			jobImages
+			companyName
 			companyLogo
 			jobDesc
 			memberId
@@ -160,6 +170,7 @@ export const GET_JOBS = gql`
 				jobComments
 				jobRank
 				jobImages
+				companyName
 				companyLogo
 				jobDesc
 				memberId
