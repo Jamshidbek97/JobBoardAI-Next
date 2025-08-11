@@ -8,6 +8,7 @@ import { userVar } from '../../../apollo/store';
 import { useReactiveVar } from '@apollo/client';
 import { getJwtToken, updateUserInfo } from '../../auth';
 import Chat from '../Chat';
+import HomeAdditional from '../HomeAdditional';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
@@ -34,6 +35,7 @@ const withLayoutMain = (Component: any) => {
 
 					<Stack className={'header-main'}>
 						<Stack className={'container'}>
+							<HomeAdditional />
 							<HeaderFilter />
 						</Stack>
 					</Stack>

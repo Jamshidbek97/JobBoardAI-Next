@@ -83,12 +83,6 @@ const Top = () => {
 							{item.label}
 						</Link>
 					))}
-					{/* Add "My Page" when user is logged in */}
-					{/* {user?._id && (
-						<Link href="/mypage" className={router.pathname === '/mypage' ? 'active' : ''}>
-							{t('My Page')}
-						</Link>
-					)} */}
 				</nav>
 
 				<div className="user-actions">
@@ -127,7 +121,6 @@ const Top = () => {
 				</div>
 			</div>
 
-			{/* Language Selector Menu */}
 			<Menu
 				anchorEl={langMenuAnchor}
 				open={Boolean(langMenuAnchor)}
