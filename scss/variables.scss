@@ -1,0 +1,38 @@
+/** VARIABLES **/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+$font: 'Poppins', sans-serif;
+
+/* variables.scss additions (optional) */
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
+$indigo-600: #4f46e5;
+
+$slate-50: #f8fafc;
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-900: #0f172a;
+
+$amber-100: #fef3c7;
+$amber-700: #b45309;
+
+$emerald-50: #ecfdf5;
+$emerald-700: #047857;
+$white: #fff;
+
+$card-radius: 18px;
+$chip-radius: 9999px;
+$shadow-1: 0 10px 25px rgba(2, 8, 23, 0.08);
+$shadow-2: 0 25px 55px rgba(2, 8, 23, 0.12);
+
+// JobBoardAIHomeHero
+$radius-2xl: 1.5rem;
+$shadow-2xl: 0 30px 60px rgba(2, 8, 23, 0.15);
+$shadow-lg: 0 10px 30px rgba(2, 8, 23, 0.12);
+$bp-md: 768px;

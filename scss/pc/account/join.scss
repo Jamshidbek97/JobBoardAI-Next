@@ -1,0 +1,290 @@
+#pc-wrap {
+	.auth {
+		position: relative;
+		width: auto;
+		min-height: 100vh;
+		display: grid;
+		place-items: center;
+		background: radial-gradient(1200px 500px at 5% -10%, #ffe8e8 0%, rgba(255, 232, 232, 0) 60%),
+			radial-gradient(1200px 500px at 105% 10%, #e6ebff 0%, rgba(230, 235, 255, 0) 60%),
+			linear-gradient(180deg, #fbfcff 0%, #f6f9ff 100%);
+
+		/* Animated gradient veil */
+		&::after {
+			content: '';
+			position: absolute;
+			inset: -20%;
+			pointer-events: none;
+			background: conic-gradient(
+				from 180deg at 50% 50%,
+				rgba(24, 144, 255, 0.08),
+				rgba(255, 77, 79, 0.08),
+				rgba(251, 146, 60, 0.08),
+				rgba(24, 144, 255, 0.08)
+			);
+			animation: auth-pan 12s linear infinite;
+			filter: blur(80px);
+			opacity: 0.7;
+		}
+
+		.auth__bg {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+		}
+
+		.auth__container {
+			width: 100%;
+			max-width: 1100px;
+			padding: 24px;
+		}
+
+		.auth__split {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 28px;
+			align-items: stretch;
+			@media (max-width: 960px) {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.auth__card {
+			border: 1px solid #e9edf4;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.9);
+			backdrop-filter: blur(8px);
+			box-shadow: 0 25px 55px rgba(2, 8, 23, 0.12);
+			padding: 32px;
+
+			.auth__logo {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 8px;
+				img {
+					width: 28px;
+					height: 28px;
+				}
+				span {
+					font-weight: 800;
+					font-size: 16px;
+					color: #1a2a4f;
+				}
+			}
+
+			.auth__title {
+				margin-bottom: 14px;
+				h4 {
+					font-weight: 800;
+					letter-spacing: -0.02em;
+					color: #0f172a;
+				}
+				.auth__subtitle {
+					color: #64748b;
+					margin-top: 6px;
+				}
+			}
+
+			.auth__form {
+				margin-top: 10px;
+			}
+			.MuiFormControl-root {
+				margin-bottom: 10px;
+			}
+			.MuiTextField-root {
+				.MuiInputBase-root {
+					background: #fff;
+					border-radius: 12px;
+				}
+			}
+
+			.auth__register {
+				margin-top: 6px;
+				display: grid;
+				gap: 6px;
+				.text {
+					font-size: 13px;
+					color: #64748b;
+				}
+				> div {
+					display: flex;
+					gap: 6px;
+				}
+			}
+
+			.auth__remember {
+				margin-top: 2px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.auth__link {
+					color: #2563eb;
+					text-decoration: none;
+					font-size: 13px;
+				}
+			}
+
+			.auth__cta {
+				margin-top: 8px;
+				text-transform: none;
+				font-weight: 800;
+				border-radius: 12px;
+				background: linear-gradient(90deg, #ff4d4f, #ff7a45, #1890ff);
+				background-size: 200% 100%;
+				box-shadow: 0 14px 30px rgba(24, 144, 255, 0.28);
+				transition: background-position 0.35s, transform 0.15s, box-shadow 0.2s;
+				&:hover {
+					background-position: 100% 0;
+					transform: translateY(-2px);
+					box-shadow: 0 18px 38px rgba(24, 144, 255, 0.36);
+				}
+				&:disabled {
+					filter: grayscale(0.6) opacity(0.8);
+				}
+			}
+
+			.auth__switch {
+				margin-top: 8px;
+				b {
+					color: #1a2a4f;
+					cursor: pointer;
+				}
+			}
+
+			.auth__or {
+				margin: 12px 0;
+			}
+
+			.auth__providers {
+				display: flex;
+				justify-content: space-between;
+				gap: 10px;
+			}
+			.auth__btn {
+				flex: 1 1 0;
+				border-radius: 12px;
+				text-transform: none;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+			}
+			.auth__btn--google {
+				justify-content: flex-start;
+				padding-left: 14px;
+			}
+			.auth__btn--github {
+				justify-content: flex-end;
+				padding-right: 14px;
+			}
+			.auth__btn img {
+				width: 18px;
+				height: 18px;
+			}
+			.auth__btn:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 10px 26px rgba(2, 8, 23, 0.12);
+				border-color: #e5eaf3;
+			}
+		}
+
+		.auth__right {
+			position: relative;
+			border-radius: 22px;
+			border: 1px solid #e9edf4;
+			background: linear-gradient(120deg, #eef2ff, #fff7ed);
+			overflow: hidden;
+			display: grid;
+			place-items: center;
+			padding: 24px;
+
+			.auth__right-glow {
+				position: absolute;
+				inset: -10%;
+				filter: blur(42px);
+				background: radial-gradient(460px 280px at 20% 10%, rgba(99, 102, 241, 0.35), transparent 60%),
+					radial-gradient(420px 240px at 80% 20%, rgba(251, 146, 60, 0.28), transparent 60%);
+			}
+
+			.auth__right-card {
+				position: relative;
+				z-index: 1;
+				background: rgba(255, 255, 255, 0.85);
+				backdrop-filter: blur(6px);
+				border: 1px solid #e9edf4;
+				border-radius: 16px;
+				box-shadow: 0 20px 50px rgba(2, 8, 23, 0.12);
+				padding: 22px;
+				width: min(520px, 88%);
+				text-align: left;
+				transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+				h3 {
+					margin: 0 0 6px;
+					font-weight: 800;
+					color: #0f172a;
+				}
+				p {
+					color: #475569;
+					margin: 0 0 10px;
+				}
+				ul {
+					margin: 0 0 10px;
+					padding-left: 18px;
+					color: #475569;
+					li {
+						margin: 4px 0;
+					}
+				}
+
+				&:hover {
+					transform: translateY(-4px);
+					box-shadow: 0 26px 64px rgba(2, 8, 23, 0.18);
+					border-color: #dfe6f2;
+				}
+
+				/* mini stats row */
+				.auth__stats {
+					display: grid;
+					grid-template-columns: repeat(3, 1fr);
+					gap: 8px;
+					margin-top: 6px;
+				}
+				.auth__stats .stat {
+					display: grid;
+					gap: 2px;
+					background: #f8fafc;
+					border: 1px solid #e9edf4;
+					border-radius: 10px;
+					padding: 8px;
+					text-align: center;
+				}
+				.auth__stats .stat b {
+					font-weight: 800;
+					color: #0f172a;
+				}
+				.auth__stats .stat span {
+					font-size: 12px;
+					color: #64748b;
+				}
+			}
+
+			@media (max-width: 960px) {
+				min-height: 220px;
+			}
+		}
+	}
+
+	// @keyframes auth-pan {
+	// 	0% {
+	// 		transform: rotate(0deg) scale(1);
+	// 	}
+	// 	50% {
+	// 		transform: rotate(180deg) scale(1.05);
+	// 	}
+	// 	100% {
+	// 		transform: rotate(360deg) scale(1);
+	// 	}
+	// }
+}
