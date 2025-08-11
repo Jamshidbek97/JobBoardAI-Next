@@ -10,6 +10,7 @@ import { Job } from '../../types/job/job';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { getJwtToken, updateUserInfo } from '../../auth';
+import { REACT_APP_API_URL } from '../../config';
 
 export type JobRowProps = {
 	likePropertyHandler?: any;
@@ -51,13 +52,35 @@ export default React.memo(function JobRow({ job, onApply, likePropertyHandler }:
 
 	const isLiked = Array.isArray(job?.meLiked) && job.meLiked.length > 0 && job.meLiked[0]?.myFavorite === true;
 
+	// Create proper image path with fallback
+	const imagePath: string = job?.companyLogo
+		? `${REACT_APP_API_URL}/${job.companyLogo}`
+		: '/img/brands/g.png';
+
 	return (
 		<div className={`job-row ${statusClosed ? 'is-closed' : ''}`}>
 			<div className="job-row__logo">
-				{job.companyLogo && job.companyLogo !== 'logo' ? (
-					<Image src={job.companyLogo} alt={`${job.companyName} logo`} width={44} height={44} />
+				{job.companyLogo ? (
+					<Image 
+						src={imagePath} 
+						alt={`${job.companyName} logo`} 
+						width={44} 
+						height={44}
+						onError={(e) => {
+							// If image fails to load, show the fallback text
+							const target = e.target as HTMLImageElement;
+							target.style.display = 'none';
+							const parent = target.parentElement;
+							if (parent) {
+								const fallback = document.createElement('div');
+								fallback.className = 'logo-fallback';
+								fallback.textContent = job.companyName?.charAt(0) ?? 'G';
+								parent.appendChild(fallback);
+							}
+						}}
+					/>
 				) : (
-					<div className="logo-fallback">{job.companyName?.charAt(0) ?? 'C'}</div>
+					<div className="logo-fallback">{job.companyName?.charAt(0) ?? 'G'}</div>
 				)}
 			</div>
 
