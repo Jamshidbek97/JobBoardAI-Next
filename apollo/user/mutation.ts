@@ -122,58 +122,56 @@ export const LIKE_TARGET_MEMBER = gql`
  *        PROPERTY        *
  *************************/
 
-export const CREATE_PROPERTY = gql`
-	mutation CreateProperty($input: PropertyInput!) {
-		createProperty(input: $input) {
+export const CREATE_JOB = gql`
+	mutation CreateJob($input: JobInput!) {
+		createJob(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			jobType
+			jobStatus
+			jobLocation
+			jobSalary
+			experienceYears
+			educationLevel
+			jobViews
+			jobLikes
+			jobComments
+			jobRank
+			jobImages
+			companyLogo
+			jobDesc
 			memberId
-			soldAt
+			closedAt
 			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
+			positionTitle
+			skillsRequired
 		}
 	}
 `;
 
-export const UPDATE_PROPERTY = gql`
-	mutation UpdateProperty($input: PropertyUpdate!) {
-		updateProperty(input: $input) {
+export const UPDATE_JOB = gql`
+	mutation UpdateJob($input: JobUpdate!) {
+		updateJob(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			jobType
+			jobStatus
+			jobLocation
+			positionTitle
+			jobSalary
+			skillsRequired
+			experienceYears
+			educationLevel
+			jobViews
+			jobLikes
+			jobComments
+			jobRank
+			jobImages
+			companyLogo
+			jobDesc
 			memberId
-			soldAt
+			closedAt
 			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
 		}
