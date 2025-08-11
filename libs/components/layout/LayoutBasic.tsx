@@ -22,7 +22,7 @@ type LayoutWrappedComponent = React.ComponentType & {
 
 const routeMeta: Record<string, { title: string; desc: string }> = {
 	'/': { title: 'JobBoardAI', desc: 'Your AI Job Hunter — faster applications, more interviews.' },
-	'/job': { title: 'Jobs', desc: 'Fresh roles matched to your profile.' },
+	'/jobs': { title: 'Jobs', desc: 'Fresh roles matched to your profile.' },
 	'/agent': { title: 'Agents', desc: 'Meet the AI agents that apply for you.' },
 	'/agent/detail': { title: 'Agent', desc: 'Agent overview & performance.' },
 	'/mypage': { title: 'My Page', desc: 'Your applications, responses, and interviews.' },

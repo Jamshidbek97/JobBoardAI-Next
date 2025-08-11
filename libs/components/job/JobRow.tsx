@@ -1,4 +1,3 @@
-// components/job/JobRow.tsx
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
@@ -63,7 +62,7 @@ export default React.memo(function JobRow({ job, onApply, likePropertyHandler }:
 			</div>
 
 			<div className="job-row__main">
-				<a className="job-row__title" href={`/job/${job._id}`}>
+				<a className="job-row__title" href={`/jobs/${job._id}`}>
 					{job.positionTitle}
 				</a>
 				<div className="job-row__company">{job.companyName || 'Company'}</div>
