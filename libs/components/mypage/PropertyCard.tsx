@@ -4,11 +4,12 @@ import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/Mode';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Property } from '../../types/job/property';
 import { formatterStr } from '../../utils';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
-import { PropertyStatus } from '../../enums/property.enum';
+
+type Property = any;
+type PropertyStatus = any;
 
 interface PropertyCardProps {
 	property: Property;
@@ -104,7 +105,7 @@ export const PropertyCard = (props: PropertyCardProps) => {
 									disableRipple
 									onClick={() => {
 										handleClose();
-										updatePropertyHandler(PropertyStatus.SOLD, property?._id);
+										// updatePropertyHandler(PropertyStatus.SOLD, property?._id);
 									}}
 								>
 									Sold
@@ -117,16 +118,16 @@ export const PropertyCard = (props: PropertyCardProps) => {
 				<Stack className="views-box">
 					<Typography className="views">{property.propertyViews.toLocaleString()}</Typography>
 				</Stack>
-				{!memberPage && property.propertyStatus === PropertyStatus.ACTIVE && (
-					<Stack className="action-box">
-						<IconButton className="icon-button" onClick={() => pushEditProperty(property._id)}>
-							<ModeIcon className="buttons" />
-						</IconButton>
-						<IconButton className="icon-button" onClick={() => deletePropertyHandler(property._id)}>
-							<DeleteIcon className="buttons" />
-						</IconButton>
-					</Stack>
-				)}
+				{/* {!memberPage && property.propertyStatus === PropertyStatus.ACTIVE && ( */}
+				<Stack className="action-box">
+					<IconButton className="icon-button" onClick={() => pushEditProperty(property._id)}>
+						<ModeIcon className="buttons" />
+					</IconButton>
+					<IconButton className="icon-button" onClick={() => deletePropertyHandler(property._id)}>
+						<DeleteIcon className="buttons" />
+					</IconButton>
+				</Stack>
+				{/* )} */}
 			</Stack>
 		);
 };
