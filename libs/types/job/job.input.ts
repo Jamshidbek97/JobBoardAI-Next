@@ -4,7 +4,7 @@ import { Direction } from '../../enums/common.enum';
 export interface JobInput {
 	jobType: JobType;
 	jobLocation: JobLocation;
-	jobAddress: string;
+	jobAddress?: string;
 	companyName: string;
 	positionTitle: string;
 	jobSalary?: number;
