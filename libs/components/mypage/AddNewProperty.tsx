@@ -10,6 +10,7 @@ import { EducationLevel, EmploymentLevel, JobLocation, JobType } from '../../enu
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { getJwtToken } from '../../auth';
 import { REACT_APP_API_URL } from '../../config';
+import dynamic from 'next/dynamic';
 
 type JobForm = {
 	_id?: string;
@@ -17,14 +18,16 @@ type JobForm = {
 	companyName: string;
 	jobType: JobType | null;
 	jobLocation: JobLocation | null;
-	jobSalary: number;
-	experienceYears: number;
+	jobSalary: number; // stored as number in payload
+	experienceYears: number; // stored as number in payload
 	educationLevel: EducationLevel | null;
 	employmentLevel: EmploymentLevel | null;
 	skillsRequired: string[];
 	jobDesc: string;
 	companyLogo?: string;
 };
+
+const ToastViewerComponent = dynamic(() => import('../community/TViewer'), { ssr: false });
 
 const AddProperty = () => {
 	const router = useRouter();
@@ -33,6 +36,10 @@ const AddProperty = () => {
 
 	const logoInputRef = useRef<HTMLInputElement | null>(null);
 	const [skillInput, setSkillInput] = useState('');
+
+	const [salaryInput, setSalaryInput] = useState<string>('');
+	const [expInput, setExpInput] = useState<string>('');
+
 	const [jobData, setJobData] = useState<JobForm>({
 		positionTitle: '',
 		companyName: '',
@@ -79,11 +86,14 @@ const AddProperty = () => {
 				jobLocation: (j.jobLocation as JobLocation) ?? null,
 				jobSalary: Number(j.jobSalary) || 0,
 				experienceYears: Number(j.experienceYears) || 0,
-				educationLevel: j.educationLevel || '',
+				educationLevel: (j.educationLevel as EducationLevel) ?? null,
+				employmentLevel: (j.employmentLevel as EmploymentLevel) ?? null,
 				skillsRequired: Array.isArray(j.skillsRequired) ? j.skillsRequired : [],
 				jobDesc: j.jobDesc || '',
 				companyLogo: j.companyLogo || '',
 			}));
+			setSalaryInput(j.jobSalary ? String(j.jobSalary) : '');
+			setExpInput(j.experienceYears ? String(j.experienceYears) : '');
 		}
 	}, [data?.getJob]);
 
@@ -115,42 +125,41 @@ const AddProperty = () => {
 		}
 	};
 
-	const isDisabled = () =>
-		jobData.positionTitle.trim() === '' ||
-		jobData.companyName.trim() === '' ||
-		jobData.jobType === null ||
-		jobData.jobLocation === null ||
-		jobData.jobSalary <= 0 ||
-		jobData.experienceYears < 0 ||
-		jobData.educationLevel === null ||
-		jobData.jobDesc.trim() === '' ||
-		jobData.skillsRequired.length === 0;
+	const isDisabled = () => {
+		const salary = Number(salaryInput || 0);
+		const exp = Number(expInput || 0);
+		return (
+			jobData.positionTitle.trim() === '' ||
+			jobData.companyName.trim() === '' ||
+			jobData.jobType === null ||
+			jobData.jobLocation === null ||
+			salary <= 0 ||
+			exp < 0 ||
+			jobData.educationLevel === null ||
+			jobData.employmentLevel === null ||
+			jobData.jobDesc.trim() === '' ||
+			jobData.skillsRequired.length === 0
+		);
+	};
 
 	const uploadCompanyLogo = async () => {
 		try {
 			if (!logoInputRef.current?.files?.length) return;
-
 			const file = logoInputRef.current.files[0];
 			if (!file) return;
 
-			console.log('Uploading file:', file.name, file.size, file.type);
-
 			const fd = new FormData();
-
 			fd.append(
 				'operations',
 				JSON.stringify({
 					query: `mutation ImageUploader($file: Upload!, $target: String!) {
-						imageUploader(file: $file, target: $target)
-					}`,
+            imageUploader(file: $file, target: $target)
+          }`,
 					variables: { file: null, target: 'job' },
 				}),
 			);
 			fd.append('map', JSON.stringify({ '0': ['variables.file'] }));
 			fd.append('0', file);
-
-			console.log('API URL:', process.env.REACT_APP_API_GRAPHQL_URL);
-			console.log('Token:', token ? 'Present' : 'Missing');
 
 			const res = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, fd, {
 				headers: {
@@ -160,26 +169,17 @@ const AddProperty = () => {
 				},
 			});
 
-			console.log('Response:', res.data);
-
-			// Check for GraphQL errors first
-			if (res.data.errors && res.data.errors.length > 0) {
-				console.error('GraphQL errors:', res.data.errors);
+			if (res.data?.errors?.length) {
 				throw new Error(res.data.errors[0].message || 'GraphQL error occurred');
 			}
 
 			const responseImage = res?.data?.data?.imageUploader;
-			if (!responseImage) {
-				console.error('No response image in data:', res.data);
-				throw new Error('Upload failed - no response image');
-			}
+			if (!responseImage) throw new Error('Upload failed - no response image');
 
 			updateField('companyLogo', responseImage);
 			await sweetMixinSuccessAlert('Logo uploaded');
 			logoInputRef.current.value = '';
 		} catch (err: any) {
-			console.error('Upload error:', err);
-			console.error('Error response:', err.response?.data);
 			await sweetMixinErrorAlert(err?.response?.data?.message || err?.message || 'Upload failed');
 		}
 	};
@@ -193,6 +193,9 @@ const AddProperty = () => {
 				...jobData,
 				jobType: jobData.jobType ?? undefined,
 				jobLocation: jobData.jobLocation ?? undefined,
+				employmentLevel: jobData.employmentLevel ?? undefined,
+				jobSalary: Number(salaryInput || 0),
+				experienceYears: Number(expInput || 0),
 			};
 
 			if (editingId) {
@@ -207,7 +210,7 @@ const AddProperty = () => {
 		} catch (err) {
 			sweetErrorHandling(err).then();
 		}
-	}, [jobData, editingId]);
+	}, [jobData, editingId, salaryInput, expInput]);
 
 	return (
 		<div id="add-property-page">
@@ -217,7 +220,7 @@ const AddProperty = () => {
 			</Stack>
 
 			<div>
-				<Stack className="config">
+				<Stack className="config config--with-sidebar">
 					<Stack className="description-box">
 						<Stack className="config-row">
 							<Stack className="config-column">
@@ -267,7 +270,7 @@ const AddProperty = () => {
 								<Typography className="title">Location</Typography>
 								<select
 									className="select-description"
-									value={jobData.jobLocation ?? ''} //
+									value={jobData.jobLocation ?? ''}
 									onChange={(e) => updateField('jobLocation', (e.target.value || null) as JobLocation | null)}
 								>
 									<option disabled value="">
@@ -282,11 +285,12 @@ const AddProperty = () => {
 								<div className="divider" />
 								<img src="/img/icons/Vector.svg" className="arrow-down" />
 							</Stack>
+
 							<Stack className="price-year-after-price">
 								<Typography className="title">Employment Level</Typography>
 								<select
 									className="select-description"
-									value={jobData.employmentLevel ?? ''} //
+									value={jobData.employmentLevel ?? ''}
 									onChange={(e) => updateField('employmentLevel', (e.target.value || null) as EmploymentLevel | null)}
 								>
 									<option disabled value="">
@@ -307,22 +311,26 @@ const AddProperty = () => {
 							<Stack className="price-year-after-price">
 								<Typography className="title">Salary</Typography>
 								<input
-									type="number"
+									type="text"
+									inputMode="numeric"
+									pattern="\d*"
 									className="description-input"
 									placeholder="e.g., 60000000"
-									value={jobData.jobSalary}
-									onChange={(e) => updateField('jobSalary', parseInt(e.target.value || '0', 10))}
+									value={salaryInput}
+									onChange={(e) => setSalaryInput(e.target.value.replace(/[^\d]/g, ''))}
 								/>
 							</Stack>
 
 							<Stack className="price-year-after-price">
 								<Typography className="title">Experience (years)</Typography>
 								<input
-									type="number"
+									type="text"
+									inputMode="numeric"
+									pattern="\d*"
 									className="description-input"
 									placeholder="e.g., 3"
-									value={jobData.experienceYears}
-									onChange={(e) => updateField('experienceYears', parseInt(e.target.value || '0', 10))}
+									value={expInput}
+									onChange={(e) => setExpInput(e.target.value.replace(/[^\d]/g, ''))}
 								/>
 							</Stack>
 
@@ -369,22 +377,35 @@ const AddProperty = () => {
 						<Typography className="property-title">Job Description</Typography>
 						<Stack className="config-column">
 							<Typography className="title">Description</Typography>
+
+							{/* simple editor textarea for now */}
 							<textarea
-								className="description-text"
-								placeholder="Responsibilities, requirements, nice-to-haves…"
+								className="description-textarea"
+								rows={8}
+								placeholder="Markdown supported. Describe responsibilities, requirements, benefits..."
 								value={jobData.jobDesc}
 								onChange={(e) => updateField('jobDesc', e.target.value)}
 							/>
+
+							{/* Live preview (ToastViewer) */}
+							{jobData.jobDesc ? (
+								<div className="viewer-wrapper">
+									<ToastViewerComponent markdown={jobData.jobDesc} className={'ytb_play'} />
+								</div>
+							) : (
+								<Typography className="viewer-empty">Start typing to see a preview…</Typography>
+							)}
 						</Stack>
 					</Stack>
 
-					{/* Company Logo (single) */}
-					<Typography className="upload-title">Company Logo (single)</Typography>
-					<Stack className="images-box">
-						<Stack className="upload-box">
+					{/* RIGHT: compact company logo uploader (sticky, small) */}
+					<aside className="images-box images-box--compact">
+						<Typography className="upload-title">Company Logo</Typography>
+
+						<Stack className="upload-box upload-box--compact">
 							<Stack className="text-box">
 								<Typography className="drag-title">Choose logo</Typography>
-								<Typography className="format-title">JPEG/PNG, single file</Typography>
+								<Typography className="format-title">JPEG/PNG • single file</Typography>
 							</Stack>
 							<Button className="browse-button" onClick={() => logoInputRef.current?.click()}>
 								<Typography className="browse-button-text">
@@ -401,23 +422,23 @@ const AddProperty = () => {
 						</Stack>
 
 						{jobData.companyLogo && (
-							<Stack className="gallery-box">
-								<Stack className="image-box">
+							<Stack className="gallery-box gallery-box--compact">
+								<Stack className="image-box image-box--compact">
 									<img src={`${REACT_APP_API_URL}/${jobData.companyLogo}`} alt="company logo" />
 								</Stack>
-								<Button className="next-button" onClick={removeCompanyLogo}>
+								<Button className="next-button next-button--danger" onClick={removeCompanyLogo}>
 									<Typography className="next-button-text">Remove Logo</Typography>
 								</Button>
 							</Stack>
 						)}
-					</Stack>
+					</aside>
+				</Stack>
 
-					{/* Actions */}
-					<Stack className="buttons-row">
-						<Button className="next-button" disabled={isDisabled()} onClick={saveHandler}>
-							<Typography className="next-button-text">Save</Typography>
-						</Button>
-					</Stack>
+				{/* Actions */}
+				<Stack className="buttons-row">
+					<Button className="next-button" disabled={isDisabled()} onClick={saveHandler}>
+						<Typography className="next-button-text">Save</Typography>
+					</Button>
 				</Stack>
 			</div>
 		</div>

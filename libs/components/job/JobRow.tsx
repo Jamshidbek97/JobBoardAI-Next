@@ -53,21 +53,18 @@ export default React.memo(function JobRow({ job, onApply, likePropertyHandler }:
 	const isLiked = Array.isArray(job?.meLiked) && job.meLiked.length > 0 && job.meLiked[0]?.myFavorite === true;
 
 	// Create proper image path with fallback
-	const imagePath: string = job?.companyLogo
-		? `${REACT_APP_API_URL}/${job.companyLogo}`
-		: '/img/brands/g.png';
+	const imagePath: string = job?.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
 
 	return (
 		<div className={`job-row ${statusClosed ? 'is-closed' : ''}`}>
 			<div className="job-row__logo">
 				{job.companyLogo ? (
-					<Image 
-						src={imagePath} 
-						alt={`${job.companyName} logo`} 
-						width={44} 
+					<Image
+						src={imagePath}
+						alt={`${job.companyName} logo`}
+						width={44}
 						height={44}
 						onError={(e) => {
-							// If image fails to load, show the fallback text
 							const target = e.target as HTMLImageElement;
 							target.style.display = 'none';
 							const parent = target.parentElement;

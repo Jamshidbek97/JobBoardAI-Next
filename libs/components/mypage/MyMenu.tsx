@@ -62,10 +62,10 @@ const MyMenu: React.FC = () => {
 		<Stack
 			width="100%"
 			padding="30px 24px"
+			className="my-menu"
 			sx={{
 				position: { md: 'sticky' },
 				top: { md: 24 },
-				borderRight: { md: '1px solid rgba(0,0,0,0.06)' },
 				gap: 2,
 			}}
 		>
@@ -77,7 +77,7 @@ const MyMenu: React.FC = () => {
 					sx={{ width: 72, height: 72, borderRadius: '50%', overflow: 'hidden' }}
 				>
 					<img
-						src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
+						src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/defaultMember.jpg'}
 						alt="member-photo"
 						style={{ width: '100%', height: '100%', objectFit: 'cover' }}
 					/>

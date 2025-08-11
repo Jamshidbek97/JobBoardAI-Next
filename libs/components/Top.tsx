@@ -23,7 +23,7 @@ const Top = () => {
 	const navItems = [
 		{ label: t('Home'), path: '/' },
 		{ label: t('Jobs'), path: '/jobs' },
-		{ label: t('Companies'), path: '/companies' },
+		{ label: t('Companies'), path: '/agent' },
 		{ label: t('Community'), path: '/community?articleCategory=FREE' },
 		{ label: t('CS'), path: '/cs' }, // Changed from Resources to CS
 	];
@@ -106,7 +106,7 @@ const Top = () => {
 					{user?._id ? (
 						<div className="user-profile" onClick={handleUserMenuOpen}>
 							<Avatar
-								src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'}
+								src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/defaultMember.jpg'}
 								className="avatar"
 							/>
 							<span className="user-name">{user.memberNick}</span>

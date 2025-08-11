@@ -20,6 +20,8 @@ import { LIKE_TARGET_JOB } from '../../../apollo/user/mutation';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_JOBS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
+import Image from 'next/image';
+import { REACT_APP_API_URL } from '../../config';
 
 interface FeaturedJobsProps {
 	initialInput: AllJobsInquiry;
@@ -100,95 +102,114 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 		return `${diffDays} days ago`;
 	};
 
-	const renderJobCard = (job: Job, index: number) => (
-		<div className="featured-job-card" key={job._id || index}>
-			<div className="featured-badge">Featured</div>
+	const renderJobCard = (job: Job, index: number) => {
+		const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
+		return (
+			<div className="featured-job-card" key={job._id || index}>
+				<div className="featured-badge">Featured</div>
 
-			<div className="card-header">
-				<div className="company-logo">
-					{job.companyLogo ? (
-						<img src={job.companyLogo} alt={job.memberData?.memberNick || 'Company logo'} className="logo-image" />
-					) : (
-						<div className="logo-placeholder">{job.memberData?.memberNick?.charAt(0) || 'C'}</div>
+				<div className="card-header">
+					<div className="company-logo">
+						{job.companyLogo ? (
+							<Image
+								src={logo}
+								alt={`${job.companyName} logo`}
+								width={44}
+								height={44}
+								onError={(e) => {
+									const target = e.target as HTMLImageElement;
+									target.style.display = 'none';
+									const parent = target.parentElement;
+									if (parent) {
+										const fallback = document.createElement('div');
+										fallback.className = 'logo-fallback';
+										fallback.textContent = job.companyName?.charAt(0) ?? 'G';
+										parent.appendChild(fallback);
+									}
+								}}
+							/>
+						) : (
+							<div className="logo-fallback">{job.companyName?.charAt(0) ?? 'G'}</div>
+						)}
+					</div>
+					<button
+						className={`like-button ${likedJobs[job._id] ? 'liked' : ''}`}
+						onClick={() => toggleLikeJob(job._id)}
+						aria-label={likedJobs[job._id] ? 'Unlike job' : 'Like job'}
+					>
+						{likedJobs[job._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+					</button>
+				</div>
+
+				<div className="job-title">{job.positionTitle}</div>
+
+				<div className="company-info">
+					<div className="company-name">{job.memberData?.memberNick || 'Company'}</div>
+					{job.memberData?.memberFullName && (
+						<div className="poster-name">
+							<PersonOutlineIcon fontSize="small" />
+							<span>{job.memberData.memberFullName}</span>
+						</div>
 					)}
 				</div>
-				<button
-					className={`like-button ${likedJobs[job._id] ? 'liked' : ''}`}
-					onClick={() => toggleLikeJob(job._id)}
-					aria-label={likedJobs[job._id] ? 'Unlike job' : 'Like job'}
-				>
-					{likedJobs[job._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-				</button>
-			</div>
 
-			<div className="job-title">{job.positionTitle}</div>
+				<div className="job-details">
+					<div className="detail-item">
+						<LocationOnOutlinedIcon />
+						<span>{getJobLocationText(job.jobLocation)}</span>
+					</div>
+					<div className="detail-item">
+						<WorkOutlineOutlinedIcon />
+						<span>{getJobTypeText(job.jobType)}</span>
+					</div>
+				</div>
 
-			<div className="company-info">
-				<div className="company-name">{job.memberData?.memberNick || 'Company'}</div>
-				{job.memberData?.memberFullName && (
-					<div className="poster-name">
-						<PersonOutlineIcon fontSize="small" />
-						<span>{job.memberData.memberFullName}</span>
+				<div className="job-details">
+					<div className="detail-item">
+						<AttachMoneyOutlinedIcon />
+						<span>${job.jobSalary?.toLocaleString()}/yr</span>
+					</div>
+					<div className="detail-item">
+						<SchoolOutlinedIcon />
+						<span>{getEducationLevelText(job.educationLevel)}</span>
+					</div>
+				</div>
+
+				<div className="engagement-stats">
+					<div className="stat-item">
+						<VisibilityOutlinedIcon fontSize="small" />
+						<span>{job.jobViews || 0} views</span>
+					</div>
+					<div className="stat-item">
+						<FavoriteOutlinedIcon fontSize="small" />
+						<span>{job.jobLikes || 0} likes</span>
+					</div>
+				</div>
+
+				{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
+					<div className="skills-container">
+						{job.skillsRequired.slice(0, 6).map((skill, i) => (
+							<Chip key={i} label={skill} size="small" className="skill-tag" />
+						))}
+						{job.skillsRequired.length > 6 && (
+							<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 6}`} />
+						)}
 					</div>
 				)}
-			</div>
 
-			<div className="job-details">
-				<div className="detail-item">
-					<LocationOnOutlinedIcon />
-					<span>{getJobLocationText(job.jobLocation)}</span>
-				</div>
-				<div className="detail-item">
-					<WorkOutlineOutlinedIcon />
-					<span>{getJobTypeText(job.jobType)}</span>
-				</div>
-			</div>
-
-			<div className="job-details">
-				<div className="detail-item">
-					<AttachMoneyOutlinedIcon />
-					<span>${job.jobSalary?.toLocaleString()}/yr</span>
-				</div>
-				<div className="detail-item">
-					<SchoolOutlinedIcon />
-					<span>{getEducationLevelText(job.educationLevel)}</span>
+				<div className="job-footer">
+					<span className="time-ago">
+						{job.createdAt
+							? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
+							: 'Recently posted'}
+					</span>
+					<Button variant="contained" className="apply-button">
+						Apply Now
+					</Button>
 				</div>
 			</div>
-
-			<div className="engagement-stats">
-				<div className="stat-item">
-					<VisibilityOutlinedIcon fontSize="small" />
-					<span>{job.jobViews || 0} views</span>
-				</div>
-				<div className="stat-item">
-					<FavoriteOutlinedIcon fontSize="small" />
-					<span>{job.jobLikes || 0} likes</span>
-				</div>
-			</div>
-
-			{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
-				<div className="skills-container">
-					{job.skillsRequired.slice(0, 6).map((skill, i) => (
-						<Chip key={i} label={skill} size="small" className="skill-tag" />
-					))}
-					{job.skillsRequired.length > 6 && (
-						<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 6}`} />
-					)}
-				</div>
-			)}
-
-			<div className="job-footer">
-				<span className="time-ago">
-					{job.createdAt
-						? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
-						: 'Recently posted'}
-				</span>
-				<Button variant="contained" className="apply-button">
-					Apply Now
-				</Button>
-			</div>
-		</div>
-	);
+		);
+	};
 
 	const renderSkeleton = () => (
 		<div className="featured-job-card skeleton">
