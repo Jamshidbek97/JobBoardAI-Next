@@ -176,7 +176,7 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 										key={job._id}
 										job={job}
 										likePropertyHandler={likePropertyHandler}
-										onApply={(id) => router.push(`/job/${id}#apply`)}
+										onApply={(id) => router.push(`/jobs/${id}#apply`)}
 									/>
 								))
 							)}
