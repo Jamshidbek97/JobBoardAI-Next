@@ -4,6 +4,7 @@ export interface JobUpdate {
 	_id: string;
 	jobType?: JobType;
 	jobStatus?: JobStatus;
+	companyName?: string;
 	jobLocation?: JobLocation;
 	jobAddress?: string;
 	positionTitle?: string;

@@ -65,6 +65,7 @@
 				border: 1px solid rgba(196, 196, 196, 0.79);
 				background: #fff;
 				box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+
 				.description-box {
 					width: 100%;
 					height: auto;
@@ -584,6 +585,220 @@
 					}
 				}
 			}
+			.config.config--with-sidebar {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 280px;
+				gap: 24px;
+				align-items: start;
+			}
 		}
 	}
+}
+
+#pc-wrap {
+	#my-page {
+		#add-property-page {
+			/* --- 1) Two-column layout for compact sidebar (you already have this; keeping here for completeness) --- */
+			.config.config--with-sidebar {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 280px;
+				gap: 24px;
+				align-items: start;
+			}
+
+			/* --- 2) Input focus polish (safe enhancement) --- */
+			.config {
+				.description-box {
+					.description-input,
+					.select-description,
+					.listing-input {
+						&:focus {
+							border-color: #2563eb;
+							box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+						}
+					}
+				}
+			}
+
+			/* --- 3) Textarea for description + live viewer (ToastViewer) --- */
+			.config {
+				.description-box {
+					.description-textarea {
+						margin-top: 10px;
+						width: 100%;
+						min-height: 160px;
+						border-radius: 8px;
+						padding: 10px 15px;
+						border: 1px solid #ddd;
+						outline: none;
+						resize: vertical;
+						background: #fff;
+						color: #181a20;
+						font-family: $font;
+						font-size: 14px;
+						line-height: 1.6;
+
+						&:focus {
+							border-color: #2563eb;
+							box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+						}
+					}
+
+					.viewer-wrapper {
+						margin-top: 10px;
+						border: 1px solid #e5e7eb;
+						border-radius: 10px;
+						padding: 12px;
+						background: #fff;
+					}
+
+					.viewer-empty {
+						margin-top: 8px;
+						font-size: 13px;
+						color: #717171;
+						font-family: $font;
+					}
+				}
+			}
+
+			/* --- 4) Compact right sidebar for logo uploader --- */
+			.config {
+				.images-box--compact {
+					position: sticky;
+					top: 88px; /* sit under header */
+					align-self: start;
+					max-width: 280px;
+
+					.upload-title {
+						margin: 0 0 8px 0;
+						font-weight: 600;
+						font-size: 16px;
+					}
+
+					.upload-box--compact {
+						padding: 12px;
+						border: 1px dashed #eb6753;
+						border-radius: 12px;
+						background: #fafafa;
+						min-height: auto; /* override tall default */
+						height: auto; /* override tall default */
+						gap: 10px;
+
+						.text-box {
+							align-items: center;
+							justify-content: center;
+							gap: 4px;
+
+							.drag-title {
+								font-size: 14px;
+								font-weight: 600;
+							}
+							.format-title {
+								font-size: 12px;
+								color: #6b7280;
+							}
+						}
+
+						.browse-button {
+							width: 100%;
+							padding: 10px 14px;
+							border-radius: 12px;
+						}
+					}
+
+					.gallery-box--compact {
+						margin-top: 12px;
+
+						.image-box--compact {
+							width: 100%;
+							height: 140px;
+							border-radius: 12px;
+							overflow: hidden;
+							border: 1px solid #e5e7eb;
+							background: #fff;
+
+							img {
+								width: 100%;
+								height: 100%;
+								object-fit: contain;
+								display: block;
+							}
+						}
+
+						.next-button--danger {
+							margin-top: 8px;
+							background: #eb6753;
+
+							.next-button-text {
+								color: #fff;
+							}
+						}
+					}
+				}
+			}
+
+			/* --- 5) Make selects look clean with arrow and divider (works with your current markup) --- */
+			.config {
+				.description-box {
+					.config-row {
+						.price-year-after-price {
+							position: relative;
+
+							.select-description {
+								appearance: none;
+								padding-right: 40px;
+							}
+							.divider {
+								position: absolute;
+								height: 46px;
+								border-left: 1px solid #ddd;
+								right: 52px;
+								top: 42px;
+							}
+							.arrow-down {
+								position: absolute;
+								width: 15px;
+								height: 7px;
+								color: #ddd;
+								right: 18px;
+								top: 62px;
+								pointer-events: none;
+							}
+						}
+					}
+				}
+			}
+
+			/* --- 6) Buttons row spacing (keeps your original sizing) --- */
+			.config {
+				.buttons-row {
+					margin-top: 20px;
+
+					.next-button {
+						border-radius: 12px;
+					}
+				}
+			}
+
+			/* --- 7) Responsive: stack the sidebar above the form on mobile --- */
+			@media (max-width: 900px) {
+				.config.config--with-sidebar {
+					grid-template-columns: 1fr;
+				}
+				.config {
+					.images-box--compact {
+						position: static;
+						max-width: 100%;
+						order: -1; /* place above the form */
+					}
+				}
+			}
+		}
+	}
+}
+
+/* --- 8) Hard overrides to beat previous tall uploader rule (only when using compact variant) --- */
+#pc-wrap #my-page #add-property-page .images-box--compact .upload-box {
+	height: auto !important;
+	min-height: 160px !important;
 }

@@ -199,3 +199,158 @@
 		}
 	}
 }
+
+#pc-wrap {
+	#my-page {
+		/* Optional: if your MyPage has two columns, enforce a clean layout */
+		.mypage-layout {
+			display: grid;
+			grid-template-columns: 300px minmax(0, 1fr);
+			gap: 24px;
+			align-items: start;
+		}
+
+		/* --- MyMenu card --- */
+		.my-menu {
+			background: #fff;
+			border: 1px solid rgba(196, 196, 196, 0.79);
+			border-radius: 16px;
+			box-shadow: 0 1px 4px rgba(24, 26, 32, 0.07);
+			min-width: 260px;
+			max-width: 320px;
+			padding: 24px !important;
+			/* neutralize old divider if it was set via sx */
+			border-right: none !important;
+		}
+
+		/* Profile header */
+		.my-menu {
+			.profile {
+				.profile-img {
+					border: 1px solid #eee;
+					background: #fafafa;
+				}
+				.user-info {
+					.user-name {
+						font-family: $font;
+						font-weight: 700;
+						font-size: 16px;
+						color: #181a20;
+					}
+					.user-phone {
+						.p-number {
+							font-family: $font;
+							font-size: 13px;
+							color: #333;
+						}
+						img {
+							width: 14px;
+							height: 14px;
+						}
+					}
+					.view-list {
+						margin-top: 2px;
+						font-size: 12px;
+						font-weight: 700;
+						color: #eb3b3b;
+						letter-spacing: 0.02em;
+					}
+				}
+			}
+		}
+
+		/* Sections & items */
+		.my-menu {
+			.sections {
+				gap: 18px;
+			}
+
+			.section {
+				.title {
+					margin: 16px 0 8px;
+					font-family: $font;
+					font-size: 12px;
+					font-weight: 700;
+					letter-spacing: 0.08em;
+					color: #717171;
+					text-transform: uppercase;
+				}
+
+				.sub-section {
+					padding: 0;
+
+					.MuiListItem-root {
+						padding: 6px 0;
+					}
+
+					/* make links fill the row */
+					.w-100 {
+						display: block;
+						width: 100%;
+						text-decoration: none;
+						color: inherit;
+					}
+
+					/* composition for each row */
+					.flex-box {
+						display: flex;
+						align-items: center;
+						gap: 10px;
+						padding: 10px 12px;
+						border-radius: 12px;
+						transition: background 0.18s ease, color 0.18s ease;
+					}
+
+					/* hover */
+					.MuiListItem-root:hover .flex-box {
+						background: #f5f6f7;
+					}
+
+					/* active (your code sets className="focus") */
+					.focus .flex-box {
+						background: #181a20;
+						color: #fff;
+					}
+					.focus .sub-title {
+						color: #fff;
+					}
+
+					/* icons */
+					.com-icon {
+						width: 18px;
+						height: 18px;
+						flex: 0 0 18px;
+						display: inline-block;
+					}
+
+					/* text */
+					.sub-title {
+						font-family: $font;
+						font-size: 14px;
+						font-weight: 600;
+						color: #181a20;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				}
+			}
+		}
+
+		/* Responsive behavior */
+		@media (max-width: 900px) {
+			.mypage-layout {
+				grid-template-columns: 1fr;
+			}
+			.my-menu {
+				position: static !important; /* disable sticky on mobile */
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+/* In case the old right divider was injected by a high-specificity style */
+#pc-wrap #my-page .my-menu {
+	border-right: none !important;
+}

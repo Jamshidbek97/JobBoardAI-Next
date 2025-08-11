@@ -21,6 +21,7 @@ import { GET_JOB, GET_JOBS } from '../../../apollo/user/query';
 import { REACT_APP_API_URL } from '../../../libs/config';
 import withLayoutBasic from '../../../libs/components/layout/LayoutBasic';
 import { T } from '../../../libs/types/common';
+import Image from 'next/image';
 
 type Job = {
 	_id: string;
@@ -142,14 +143,35 @@ const JobDetailPage: NextPage = () => {
 		);
 	}
 
-	const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/profile/defaultCompany.svg';
+	const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
 
 	return (
 		<div className={styles.wrap}>
-			{/* Hero / Header */}
 			<div className={styles.hero}>
 				<div className={styles.heroBrand}>
-					<img className={styles.logo} src={logo} alt={`${job.companyName || 'Company'} logo`} />
+					<div className="job-row__logo">
+						{job.companyLogo ? (
+							<Image
+								src={logo}
+								alt={`${job.companyName} logo`}
+								width={44}
+								height={44}
+								onError={(e) => {
+									const target = e.target as HTMLImageElement;
+									target.style.display = 'none';
+									const parent = target.parentElement;
+									if (parent) {
+										const fallback = document.createElement('div');
+										fallback.className = 'logo-fallback';
+										fallback.textContent = job.companyName?.charAt(0) ?? 'G';
+										parent.appendChild(fallback);
+									}
+								}}
+							/>
+						) : (
+							<div className="logo-fallback">{job.companyName?.charAt(0) ?? 'G'}</div>
+						)}
+					</div>
 					<div>
 						<h1 className={styles.title}>{job.positionTitle}</h1>
 						<div className={styles.brandMeta}>
