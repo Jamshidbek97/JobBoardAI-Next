@@ -6,7 +6,7 @@ import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { CREATE_JOB, UPDATE_JOB } from '../../../apollo/user/mutation';
 import { GET_JOB } from '../../../apollo/user/query';
-import { JobLocation, JobType } from '../../enums/job.enum';
+import { EducationLevel, EmploymentLevel, JobLocation, JobType } from '../../enums/job.enum';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetMixinSuccessAlert } from '../../sweetAlert';
 import { getJwtToken } from '../../auth';
 import { REACT_APP_API_URL } from '../../config';
@@ -14,14 +14,16 @@ import { REACT_APP_API_URL } from '../../config';
 type JobForm = {
 	_id?: string;
 	positionTitle: string;
-	jobType: JobType | null; // <- Option A: null means "not chosen yet"
-	jobLocation: JobLocation | null; // <- same idea here
+	companyName: string;
+	jobType: JobType | null;
+	jobLocation: JobLocation | null;
 	jobSalary: number;
 	experienceYears: number;
-	educationLevel: string;
+	educationLevel: EducationLevel | null;
+	employmentLevel: EmploymentLevel | null;
 	skillsRequired: string[];
 	jobDesc: string;
-	companyLogo?: string; // single image path
+	companyLogo?: string;
 };
 
 const AddProperty = () => {
@@ -33,17 +35,18 @@ const AddProperty = () => {
 	const [skillInput, setSkillInput] = useState('');
 	const [jobData, setJobData] = useState<JobForm>({
 		positionTitle: '',
+		companyName: '',
 		jobType: null,
 		jobLocation: null,
 		jobSalary: 0,
 		experienceYears: 0,
-		educationLevel: '',
+		educationLevel: null,
+		employmentLevel: null,
 		skillsRequired: [],
 		jobDesc: '',
 		companyLogo: '',
 	});
 
-	// Support legacy ?propertyId or new ?jobId
 	const editingId = useMemo(() => {
 		const id = (router.query.jobId || router.query.propertyId) as string | undefined;
 		return (Array.isArray(id) ? id[0] : id) || '';
@@ -51,6 +54,8 @@ const AddProperty = () => {
 
 	const jobTypes = useMemo(() => Object.values(JobType), []);
 	const jobLocations = useMemo(() => Object.values(JobLocation), []);
+	const educationLevels = useMemo(() => Object.values(EducationLevel), []);
+	const employmentLevels = useMemo(() => Object.values(EmploymentLevel), []);
 
 	/** APOLLO **/
 	const [createJob] = useMutation(CREATE_JOB);
@@ -69,6 +74,7 @@ const AddProperty = () => {
 				...prev,
 				_id: j._id,
 				positionTitle: j.positionTitle || '',
+				companyName: j.companyName || '',
 				jobType: (j.jobType as JobType) ?? null,
 				jobLocation: (j.jobLocation as JobLocation) ?? null,
 				jobSalary: Number(j.jobSalary) || 0,
@@ -111,15 +117,15 @@ const AddProperty = () => {
 
 	const isDisabled = () =>
 		jobData.positionTitle.trim() === '' ||
+		jobData.companyName.trim() === '' ||
 		jobData.jobType === null ||
 		jobData.jobLocation === null ||
 		jobData.jobSalary <= 0 ||
 		jobData.experienceYears < 0 ||
-		jobData.educationLevel.trim() === '' ||
+		jobData.educationLevel === null ||
 		jobData.jobDesc.trim() === '' ||
 		jobData.skillsRequired.length === 0;
 
-	/** SINGLE LOGO UPLOAD via GraphQL multipart **/
 	const uploadCompanyLogo = async () => {
 		try {
 			if (!logoInputRef.current?.files?.length) return;
@@ -127,38 +133,54 @@ const AddProperty = () => {
 			const file = logoInputRef.current.files[0];
 			if (!file) return;
 
+			console.log('Uploading file:', file.name, file.size, file.type);
+
 			const fd = new FormData();
 
-			// send exactly one file using the same imagesUploader
 			fd.append(
 				'operations',
 				JSON.stringify({
-					query: `mutation ImagesUploader($files: [Upload!]!, $target: String!) {
-            imagesUploader(files: $files, target: $target)
-          }`,
-					variables: { files: [null], target: 'company-logo' }, // store under uploads/company-logo
+					query: `mutation ImageUploader($file: Upload!, $target: String!) {
+						imageUploader(file: $file, target: $target)
+					}`,
+					variables: { file: null, target: 'job' },
 				}),
 			);
-			fd.append('map', JSON.stringify({ '0': ['variables.files.0'] }));
+			fd.append('map', JSON.stringify({ '0': ['variables.file'] }));
 			fd.append('0', file);
+
+			console.log('API URL:', process.env.REACT_APP_API_GRAPHQL_URL);
+			console.log('Token:', token ? 'Present' : 'Missing');
 
 			const res = await axios.post(`${process.env.REACT_APP_API_GRAPHQL_URL}`, fd, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
-					'apollo-require-preflight': 'true',
+					'apollo-require-preflight': true,
 					Authorization: `Bearer ${token}`,
 				},
 			});
 
-			const arr: string[] = res?.data?.data?.imagesUploader || [];
-			const first = arr[0];
-			if (!first) throw new Error('Upload failed');
+			console.log('Response:', res.data);
 
-			updateField('companyLogo', first);
+			// Check for GraphQL errors first
+			if (res.data.errors && res.data.errors.length > 0) {
+				console.error('GraphQL errors:', res.data.errors);
+				throw new Error(res.data.errors[0].message || 'GraphQL error occurred');
+			}
+
+			const responseImage = res?.data?.data?.imageUploader;
+			if (!responseImage) {
+				console.error('No response image in data:', res.data);
+				throw new Error('Upload failed - no response image');
+			}
+
+			updateField('companyLogo', responseImage);
 			await sweetMixinSuccessAlert('Logo uploaded');
 			logoInputRef.current.value = '';
 		} catch (err: any) {
-			await sweetMixinErrorAlert(err?.message || 'Upload failed');
+			console.error('Upload error:', err);
+			console.error('Error response:', err.response?.data);
+			await sweetMixinErrorAlert(err?.response?.data?.message || err?.message || 'Upload failed');
 		}
 	};
 
@@ -169,7 +191,7 @@ const AddProperty = () => {
 		try {
 			const payload = {
 				...jobData,
-				jobType: jobData.jobType ?? undefined, // if your backend doesn't accept null
+				jobType: jobData.jobType ?? undefined,
 				jobLocation: jobData.jobLocation ?? undefined,
 			};
 
@@ -197,25 +219,35 @@ const AddProperty = () => {
 			<div>
 				<Stack className="config">
 					<Stack className="description-box">
-						{/* Position Title */}
-						<Stack className="config-column">
-							<Typography className="title">Position Title</Typography>
-							<input
-								type="text"
-								className="description-input"
-								placeholder="e.g., Frontend Developer"
-								value={jobData.positionTitle}
-								onChange={(e) => updateField('positionTitle', e.target.value)}
-							/>
+						<Stack className="config-row">
+							<Stack className="config-column">
+								<Typography className="title">Position Title</Typography>
+								<input
+									type="text"
+									className="description-input"
+									placeholder="e.g., Frontend Developer"
+									value={jobData.positionTitle}
+									onChange={(e) => updateField('positionTitle', e.target.value)}
+								/>
+							</Stack>
+							<Stack className="config-column">
+								<Typography className="title">Company Name</Typography>
+								<input
+									type="text"
+									className="description-input"
+									placeholder="e.g., Google"
+									value={jobData.companyName}
+									onChange={(e) => updateField('companyName', e.target.value)}
+								/>
+							</Stack>
 						</Stack>
 
-						{/* Type + Location */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
 								<Typography className="title">Job Type</Typography>
 								<select
 									className="select-description"
-									value={jobData.jobType ?? ''} // '' for placeholder
+									value={jobData.jobType ?? ''}
 									onChange={(e) => updateField('jobType', (e.target.value || null) as JobType | null)}
 								>
 									<option disabled value="">
@@ -235,7 +267,7 @@ const AddProperty = () => {
 								<Typography className="title">Location</Typography>
 								<select
 									className="select-description"
-									value={jobData.jobLocation ?? ''} // '' for placeholder
+									value={jobData.jobLocation ?? ''} //
 									onChange={(e) => updateField('jobLocation', (e.target.value || null) as JobLocation | null)}
 								>
 									<option disabled value="">
@@ -250,9 +282,27 @@ const AddProperty = () => {
 								<div className="divider" />
 								<img src="/img/icons/Vector.svg" className="arrow-down" />
 							</Stack>
+							<Stack className="price-year-after-price">
+								<Typography className="title">Employment Level</Typography>
+								<select
+									className="select-description"
+									value={jobData.employmentLevel ?? ''} //
+									onChange={(e) => updateField('employmentLevel', (e.target.value || null) as EmploymentLevel | null)}
+								>
+									<option disabled value="">
+										Select
+									</option>
+									{employmentLevels.map((level) => (
+										<option key={level} value={level}>
+											{level}
+										</option>
+									))}
+								</select>
+								<div className="divider" />
+								<img src="/img/icons/Vector.svg" className="arrow-down" />
+							</Stack>
 						</Stack>
 
-						{/* Salary + Experience + Education */}
 						<Stack className="config-row">
 							<Stack className="price-year-after-price">
 								<Typography className="title">Salary</Typography>
@@ -278,13 +328,22 @@ const AddProperty = () => {
 
 							<Stack className="price-year-after-price">
 								<Typography className="title">Education Level</Typography>
-								<input
-									type="text"
-									className="description-input"
-									placeholder="e.g., Bachelor's or above"
-									value={jobData.educationLevel}
-									onChange={(e) => updateField('educationLevel', e.target.value)}
-								/>
+								<select
+									className="select-description"
+									value={jobData.educationLevel ?? ''}
+									onChange={(e) => updateField('educationLevel', (e.target.value || null) as EducationLevel | null)}
+								>
+									<option disabled value="">
+										Select
+									</option>
+									{educationLevels.map((educationLevel) => (
+										<option key={educationLevel} value={educationLevel}>
+											{educationLevel}
+										</option>
+									))}
+								</select>
+								<div className="divider" />
+								<img src="/img/icons/Vector.svg" className="arrow-down" />
 							</Stack>
 						</Stack>
 
