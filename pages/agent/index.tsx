@@ -329,7 +329,7 @@ const HiringManagerList: NextPage = ({ initialInput, ...props }: any) => {
 HiringManagerList.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 12,
+		limit: 3,
 		sort: 'createdAt',
 		direction: 'DESC',
 		search: {},
