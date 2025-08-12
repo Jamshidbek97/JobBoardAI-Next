@@ -58,28 +58,34 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const [jobLocations, setJobLocations] = useState<JobLocation[]>(Object.values(JobLocation));
 	const [jobTypes, setJobTypes] = useState<JobType[]>(Object.values(JobType));
 
-	/** LIFECYCLE **/
+	// NEW
+	const locationMenuRef = useRef<HTMLDivElement | null>(null);
+	const typeMenuRef = useRef<HTMLDivElement | null>(null);
+	const salaryMenuRef = useRef<HTMLDivElement | null>(null);
+
 	useEffect(() => {
-		const clickHandler = (event: MouseEvent) => {
-			if (!locationRef?.current?.contains(event.target)) {
+		const onDocPointerDown = (event: MouseEvent) => {
+			const target = event.target as Node;
+
+			// Close location dropdown if clicked outside
+			if (openLocation && !locationRef.current?.contains(target) && !locationMenuRef.current?.contains(target)) {
 				setOpenLocation(false);
 			}
 
-			if (!typeRef?.current?.contains(event.target)) {
+			// Close type dropdown if clicked outside
+			if (openType && !typeRef.current?.contains(target) && !typeMenuRef.current?.contains(target)) {
 				setOpenType(false);
 			}
 
-			if (!salaryRef?.current?.contains(event.target)) {
+			// Close salary dropdown if clicked outside
+			if (openSalary && !salaryRef.current?.contains(target) && !salaryMenuRef.current?.contains(target)) {
 				setOpenSalary(false);
 			}
 		};
 
-		document.addEventListener('mousedown', clickHandler);
-
-		return () => {
-			document.removeEventListener('mousedown', clickHandler);
-		};
-	}, []);
+		document.addEventListener('mousedown', onDocPointerDown);
+		return () => document.removeEventListener('mousedown', onDocPointerDown);
+	}, [openLocation, openType, openSalary]);
 
 	/** HANDLERS **/
 	const advancedFilterHandler = (status: boolean) => {
@@ -411,16 +417,15 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 
 					{/* DROPDOWN MENUS */}
 					{openLocation && (
-						<div className="dropdown-menu location-dropdown show" style={{ pointerEvents: 'auto' }}>
+						<div className="dropdown-menu location-dropdown show" ref={locationMenuRef}>
 							{jobLocations.map((location) => (
-								<div 
-									key={location} 
-									className="dropdown-item" 
+								<div
+									key={location}
+									className="dropdown-item"
 									onClick={() => {
 										console.log('Location clicked:', location);
 										jobLocationSelectHandler(location);
 									}}
-									style={{ cursor: 'pointer' }}
 								>
 									<span>{location}</span>
 								</div>
@@ -429,16 +434,15 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					)}
 
 					{openType && (
-						<div className="dropdown-menu type-dropdown show" style={{ pointerEvents: 'auto' }}>
+						<div className="dropdown-menu type-dropdown show" ref={typeMenuRef}>
 							{jobTypes.map((type) => (
-								<div 
-									key={type} 
-									className="dropdown-item" 
+								<div
+									key={type}
+									className="dropdown-item"
 									onClick={() => {
 										console.log('Type clicked:', type);
 										jobTypeSelectHandler(type);
 									}}
-									style={{ cursor: 'pointer' }}
 								>
 									<span>{type}</span>
 								</div>
@@ -447,16 +451,15 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 					)}
 
 					{openSalary && (
-						<div className="dropdown-menu salary-dropdown show" style={{ pointerEvents: 'auto' }}>
+						<div className="dropdown-menu salary-dropdown show" ref={salaryMenuRef}>
 							{salaryOptions.map((salary) => (
-								<div 
-									key={salary} 
-									className="dropdown-item" 
+								<div
+									key={salary}
+									className="dropdown-item"
 									onClick={() => {
 										console.log('Salary clicked:', salary);
 										salarySelectHandler(salary);
 									}}
-									style={{ cursor: 'pointer' }}
 								>
 									<span>${salary.toLocaleString()}+</span>
 								</div>
@@ -466,7 +469,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				</div>
 			</div>
 
-			{/* ADVANCED FILTER MODAL */}
 			<Modal
 				open={openAdvancedFilter}
 				onClose={() => advancedFilterHandler(false)}
