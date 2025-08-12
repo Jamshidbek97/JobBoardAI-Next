@@ -593,6 +593,7 @@
 						}
 
 						.review-input {
+							margin-top: 6px;
 							margin-bottom: 16px;
 
 							.MuiOutlinedInput-root {
@@ -609,6 +610,22 @@
 									border-color: #3b82f6;
 									background: white;
 									box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+								}
+
+								.MuiInputBase-input {
+									padding: 16px;
+									font-size: 14px;
+									line-height: 1.5;
+									color: #1e293b;
+
+									&::placeholder {
+										color: #64748b;
+										opacity: 1;
+									}
+								}
+
+								.MuiOutlinedInput-notchedOutline {
+									border: none;
 								}
 							}
 						}

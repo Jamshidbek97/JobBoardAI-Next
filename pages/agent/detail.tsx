@@ -600,6 +600,13 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 										commentContent: e.target.value 
 									})}
 									className="review-input"
+									variant="outlined"
+									InputProps={{
+										style: {
+											fontSize: '14px',
+											lineHeight: '1.5',
+										}
+									}}
 								/>
 								<Button
 									variant="contained"
