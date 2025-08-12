@@ -1,0 +1,685 @@
+#pc-wrap {
+	.hiring-manager-detail-page {
+		position: relative;
+		padding: 147px 0 75px;
+		width: 100%;
+		min-height: 100vh;
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 24px;
+			display: flex;
+			flex-direction: column;
+			gap: 32px;
+
+			/* Loading State */
+			.loading-state {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 80px 20px;
+				text-align: center;
+
+				.loading-icon {
+					font-size: 48px;
+					color: #64748b;
+					margin-bottom: 16px;
+					animation: pulse 2s infinite;
+				}
+
+				.loading-text {
+					color: #64748b;
+					font-size: 16px;
+					font-weight: 500;
+				}
+			}
+
+			/* Error State */
+			.error-state {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 80px 20px;
+				text-align: center;
+
+				.error-title {
+					font-size: 24px;
+					font-weight: 700;
+					color: #475569;
+					margin-bottom: 8px;
+				}
+
+				.error-subtitle {
+					font-size: 16px;
+					color: #64748b;
+					margin-bottom: 24px;
+					max-width: 400px;
+				}
+
+				.back-btn {
+					background: #3b82f6;
+					color: white;
+					border-radius: 8px;
+					padding: 12px 24px;
+					font-weight: 600;
+					text-transform: none;
+
+					&:hover {
+						background: #2563eb;
+					}
+				}
+			}
+
+			/* Back Navigation */
+			.back-nav {
+				margin-bottom: 16px;
+
+				.back-btn {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					color: #64748b;
+					font-weight: 500;
+					text-transform: none;
+					padding: 8px 16px;
+					border-radius: 8px;
+					transition: all 0.2s ease;
+
+					&:hover {
+						background: #f1f5f9;
+						color: #3b82f6;
+					}
+				}
+			}
+
+			/* Profile Header */
+			.profile-header {
+				background: white;
+				border-radius: 16px;
+				padding: 32px;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 32px;
+
+				.profile-info {
+					display: flex;
+					gap: 24px;
+					flex: 1;
+
+					.profile-image-container {
+						position: relative;
+						flex-shrink: 0;
+
+						.profile-image {
+							width: 120px;
+							height: 120px;
+							border-radius: 50%;
+							object-fit: cover;
+							border: 4px solid #f1f5f9;
+							transition: all 0.2s ease;
+						}
+
+						.status-indicator {
+							position: absolute;
+							bottom: 8px;
+							right: 8px;
+							width: 20px;
+							height: 20px;
+							border-radius: 50%;
+							border: 3px solid white;
+
+							&.active {
+								background: #10b981;
+							}
+						}
+					}
+
+					.profile-details {
+						flex: 1;
+						display: flex;
+						flex-direction: column;
+						gap: 16px;
+
+						.profile-name {
+							font-size: 28px;
+							font-weight: 700;
+							color: #1e293b;
+							line-height: 1.2;
+						}
+
+						.profile-meta {
+							display: flex;
+							flex-direction: column;
+							gap: 12px;
+
+							.member-type-chip {
+								align-self: flex-start;
+								background: #f0f9ff;
+								color: #0ea5e9;
+								font-weight: 600;
+								border-radius: 20px;
+
+								.MuiChip-icon {
+									color: #0ea5e9;
+								}
+							}
+
+							.location-info {
+								display: flex;
+								align-items: center;
+								gap: 8px;
+								color: #64748b;
+
+								.location-icon {
+									font-size: 18px;
+								}
+
+								.location-text {
+									font-size: 14px;
+									color: #64748b;
+								}
+							}
+						}
+
+						.profile-description {
+							font-size: 16px;
+							color: #475569;
+							line-height: 1.6;
+							margin-top: 8px;
+						}
+
+						.profile-stats {
+							display: grid;
+							grid-template-columns: repeat(4, 1fr);
+							gap: 16px;
+							margin-top: 16px;
+
+							.stat-item {
+								display: flex;
+								align-items: center;
+								gap: 12px;
+								padding: 16px;
+								background: #f8fafc;
+								border-radius: 12px;
+								transition: background 0.2s ease;
+
+								&:hover {
+									background: #f1f5f9;
+								}
+
+								.stat-icon {
+									font-size: 20px;
+									color: #3b82f6;
+									background: rgba(59, 130, 246, 0.1);
+									padding: 8px;
+									border-radius: 8px;
+								}
+
+								.stat-content {
+									.stat-value {
+										font-size: 18px;
+										font-weight: 700;
+										color: #1e293b;
+										line-height: 1;
+									}
+
+									.stat-label {
+										font-size: 12px;
+										color: #64748b;
+										font-weight: 500;
+										margin-top: 2px;
+									}
+								}
+							}
+						}
+
+						.join-info {
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							color: #64748b;
+							margin-top: 8px;
+
+							.time-icon {
+								font-size: 16px;
+							}
+
+							.join-text {
+								font-size: 14px;
+								color: #64748b;
+							}
+						}
+					}
+				}
+
+				.profile-actions {
+					display: flex;
+					flex-direction: column;
+					gap: 12px;
+					align-items: flex-end;
+
+					.follow-btn {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						padding: 12px 20px;
+						border-radius: 8px;
+						background: #f8fafc;
+						border: 1px solid #e2e8f0;
+						color: #64748b;
+						transition: all 0.2s ease;
+						text-transform: none;
+
+						&:hover {
+							background: #f1f5f9;
+							border-color: #cbd5e1;
+						}
+
+						&.following {
+							background: #f0f9ff;
+							border-color: #bae6fd;
+							color: #0ea5e9;
+
+							&:hover {
+								background: #e0f2fe;
+								color: #0284c7;
+							}
+						}
+
+						.follow-text {
+							font-weight: 600;
+							font-size: 14px;
+						}
+					}
+
+					.contact-btn {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						padding: 12px 20px;
+						border-radius: 8px;
+						background: #3b82f6;
+						color: white;
+						border: none;
+						transition: all 0.2s ease;
+						text-transform: none;
+						font-weight: 600;
+
+						&:hover {
+							background: #2563eb;
+							transform: translateY(-1px);
+						}
+					}
+				}
+			}
+
+			/* Main Content */
+			.main-content {
+				display: flex;
+				flex-direction: column;
+				gap: 32px;
+
+				/* Section Headers */
+				.section-header {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					margin-bottom: 24px;
+
+					.section-title {
+						font-size: 24px;
+						font-weight: 700;
+						color: #1e293b;
+					}
+
+					.section-subtitle {
+						font-size: 16px;
+						color: #64748b;
+					}
+
+					.reviews-summary {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						color: #64748b;
+
+						.star-icon {
+							color: #fbbf24;
+							font-size: 20px;
+						}
+
+						.reviews-count {
+							font-weight: 600;
+							color: #475569;
+						}
+					}
+				}
+
+				/* Jobs Section */
+				.jobs-section {
+					background: white;
+					border-radius: 16px;
+					padding: 32px;
+					box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+					.loading-jobs,
+					.no-jobs {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+						padding: 60px 20px;
+						text-align: center;
+
+						.no-jobs-icon {
+							font-size: 64px;
+							color: #cbd5e1;
+							margin-bottom: 16px;
+						}
+
+						.no-jobs-title {
+							font-size: 20px;
+							font-weight: 600;
+							color: #475569;
+							margin-bottom: 8px;
+						}
+
+						.no-jobs-subtitle {
+							font-size: 16px;
+							color: #64748b;
+						}
+					}
+
+					.jobs-grid {
+						display: grid;
+						grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+						gap: 20px;
+						margin-bottom: 32px;
+
+						.job-card {
+							background: #f8fafc;
+							border-radius: 12px;
+							padding: 20px;
+							border: 1px solid #e2e8f0;
+							cursor: pointer;
+							transition: all 0.2s ease;
+
+							&:hover {
+								background: #f1f5f9;
+								transform: translateY(-2px);
+								box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+							}
+
+							.job-header {
+								display: flex;
+								justify-content: space-between;
+								align-items: flex-start;
+								margin-bottom: 16px;
+
+								.job-company {
+									display: flex;
+									align-items: center;
+									gap: 12px;
+
+									.company-logo {
+										border-radius: 8px;
+										object-fit: cover;
+									}
+
+									.company-info {
+										.job-title {
+											font-size: 16px;
+											font-weight: 600;
+											color: #1e293b;
+											margin-bottom: 4px;
+											line-height: 1.3;
+										}
+
+										.company-name {
+											font-size: 14px;
+											color: #64748b;
+										}
+									}
+								}
+
+								.like-btn {
+									color: #64748b;
+									padding: 4px;
+
+									&:hover {
+										color: #ef4444;
+										background: rgba(239, 68, 68, 0.1);
+									}
+								}
+							}
+
+							.job-details {
+								.job-meta {
+									display: flex;
+									gap: 12px;
+									margin-bottom: 12px;
+
+									.job-location,
+									.job-type {
+										font-size: 13px;
+										color: #64748b;
+										background: #f1f5f9;
+										padding: 4px 8px;
+										border-radius: 6px;
+									}
+								}
+
+								.job-salary {
+									font-size: 16px;
+									font-weight: 600;
+									color: #059669;
+								}
+							}
+						}
+					}
+
+					.jobs-pagination {
+						display: flex;
+						justify-content: center;
+						margin-top: 24px;
+					}
+				}
+
+				/* Reviews Section */
+				.reviews-section {
+					background: white;
+					border-radius: 16px;
+					padding: 32px;
+					box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+					.loading-reviews,
+					.no-reviews {
+						display: flex;
+						flex-direction: column;
+						align-items: center;
+						justify-content: center;
+						padding: 60px 20px;
+						text-align: center;
+
+						.no-reviews-icon {
+							font-size: 64px;
+							color: #cbd5e1;
+							margin-bottom: 16px;
+						}
+
+						.no-reviews-title {
+							font-size: 20px;
+							font-weight: 600;
+							color: #475569;
+							margin-bottom: 8px;
+						}
+
+						.no-reviews-subtitle {
+							font-size: 16px;
+							color: #64748b;
+						}
+					}
+
+					.reviews-list {
+						display: flex;
+						flex-direction: column;
+						gap: 20px;
+						margin-bottom: 32px;
+
+						.review-card {
+							background: #f8fafc;
+							border-radius: 12px;
+							padding: 20px;
+							border: 1px solid #e2e8f0;
+
+							.review-header {
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+								margin-bottom: 12px;
+
+								.reviewer-name {
+									font-size: 16px;
+									font-weight: 600;
+									color: #1e293b;
+								}
+
+								.review-date {
+									font-size: 14px;
+									color: #64748b;
+								}
+							}
+
+							.review-content {
+								font-size: 15px;
+								color: #475569;
+								line-height: 1.6;
+							}
+						}
+					}
+
+					.reviews-pagination {
+						display: flex;
+						justify-content: center;
+						margin-bottom: 32px;
+					}
+
+					/* Leave Review */
+					.leave-review {
+						border-top: 1px solid #e2e8f0;
+						padding-top: 32px;
+
+						.review-form-title {
+							font-size: 20px;
+							font-weight: 600;
+							color: #1e293b;
+							margin-bottom: 16px;
+						}
+
+						.review-input {
+							margin-bottom: 16px;
+
+							.MuiOutlinedInput-root {
+								border-radius: 12px;
+								background: #f8fafc;
+								border: 2px solid #e2e8f0;
+								transition: all 0.2s ease;
+
+								&:hover {
+									border-color: #cbd5e1;
+								}
+
+								&.Mui-focused {
+									border-color: #3b82f6;
+									background: white;
+									box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+								}
+							}
+						}
+
+						.submit-review-btn {
+							background: #3b82f6;
+							color: white;
+							border-radius: 8px;
+							padding: 12px 24px;
+							font-weight: 600;
+							text-transform: none;
+							box-shadow: none;
+
+							&:hover {
+								background: #2563eb;
+								box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+							}
+
+							&:disabled {
+								background: #cbd5e1;
+								color: #64748b;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Animations */
+@keyframes pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	#pc-wrap {
+		.hiring-manager-detail-page {
+			.container {
+				padding: 0 16px;
+				gap: 24px;
+
+				.profile-header {
+					flex-direction: column;
+					padding: 24px;
+
+					.profile-info {
+						flex-direction: column;
+						align-items: center;
+						text-align: center;
+
+						.profile-details {
+							.profile-stats {
+								grid-template-columns: repeat(2, 1fr);
+							}
+						}
+					}
+
+					.profile-actions {
+						align-items: center;
+						width: 100%;
+					}
+				}
+
+				.main-content {
+					.jobs-section,
+					.reviews-section {
+						padding: 24px;
+
+						.jobs-grid {
+							grid-template-columns: 1fr;
+						}
+					}
+				}
+			}
+		}
+	}
+}

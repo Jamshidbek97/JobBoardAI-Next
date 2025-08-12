@@ -2,10 +2,24 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import PropertyBigCard from '../../libs/components/common/PropertyBigCard';
-import ReviewCard from '../../libs/components/agent/ReviewCard';
-import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
+import { Box, Button, Pagination, Stack, Typography, Chip, IconButton, TextField } from '@mui/material';
+import {
+	Star as StarIcon,
+	ArrowBack as ArrowBackIcon,
+	Work as WorkIcon,
+	Visibility as VisibilityIcon,
+	Favorite as FavoriteIcon,
+	FavoriteBorder as FavoriteBorderIcon,
+	PersonAdd as FollowIcon,
+	PersonRemove as UnfollowIcon,
+	LocationOn as LocationIcon,
+	Business as BusinessIcon,
+	AccessTime as TimeIcon,
+	Phone as PhoneIcon,
+	Email as EmailIcon,
+	LinkedIn as LinkedInIcon,
+	Send as SendIcon,
+} from '@mui/icons-material';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Member } from '../../libs/types/member/member';
@@ -16,10 +30,13 @@ import { Comment } from '../../libs/types/comment/comment';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { Messages, REACT_APP_API_URL } from '../../libs/config';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { CREATE_COMMENT, LIKE_TARGET_JOB } from '../../apollo/user/mutation';
+import { CREATE_COMMENT, LIKE_TARGET_JOB, SUBSCRIBE, UNSUBSCRIBE } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_JOBS, GET_MEMBER } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Direction } from '../../libs/enums/common.enum';
+import { Job } from '../../libs/types/job/job';
+import { JobInquiry } from '../../libs/types/job/job.input';
+import Image from 'next/image';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -27,17 +44,17 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
+const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [mbId, setMbId] = useState<string | null>(null);
-	const [agent, setAgent] = useState<Member | null>(null);
-	const [searchFilter, setSearchFilter] = useState<PropertiesInquiry>(initialInput);
-	const [agentProperties, setAgentProperties] = useState<Property[]>([]);
-	const [propertyTotal, setPropertyTotal] = useState<number>(0);
+	const [hiringManager, setHiringManager] = useState<Member | null>(null);
+	const [searchFilter, setSearchFilter] = useState<JobInquiry>(initialInput);
+	const [hiringManagerJobs, setHiringManagerJobs] = useState<Job[]>([]);
+	const [jobsTotal, setJobsTotal] = useState<number>(0);
 	const [commentInquiry, setCommentInquiry] = useState<CommentsInquiry>(initialComment);
-	const [agentComments, setAgentComments] = useState<Comment[]>([]);
+	const [hiringManagerComments, setHiringManagerComments] = useState<Comment[]>([]);
 	const [commentTotal, setCommentTotal] = useState<number>(0);
 	const [insertCommentData, setInsertCommentData] = useState<CommentInput>({
 		commentGroup: CommentGroup.MEMBER,
@@ -47,7 +64,10 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 
 	/** APOLLO REQUESTS **/
 	const [createComment] = useMutation(CREATE_COMMENT);
-	const [likeTargetProperty] = useMutation(LIKE_TARGET_JOB);
+	const [likeTargetJob] = useMutation(LIKE_TARGET_JOB);
+	const [subscribe] = useMutation(SUBSCRIBE);
+	const [unsubscribe] = useMutation(UNSUBSCRIBE);
+
 	const {
 		loading: getMemberLoading,
 		data: getMemberData,
@@ -59,7 +79,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		skip: !mbId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgent(data?.getMember);
+			setHiringManager(data?.getMember);
 			setSearchFilter({
 				...searchFilter,
 				search: {
@@ -80,18 +100,18 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	});
 
 	const {
-		loading: getPropertiesLoading,
-		data: getPropertiesData,
-		error: getPropertiesError,
-		refetch: getPropertiesRefetch,
+		loading: getJobsLoading,
+		data: getJobsData,
+		error: getJobsError,
+		refetch: getJobsRefetch,
 	} = useQuery(GET_JOBS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
-		skip: !searchFilter.search.memberId,
+		skip: !searchFilter?.search?.memberId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProperties(data?.getProperties?.list);
-			setPropertyTotal(data?.getProperties?.metaCounter[0]?.total ?? 0);
+			setHiringManagerJobs(data?.getJobs?.list);
+			setJobsTotal(data?.getJobs?.metaCounter[0]?.total ?? 0);
 		},
 	});
 
@@ -106,7 +126,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		skip: !commentInquiry.search.commentRefId,
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentComments(data?.getComments?.list);
+			setHiringManagerComments(data?.getComments?.list);
 			setCommentTotal(data?.getComments?.metaCounter[0]?.total ?? 0);
 		},
 	});
@@ -118,7 +138,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 
 	useEffect(() => {
 		if (searchFilter.search.memberId) {
-			getPropertiesRefetch({ variables: { input: searchFilter } }).then();
+			getJobsRefetch({ variables: { input: searchFilter } }).then();
 		}
 	}, [searchFilter]);
 
@@ -128,17 +148,41 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		}
 	}, [commentInquiry]);
 
-	/** HANDLERS **/
-	const redirectToMemberPageHandler = async (memberId: string) => {
-		try {
-			if (memberId === user?._id) await router.push(`/mypage?memberId=${memberId}`);
-			else await router.push(`/member?memberId=${memberId}`);
-		} catch (error) {
-			await sweetErrorHandling(error);
+	/** HELPERS **/
+	const getMemberTypeDisplay = (type: string) => {
+		switch (type?.toLowerCase()) {
+			case 'admin':
+				return 'Admin';
+			case 'member':
+				return 'Hiring Manager';
+			case 'agent':
+				return 'Recruiter';
+			default:
+				return 'Hiring Manager';
 		}
 	};
 
-	const propertyPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
+	const getTimeSinceJoined = (createdAt: string) => {
+		if (!createdAt) return 'Recently joined';
+		const createdDate = new Date(createdAt);
+		const now = new Date();
+		const diffDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+		if (diffDays === 0) return 'Joined today';
+		if (diffDays === 1) return 'Joined yesterday';
+		if (diffDays < 7) return `Joined ${diffDays} days ago`;
+		if (diffDays < 30) return `Joined ${Math.floor(diffDays / 7)} weeks ago`;
+		if (diffDays < 365) return `Joined ${Math.floor(diffDays / 30)} months ago`;
+		return `Joined ${Math.floor(diffDays / 365)} years ago`;
+	};
+
+	const isFollowing = hiringManager?.meFollowed && hiringManager.meFollowed.length > 0 && hiringManager.meFollowed[0]?.myFollowing === true;
+
+	/** HANDLERS **/
+	const handleBackClick = () => {
+		router.back();
+	};
+
+	const jobsPaginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
 		searchFilter.page = value;
 		setSearchFilter({ ...searchFilter });
 	};
@@ -151,7 +195,8 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 	const createCommentHandler = async () => {
 		try {
 			if (!user._id) throw new Error(Messages.error2);
-			if (user._id === agent?._id) throw new Error('Can not write review for yourself');
+			if (user._id === hiringManager?._id) throw new Error('Cannot write review for yourself');
+			
 			await createComment({
 				variables: {
 					input: insertCommentData,
@@ -159,160 +204,418 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 			});
 
 			setInsertCommentData({ ...insertCommentData, commentContent: '' });
-
 			await getCommentsRefetch({ input: commentInquiry });
+			await sweetTopSmallSuccessAlert('Review submitted successfully', 800);
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
 	};
 
-	const likePropertyHandler = async (user: any, id: string) => {
+	const likeJobHandler = async (user: any, id: string) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Messages.error2);
-			await likeTargetProperty({
+			
+			await likeTargetJob({
 				variables: {
 					input: id,
 				},
 			});
 
-			await getPropertiesRefetch({ input: searchFilter });
-			await sweetTopSmallSuccessAlert('success', 800);
+			await getJobsRefetch({ input: searchFilter });
+			await sweetTopSmallSuccessAlert('Job liked successfully', 800);
 		} catch (err: any) {
-			console.log('ERROR, likePropertyHandler', err);
-
+			console.log('ERROR, likeJobHandler', err);
 			sweetErrorHandling(err).then();
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>AGENT DETAIL PAGE MOBILE</div>;
-	} else {
-		return (
-			<Stack className={'agent-detail-page'}>
-				<Stack className={'container'}>
-					<Stack className={'agent-info'}>
-						<img
-							src={agent?.memberImage ? `${REACT_APP_API_URL}/${agent?.memberImage}` : '/img/profile/defaultUser.svg'}
-							alt=""
-						/>
-						<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(agent?._id as string)}>
-							<strong>{agent?.memberFullName ?? agent?.memberNick}</strong>
-							<div>
-								<img src="/img/icons/call.svg" alt="" />
-								<span>{agent?.memberPhone}</span>
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'agent-home-list'}>
-						<Stack className={'card-wrap'}>
-							{agentProperties.map((property: Property) => {
-								return (
-									<div className={'wrap-main'} key={property?._id}>
-										<PropertyBigCard
-											property={property}
-											likePropertyHandler={likePropertyHandler}
-											key={property?._id}
-										/>
-									</div>
-								);
-							})}
-						</Stack>
-						<Stack className={'pagination'}>
-							{propertyTotal ? (
-								<>
-									<Stack className="pagination-box">
-										<Pagination
-											page={searchFilter.page}
-											count={Math.ceil(propertyTotal / searchFilter.limit) || 1}
-											onChange={propertyPaginationChangeHandler}
-											shape="circular"
-											color="primary"
-										/>
-									</Stack>
-									<span>
-										Total {propertyTotal} property{propertyTotal > 1 ? 'ies' : 'y'} available
-									</span>
-								</>
-							) : (
-								<div className={'no-data'}>
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No properties found!</p>
-								</div>
-							)}
-						</Stack>
-					</Stack>
-					<Stack className={'review-box'}>
-						<Stack className={'main-intro'}>
-							<span>Reviews</span>
-							<p>we are glad to see you again</p>
-						</Stack>
-						{commentTotal !== 0 && (
-							<Stack className={'review-wrap'}>
-								<Box component={'div'} className={'title-box'}>
-									<StarIcon />
-									<span>
-										{commentTotal} review{commentTotal > 1 ? 's' : ''}
-									</span>
-								</Box>
-								{agentComments?.map((comment: Comment) => {
-									return <ReviewCard comment={comment} key={comment?._id} />;
-								})}
-								<Box component={'div'} className={'pagination-box'}>
-									<Pagination
-										page={commentInquiry.page}
-										count={Math.ceil(commentTotal / commentInquiry.limit) || 1}
-										onChange={commentPaginationChangeHandler}
-										shape="circular"
-										color="primary"
-									/>
-								</Box>
-							</Stack>
-						)}
+	const followHandler = async () => {
+		try {
+			if (!hiringManager?._id) return;
+			if (!user._id) throw new Error(Messages.error2);
 
-						<Stack className={'leave-review-config'}>
-							<Typography className={'main-title'}>Leave A Review</Typography>
-							<Typography className={'review-title'}>Review</Typography>
-							<textarea
-								onChange={({ target: { value } }: any) => {
-									setInsertCommentData({ ...insertCommentData, commentContent: value });
-								}}
-								value={insertCommentData.commentContent}
-							></textarea>
-							<Box className={'submit-btn'} component={'div'}>
-								<Button
-									className={'submit-review'}
-									disabled={insertCommentData.commentContent === '' || user?._id === ''}
-									onClick={createCommentHandler}
-								>
-									<Typography className={'title'}>Submit Review</Typography>
-									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-										<g clipPath="url(#clip0_6975_3642)">
-											<path
-												d="M16.1571 0.5H6.37936C6.1337 0.5 5.93491 0.698792 5.93491 0.944458C5.93491 1.19012 6.1337 1.38892 6.37936 1.38892H15.0842L0.731781 15.7413C0.558156 15.915 0.558156 16.1962 0.731781 16.3698C0.818573 16.4566 0.932323 16.5 1.04603 16.5C1.15974 16.5 1.27345 16.4566 1.36028 16.3698L15.7127 2.01737V10.7222C15.7127 10.9679 15.9115 11.1667 16.1572 11.1667C16.4028 11.1667 16.6016 10.9679 16.6016 10.7222V0.944458C16.6016 0.698792 16.4028 0.5 16.1571 0.5Z"
-												fill="#181A20"
-											/>
-										</g>
-										<defs>
-											<clipPath id="clip0_6975_3642">
-												<rect width="16" height="16" fill="white" transform="translate(0.601562 0.5)" />
-											</clipPath>
-										</defs>
-									</svg>
-								</Button>
-							</Box>
-						</Stack>
-					</Stack>
+			if (isFollowing) {
+				await unsubscribe({
+					variables: {
+						memberId: hiringManager._id,
+					},
+				});
+				await sweetTopSmallSuccessAlert('Unfollowed successfully', 800);
+			} else {
+				await subscribe({
+					variables: {
+						memberId: hiringManager._id,
+					},
+				});
+				await sweetTopSmallSuccessAlert('Followed successfully', 800);
+			}
+
+			await getMemberRefetch();
+		} catch (err: any) {
+			console.log('ERROR, followHandler', err.message);
+			sweetErrorHandling(err).then();
+		}
+	};
+
+	const handleJobClick = (jobId: string) => {
+		router.push(`/jobs/${jobId}`);
+	};
+
+	if (getMemberLoading) {
+		return (
+			<Stack className="hiring-manager-detail-page">
+				<Stack className="container">
+					<Box className="loading-state">
+						<BusinessIcon className="loading-icon" />
+						<Typography className="loading-text">Loading hiring manager profile...</Typography>
+					</Box>
 				</Stack>
 			</Stack>
 		);
 	}
+
+	if (getMemberError || !hiringManager) {
+		return (
+			<Stack className="hiring-manager-detail-page">
+				<Stack className="container">
+					<Box className="error-state">
+						<Typography className="error-title">Profile Not Found</Typography>
+						<Typography className="error-subtitle">
+							The hiring manager profile you're looking for doesn't exist or has been removed.
+						</Typography>
+						<Button onClick={handleBackClick} variant="contained" className="back-btn">
+							Go Back
+						</Button>
+					</Box>
+				</Stack>
+			</Stack>
+		);
+	}
+
+	if (device === 'mobile') {
+		return <h1>HIRING MANAGER DETAIL MOBILE</h1>;
+	}
+
+	const imagePath = hiringManager?.memberImage
+		? `${REACT_APP_API_URL}/${hiringManager.memberImage}`
+		: '/img/defaultMember.jpg';
+
+	return (
+		<Stack className="hiring-manager-detail-page">
+			<Stack className="container">
+				{/* Back Navigation */}
+				<Box className="back-nav">
+					<Button onClick={handleBackClick} className="back-btn">
+						<ArrowBackIcon />
+						<span>Back to Hiring Managers</span>
+					</Button>
+				</Box>
+
+				{/* Profile Header */}
+				<Box className="profile-header">
+					<Box className="profile-info">
+						<Box className="profile-image-container">
+							<Image
+								src={imagePath}
+								alt={`${hiringManager.memberFullName || hiringManager.memberNick} profile`}
+								width={120}
+								height={120}
+								className="profile-image"
+								onError={(e) => {
+									const target = e.target as HTMLImageElement;
+									target.src = '/img/defaultMember.jpg';
+								}}
+							/>
+							{hiringManager?.memberStatus === 'ACTIVE' && (
+								<Box className="status-indicator active" />
+							)}
+						</Box>
+						
+						<Box className="profile-details">
+							<Typography className="profile-name">
+								{hiringManager.memberFullName || hiringManager.memberNick || 'Anonymous'}
+							</Typography>
+							
+							<Box className="profile-meta">
+								<Chip 
+									icon={<BusinessIcon />} 
+									label={getMemberTypeDisplay(hiringManager.memberType)}
+									className="member-type-chip"
+									size="small"
+								/>
+								{hiringManager.memberAddress && (
+									<Box className="location-info">
+										<LocationIcon className="location-icon" />
+										<Typography className="location-text">
+											{hiringManager.memberAddress}
+										</Typography>
+									</Box>
+								)}
+							</Box>
+
+							{hiringManager.memberDesc && (
+								<Typography className="profile-description">
+									{hiringManager.memberDesc}
+								</Typography>
+							)}
+
+							<Box className="profile-stats">
+								<Box className="stat-item">
+									<WorkIcon className="stat-icon" />
+									<Box className="stat-content">
+										<Typography className="stat-value">{hiringManager.memberPostedJobs || 0}</Typography>
+										<Typography className="stat-label">Jobs Posted</Typography>
+									</Box>
+								</Box>
+								
+								<Box className="stat-item">
+									<VisibilityIcon className="stat-icon" />
+									<Box className="stat-content">
+										<Typography className="stat-value">{hiringManager.memberViews || 0}</Typography>
+										<Typography className="stat-label">Profile Views</Typography>
+									</Box>
+								</Box>
+								
+								<Box className="stat-item">
+									<FavoriteIcon className="stat-icon" />
+									<Box className="stat-content">
+										<Typography className="stat-value">{hiringManager.memberLikes || 0}</Typography>
+										<Typography className="stat-label">Likes</Typography>
+									</Box>
+								</Box>
+								
+								<Box className="stat-item">
+									<FollowIcon className="stat-icon" />
+									<Box className="stat-content">
+										<Typography className="stat-value">{hiringManager.memberFollowers || 0}</Typography>
+										<Typography className="stat-label">Followers</Typography>
+									</Box>
+								</Box>
+							</Box>
+
+							<Box className="join-info">
+								<TimeIcon className="time-icon" />
+								<Typography className="join-text">
+									{getTimeSinceJoined(hiringManager.createdAt)}
+								</Typography>
+							</Box>
+						</Box>
+					</Box>
+
+					<Box className="profile-actions">
+						<IconButton 
+							className={`follow-btn ${isFollowing ? 'following' : ''}`}
+							onClick={followHandler}
+							title={isFollowing ? 'Unfollow' : 'Follow'}
+						>
+							{isFollowing ? <UnfollowIcon /> : <FollowIcon />}
+							<Typography className="follow-text">
+								{isFollowing ? 'Unfollow' : 'Follow'}
+							</Typography>
+						</IconButton>
+
+						{hiringManager.memberPhone && (
+							<Button className="contact-btn phone-btn">
+								<PhoneIcon />
+								<span>{hiringManager.memberPhone}</span>
+							</Button>
+						)}
+					</Box>
+				</Box>
+
+				{/* Main Content */}
+				<Box className="main-content">
+					{/* Jobs Section */}
+					<Box className="jobs-section">
+						<Box className="section-header">
+							<Typography className="section-title">Posted Jobs</Typography>
+							<Typography className="section-subtitle">
+								{jobsTotal} job{jobsTotal !== 1 ? 's' : ''} posted by this hiring manager
+							</Typography>
+						</Box>
+
+						{getJobsLoading ? (
+							<Box className="loading-jobs">
+								<Typography>Loading jobs...</Typography>
+							</Box>
+						) : hiringManagerJobs.length === 0 ? (
+							<Box className="no-jobs">
+								<WorkIcon className="no-jobs-icon" />
+								<Typography className="no-jobs-title">No Jobs Posted Yet</Typography>
+								<Typography className="no-jobs-subtitle">
+									This hiring manager hasn't posted any jobs yet.
+								</Typography>
+							</Box>
+						) : (
+							<Box className="jobs-grid">
+								{hiringManagerJobs.map((job: Job) => (
+									<Box 
+										key={job._id} 
+										className="job-card"
+										onClick={() => handleJobClick(job._id)}
+									>
+										<Box className="job-header">
+											<Box className="job-company">
+												{job.companyLogo && (
+													<Image
+														src={`${REACT_APP_API_URL}/${job.companyLogo}`}
+														alt={`${job.companyName} logo`}
+														width={40}
+														height={40}
+														className="company-logo"
+														onError={(e) => {
+															const target = e.target as HTMLImageElement;
+															target.style.display = 'none';
+														}}
+													/>
+												)}
+												<Box className="company-info">
+													<Typography className="job-title">{job.positionTitle}</Typography>
+													<Typography className="company-name">{job.companyName || '—'}</Typography>
+												</Box>
+											</Box>
+											<IconButton 
+												className="like-btn"
+												onClick={(e) => {
+													e.stopPropagation();
+													likeJobHandler(user, job._id);
+												}}
+											>
+												<FavoriteBorderIcon />
+											</IconButton>
+										</Box>
+										
+										<Box className="job-details">
+											<Box className="job-meta">
+												<Typography className="job-location">
+													{job.jobLocation?.replace(/_/g, ' ') || '—'}
+												</Typography>
+												<Typography className="job-type">
+													{job.jobType?.replace(/_/g, ' ') || '—'}
+												</Typography>
+											</Box>
+											
+											<Typography className="job-salary">
+												{job.jobSalary ? `${new Intl.NumberFormat('ko-KR', { 
+													style: 'currency', 
+													currency: 'KRW',
+													maximumFractionDigits: 0 
+												}).format(Number(job.jobSalary))}` : 'Negotiable'}
+											</Typography>
+										</Box>
+									</Box>
+								))}
+							</Box>
+						)}
+
+						{jobsTotal > 0 && (
+							<Box className="jobs-pagination">
+								<Pagination
+									page={searchFilter.page}
+									count={Math.ceil(jobsTotal / searchFilter.limit)}
+									onChange={jobsPaginationChangeHandler}
+									shape="circular"
+									color="primary"
+								/>
+							</Box>
+						)}
+					</Box>
+
+					{/* Reviews Section */}
+					<Box className="reviews-section">
+						<Box className="section-header">
+							<Typography className="section-title">Reviews</Typography>
+							<Box className="reviews-summary">
+								<StarIcon className="star-icon" />
+								<Typography className="reviews-count">
+									{commentTotal} review{commentTotal !== 1 ? 's' : ''}
+								</Typography>
+							</Box>
+						</Box>
+
+						{getCommentsLoading ? (
+							<Box className="loading-reviews">
+								<Typography>Loading reviews...</Typography>
+							</Box>
+						) : hiringManagerComments.length === 0 ? (
+							<Box className="no-reviews">
+								<StarIcon className="no-reviews-icon" />
+								<Typography className="no-reviews-title">No Reviews Yet</Typography>
+								<Typography className="no-reviews-subtitle">
+									Be the first to review this hiring manager.
+								</Typography>
+							</Box>
+						) : (
+							<Box className="reviews-list">
+								{hiringManagerComments.map((comment: Comment) => (
+									<Box key={comment._id} className="review-card">
+										<Box className="review-header">
+											<Typography className="reviewer-name">
+												{comment.memberData?.memberFullName || comment.memberData?.memberNick || 'Anonymous'}
+											</Typography>
+											<Typography className="review-date">
+												{new Date(comment.createdAt).toLocaleDateString()}
+											</Typography>
+										</Box>
+										<Typography className="review-content">
+											{comment.commentContent}
+										</Typography>
+									</Box>
+								))}
+							</Box>
+						)}
+
+						{commentTotal > 0 && (
+							<Box className="reviews-pagination">
+								<Pagination
+									page={commentInquiry.page}
+									count={Math.ceil(commentTotal / commentInquiry.limit)}
+									onChange={commentPaginationChangeHandler}
+									shape="circular"
+									color="primary"
+								/>
+							</Box>
+						)}
+
+						{/* Leave Review */}
+						{user._id && user._id !== hiringManager._id && (
+							<Box className="leave-review">
+								<Typography className="review-form-title">Leave a Review</Typography>
+								<TextField
+									fullWidth
+									multiline
+									rows={4}
+									placeholder="Share your experience with this hiring manager..."
+									value={insertCommentData.commentContent}
+									onChange={(e) => setInsertCommentData({ 
+										...insertCommentData, 
+										commentContent: e.target.value 
+									})}
+									className="review-input"
+								/>
+								<Button
+									variant="contained"
+									onClick={createCommentHandler}
+									disabled={!insertCommentData.commentContent.trim()}
+									className="submit-review-btn"
+									endIcon={<SendIcon />}
+								>
+									Submit Review
+								</Button>
+							</Box>
+						)}
+					</Box>
+				</Box>
+			</Stack>
+		</Stack>
+	);
 };
 
-AgentDetail.defaultProps = {
+HiringManagerDetail.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 9,
+		limit: 6,
 		search: {
 			memberId: '',
 		},
@@ -329,4 +632,4 @@ AgentDetail.defaultProps = {
 	},
 };
 
-export default withLayoutBasic(AgentDetail);
+export default withLayoutBasic(HiringManagerDetail);
