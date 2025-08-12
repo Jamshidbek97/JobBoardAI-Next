@@ -94,56 +94,298 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		return <div>JobBoardAI PROPERTIES MOBILE</div>;
 	} else {
 		return (
-			<div id="my-property-page">
-				<Stack className="main-title-box">
+			<div id="my-property-page" style={{ width: '100%', padding: '20px' }}>
+				<Stack className="main-title-box" style={{ marginBottom: '30px' }}>
 					<Stack className="right-box">
-						<Typography className="main-title">My Properties</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
+						<Typography className="main-title" style={{ 
+							fontSize: '30px', 
+							fontWeight: 600, 
+							marginBottom: '10px',
+							color: '#181a20'
+						}}>
+							My Posted Jobs
+						</Typography>
+						<Typography className="sub-title" style={{ 
+							fontSize: '14px', 
+							color: '#666',
+							lineHeight: '1.5'
+						}}>
+							Manage your job postings and track their performance
+						</Typography>
 					</Stack>
 				</Stack>
-				<Stack className="property-list-box">
-					<Stack className="tab-name-box">
+				
+				<Stack className="property-list-box" style={{
+					padding: '30px',
+					borderRadius: '12px',
+					border: '1px solid rgba(196, 196, 196, 0.79)',
+					background: '#fff',
+					boxShadow: '0px 1px 4px 0px rgba(24, 26, 32, 0.07)'
+				}}>
+					<Stack className="tab-name-box" style={{
+						display: 'flex',
+						gap: '40px',
+						marginBottom: '30px',
+						borderBottom: '1px solid #e5e7eb',
+						paddingBottom: '15px'
+					}}>
 						<Typography
 							onClick={() => changeStatusHandler(JobStatus.OPEN)}
 							className={searchFilter.search.jobStatus === 'OPEN' ? 'active-tab-name' : 'tab-name'}
+							style={{
+								fontSize: '16px',
+								fontWeight: searchFilter.search.jobStatus === 'OPEN' ? 600 : 400,
+								color: searchFilter.search.jobStatus === 'OPEN' ? '#181a20' : '#666',
+								cursor: 'pointer',
+								padding: '8px 0',
+								borderBottom: searchFilter.search.jobStatus === 'OPEN' ? '2px solid #181a20' : 'none',
+								transition: 'all 0.2s ease'
+							}}
 						>
-							On Sale
+							Active Jobs
 						</Typography>
 						<Typography
 							onClick={() => changeStatusHandler(JobStatus.CLOSED)}
 							className={searchFilter.search.jobStatus === 'CLOSED' ? 'active-tab-name' : 'tab-name'}
+							style={{
+								fontSize: '16px',
+								fontWeight: searchFilter.search.jobStatus === 'CLOSED' ? 600 : 400,
+								color: searchFilter.search.jobStatus === 'CLOSED' ? '#181a20' : '#666',
+								cursor: 'pointer',
+								padding: '8px 0',
+								borderBottom: searchFilter.search.jobStatus === 'CLOSED' ? '2px solid #181a20' : 'none',
+								transition: 'all 0.2s ease'
+							}}
 						>
-							On Sold
+							Closed Jobs
 						</Typography>
 					</Stack>
+					
 					<Stack className="list-box">
-						<Stack className="listing-title-box">
-							<Typography className="title-text">Listing title</Typography>
-							<Typography className="title-text">Date Published</Typography>
-							<Typography className="title-text">Status</Typography>
-							<Typography className="title-text">View</Typography>
-							{searchFilter.search.jobStatus === 'OPEN' && <Typography className="title-text">Action</Typography>}
+						<Stack className="listing-title-box" style={{
+							display: 'grid',
+							gridTemplateColumns: searchFilter.search.jobStatus === 'OPEN' 
+								? '2fr 1fr 1fr 1fr 1fr' 
+								: '2fr 1fr 1fr 1fr',
+							gap: '20px',
+							padding: '15px 20px',
+							background: '#f8f9fa',
+							borderRadius: '8px',
+							marginBottom: '20px',
+							border: '1px solid #e5e7eb'
+						}}>
+							<Typography className="title-text" style={{ 
+								fontSize: '14px', 
+								fontWeight: 600, 
+								color: '#181a20'
+							}}>
+								Job Title
+							</Typography>
+							<Typography className="title-text" style={{ 
+								fontSize: '14px', 
+								fontWeight: 600, 
+								color: '#181a20'
+							}}>
+								Date Posted
+							</Typography>
+							<Typography className="title-text" style={{ 
+								fontSize: '14px', 
+								fontWeight: 600, 
+								color: '#181a20'
+							}}>
+								Status
+							</Typography>
+							<Typography className="title-text" style={{ 
+								fontSize: '14px', 
+								fontWeight: 600, 
+								color: '#181a20'
+							}}>
+								Views
+							</Typography>
+							{searchFilter.search.jobStatus === 'OPEN' && (
+								<Typography className="title-text" style={{ 
+									fontSize: '14px', 
+									fontWeight: 600, 
+									color: '#181a20'
+								}}>
+									Actions
+								</Typography>
+							)}
 						</Stack>
 
 						{agentProperties?.length === 0 ? (
-							<div className={'no-data'}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Property found!</p>
+							<div className={'no-data'} style={{
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								justifyContent: 'center',
+								padding: '60px 20px',
+								textAlign: 'center',
+								color: '#666'
+							}}>
+								<img src="/img/icons/icoAlert.svg" alt="" style={{ 
+									width: '60px', 
+									height: '60px', 
+									marginBottom: '20px',
+									opacity: '0.6'
+								}} />
+								<p style={{ 
+									fontSize: '16px', 
+									margin: '0',
+									color: '#666'
+								}}>
+									No jobs found!
+								</p>
+								<p style={{ 
+									fontSize: '14px', 
+									margin: '10px 0 0 0',
+									color: '#999'
+								}}>
+									{searchFilter.search.jobStatus === 'OPEN' 
+										? 'You haven\'t posted any active jobs yet.' 
+										: 'You don\'t have any closed jobs yet.'
+									}
+								</p>
 							</div>
 						) : (
-							agentProperties.map((property: Job) => {
-								return (
-									<PropertyCard
-										property={property}
-										deletePropertyHandler={deletePropertyHandler}
-										updatePropertyHandler={updatePropertyHandler}
-									/>
-								);
-							})
+							<div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+								{agentProperties.map((property: Job, index: number) => {
+									return (
+										<div key={property._id || index} style={{
+											display: 'grid',
+											gridTemplateColumns: searchFilter.search.jobStatus === 'OPEN' 
+												? '2fr 1fr 1fr 1fr 1fr' 
+												: '2fr 1fr 1fr 1fr',
+											gap: '20px',
+											padding: '15px 20px',
+											background: '#fff',
+											borderRadius: '8px',
+											border: '1px solid #e5e7eb',
+											alignItems: 'center',
+											transition: 'all 0.2s ease',
+											boxShadow: undefined,
+										}}
+										onMouseEnter={e => {
+											(e.currentTarget as HTMLDivElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+										}}
+										onMouseLeave={e => {
+											(e.currentTarget as HTMLDivElement).style.boxShadow = '';
+										}}>
+											<div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+												<Typography style={{ 
+													fontSize: '16px', 
+													fontWeight: 600, 
+													color: '#181a20',
+													cursor: 'pointer'
+												}}>
+													{property.positionTitle}
+												</Typography>
+												<Typography style={{ 
+													fontSize: '14px', 
+													color: '#666'
+												}}>
+													{property.companyName}
+												</Typography>
+											</div>
+											
+											<Typography style={{ 
+												fontSize: '14px', 
+												color: '#666'
+											}}>
+												{new Date(property.createdAt).toLocaleDateString()}
+											</Typography>
+											
+											<div style={{
+												padding: '4px 12px',
+												borderRadius: '20px',
+												background: property.jobStatus === 'OPEN' ? '#e8f5e8' : '#ffe8e8',
+												color: property.jobStatus === 'OPEN' ? '#2d5a2d' : '#8b2d2d',
+												fontSize: '12px',
+												fontWeight: 600,
+												textAlign: 'center',
+												width: 'fit-content'
+											}}>
+												{property.jobStatus === 'OPEN' ? 'Active' : 'Closed'}
+											</div>
+											
+											<Typography style={{ 
+												fontSize: '14px', 
+												color: '#666',
+												textAlign: 'center'
+											}}>
+												{property.jobViews || 0}
+											</Typography>
+											
+											{searchFilter.search.jobStatus === 'OPEN' && (
+												<div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+													<button
+														onClick={() => router.push(`/mypage?category=myProfile&jobId=${property._id}`)}
+														style={{
+															padding: '6px 12px',
+															background: '#2563eb',
+															color: '#fff',
+															border: 'none',
+															borderRadius: '6px',
+															fontSize: '12px',
+															cursor: 'pointer',
+															transition: 'background 0.2s ease'
+														}}
+														onMouseOver={(e) => e.currentTarget.style.background = '#1d4ed8'}
+														onMouseOut={(e) => e.currentTarget.style.background = '#2563eb'}
+													>
+														Edit
+													</button>
+													<button
+														onClick={() => updatePropertyHandler('CLOSED', property._id)}
+														style={{
+															padding: '6px 12px',
+															background: '#dc2626',
+															color: '#fff',
+															border: 'none',
+															borderRadius: '6px',
+															fontSize: '12px',
+															cursor: 'pointer',
+															transition: 'background 0.2s ease'
+														}}
+														onMouseOver={(e) => e.currentTarget.style.background = '#b91c1c'}
+														onMouseOut={(e) => e.currentTarget.style.background = '#dc2626'}
+													>
+														Close
+													</button>
+													<button
+														onClick={() => deletePropertyHandler(property._id)}
+														style={{
+															padding: '6px 12px',
+															background: '#6b7280',
+															color: '#fff',
+															border: 'none',
+															borderRadius: '6px',
+															fontSize: '12px',
+															cursor: 'pointer',
+															transition: 'background 0.2s ease'
+														}}
+														onMouseOver={(e) => e.currentTarget.style.background = '#4b5563'}
+														onMouseOut={(e) => e.currentTarget.style.background = '#6b7280'}
+													>
+														Delete
+													</button>
+												</div>
+											)}
+										</div>
+									);
+								})}
+							</div>
 						)}
 
 						{agentProperties.length !== 0 && (
-							<Stack className="pagination-config">
+							<Stack className="pagination-config" style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+								alignItems: 'center',
+								marginTop: '30px',
+								paddingTop: '20px',
+								borderTop: '1px solid #e5e7eb'
+							}}>
 								<Stack className="pagination-box">
 									<Pagination
 										count={Math.ceil(total / searchFilter.limit)}
@@ -154,7 +396,12 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 									/>
 								</Stack>
 								<Stack className="total-result">
-									<Typography>{total} property available</Typography>
+									<Typography style={{ 
+										fontSize: '14px', 
+										color: '#666'
+									}}>
+										{total} job{total !== 1 ? 's' : ''} available
+									</Typography>
 								</Stack>
 							</Stack>
 						)}
