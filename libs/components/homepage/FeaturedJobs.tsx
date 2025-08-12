@@ -22,27 +22,45 @@ import { GET_JOBS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import Image from 'next/image';
 import { REACT_APP_API_URL } from '../../config';
+import { useRouter } from 'next/router';
 
 interface FeaturedJobsProps {
 	initialInput: AllJobsInquiry;
 }
 
 const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
-	const [likedJobs, setLikedJobs] = useState<Record<string, boolean>>({});
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+	const router = useRouter();
 
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
 
-	const { loading: getJobsLoading } = useQuery(GET_JOBS, {
+	const { loading: getJobsLoading, refetch: getJobsRefetch } = useQuery(GET_JOBS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => setFeaturedJobs(data?.getJobs?.list),
 	});
 
-	const toggleLikeJob = (jobId: string) => {
-		setLikedJobs((prev) => ({ ...prev, [jobId]: !prev[jobId] }));
-		likeTargetJobs({ variables: { input: jobId } });
+	const toggleLikeJob = async (e: React.MouseEvent, jobId: string) => {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		try {
+			await likeTargetJobs({ variables: { input: jobId } });
+			await getJobsRefetch({ input: initialInput });
+			window.location.reload();
+		} catch (err) {
+			console.error('Error toggling like:', err);
+		}
+	};
+
+	const handleCardClick = (jobId: string) => {
+		router.push(`/jobs/${jobId}`);
+	};
+
+	// Check if job is liked by current user
+	const isJobLiked = (job: Job) => {
+		return Array.isArray(job?.meLiked) && job.meLiked.length > 0 && job.meLiked[0]?.myFavorite === true;
 	};
 
 	// === Helpers ===
@@ -104,8 +122,15 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 
 	const renderJobCard = (job: Job, index: number) => {
 		const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
+		const isLiked = isJobLiked(job);
+		
 		return (
-			<div className="featured-job-card" key={job._id || index}>
+			<div 
+				className="featured-job-card" 
+				key={job._id || index}
+				onClick={() => handleCardClick(job._id)}
+				style={{ cursor: 'pointer' }}
+			>
 				<div className="featured-badge">Featured</div>
 
 				<div className="card-header">
@@ -114,37 +139,39 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 							<Image
 								src={logo}
 								alt={`${job.companyName} logo`}
-								width={44}
-								height={44}
+								width={72}
+								height={72}
+								className="logo-image"
 								onError={(e) => {
 									const target = e.target as HTMLImageElement;
 									target.style.display = 'none';
 									const parent = target.parentElement;
 									if (parent) {
 										const fallback = document.createElement('div');
-										fallback.className = 'logo-fallback';
+										fallback.className = 'logo-placeholder';
 										fallback.textContent = job.companyName?.charAt(0) ?? 'G';
 										parent.appendChild(fallback);
 									}
 								}}
 							/>
 						) : (
-							<div className="logo-fallback">{job.companyName?.charAt(0) ?? 'G'}</div>
+							<div className="logo-placeholder">{job.companyName?.charAt(0) ?? 'G'}</div>
 						)}
 					</div>
 					<button
-						className={`like-button ${likedJobs[job._id] ? 'liked' : ''}`}
-						onClick={() => toggleLikeJob(job._id)}
-						aria-label={likedJobs[job._id] ? 'Unlike job' : 'Like job'}
+						className={`like-button ${isLiked ? 'liked' : ''}`}
+						onClick={(e) => toggleLikeJob(e, job._id)}
+						aria-label={isLiked ? 'Unlike job' : 'Like job'}
+						style={{ fontSize: '24px' }}
 					>
-						{likedJobs[job._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+						{isLiked ? <FavoriteIcon style={{ fontSize: '24px' }} /> : <FavoriteBorderIcon style={{ fontSize: '24px' }} />}
 					</button>
 				</div>
 
 				<div className="job-title">{job.positionTitle}</div>
 
 				<div className="company-info">
-					<div className="company-name">{job.memberData?.memberNick || 'Company'}</div>
+					<div className="company-name">{job.companyName || job.memberData?.memberNick || 'Company'}</div>
 					{job.memberData?.memberFullName && (
 						<div className="poster-name">
 							<PersonOutlineIcon fontSize="small" />
@@ -188,11 +215,11 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 
 				{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
 					<div className="skills-container">
-						{job.skillsRequired.slice(0, 6).map((skill, i) => (
+						{job.skillsRequired.slice(0, 5).map((skill, i) => (
 							<Chip key={i} label={skill} size="small" className="skill-tag" />
 						))}
-						{job.skillsRequired.length > 6 && (
-							<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 6}`} />
+						{job.skillsRequired.length > 5 && (
+							<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 5}`} />
 						)}
 					</div>
 				)}
@@ -203,7 +230,7 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 							? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
 							: 'Recently posted'}
 					</span>
-					<Button variant="contained" className="apply-button">
+					<Button variant="contained" className="apply-button" size="small">
 						Apply Now
 					</Button>
 				</div>
