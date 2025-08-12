@@ -191,12 +191,15 @@ const AddProperty = () => {
 		try {
 			const payload = {
 				...jobData,
-				jobType: jobData.jobType ?? undefined,
-				jobLocation: jobData.jobLocation ?? undefined,
-				employmentLevel: jobData.employmentLevel ?? undefined,
+				jobType: jobData.jobType || undefined,
+				jobLocation: jobData.jobLocation || undefined,
+				employmentLevel: jobData.employmentLevel || undefined,
 				jobSalary: Number(salaryInput || 0),
 				experienceYears: Number(expInput || 0),
 			};
+
+			// Debug log to see what's being sent
+			console.log('Sending payload:', payload);
 
 			if (editingId) {
 				await updateJob({ variables: { input: payload } });
