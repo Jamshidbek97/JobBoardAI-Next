@@ -451,10 +451,20 @@
 								.like-btn {
 									color: #64748b;
 									padding: 4px;
+									transition: all 0.2s ease;
 
 									&:hover {
 										color: #ef4444;
 										background: rgba(239, 68, 68, 0.1);
+									}
+
+									&.liked {
+										color: #ef4444;
+										
+										&:hover {
+											color: #dc2626;
+											background: rgba(239, 68, 68, 0.15);
+										}
 									}
 								}
 							}

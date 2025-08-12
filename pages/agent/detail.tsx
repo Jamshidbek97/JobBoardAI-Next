@@ -99,6 +99,8 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 		},
 	});
 
+	console.log('getMember', searchFilter);
+
 	const {
 		loading: getJobsLoading,
 		data: getJobsData,
@@ -209,6 +211,11 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
+	};
+
+	// Check if job is liked by current user
+	const isJobLiked = (job: Job) => {
+		return job?.meLiked && job?.meLiked.length > 0;
 	};
 
 	const likeJobHandler = async (user: any, id: string) => {
@@ -397,7 +404,7 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 							<Box className="join-info">
 								<TimeIcon className="time-icon" />
 								<Typography className="join-text">
-									{getTimeSinceJoined(hiringManager.createdAt)}
+									{getTimeSinceJoined(hiringManager.createdAt.toString())}
 								</Typography>
 							</Box>
 						</Box>
@@ -476,13 +483,13 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 												</Box>
 											</Box>
 											<IconButton 
-												className="like-btn"
-												onClick={(e) => {
+												className={`like-btn ${isJobLiked(job) ? 'liked' : ''}`}
+												onClick={(e: any) => {
 													e.stopPropagation();
 													likeJobHandler(user, job._id);
 												}}
 											>
-												<FavoriteBorderIcon />
+												{isJobLiked(job) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 											</IconButton>
 										</Box>
 										
@@ -615,7 +622,7 @@ const HiringManagerDetail: NextPage = ({ initialInput, initialComment, ...props 
 HiringManagerDetail.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 6,
+		limit: 4,
 		search: {
 			memberId: '',
 		},
@@ -623,7 +630,7 @@ HiringManagerDetail.defaultProps = {
 	},
 	initialComment: {
 		page: 1,
-		limit: 5,
+		limit: 3,
 		sort: 'createdAt',
 		direction: 'ASC',
 		search: {
