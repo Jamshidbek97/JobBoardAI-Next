@@ -295,65 +295,68 @@ export const GET_AGENT_JOBS = gql`
 
 export const GET_FAVORITES = gql`
 	query GetFavorites($input: OrdinaryInquiry!) {
-		getFavorites(input: $input) {
-			list {
-				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyComments
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
-				memberId
-				soldAt
-				deletedAt
-				constructedAt
-				createdAt
-				updatedAt
-				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberProperties
-					memberArticles
-					memberPoints
-					memberLikes
-					memberViews
-					memberComments
-					memberFollowings
-					memberFollowers
-					memberRank
-					memberWarnings
-					memberBlocks
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
-				}
-			}
-			metaCounter {
-				total
-			}
-		}
-	}
+    getFavorites(input: $input) {
+        list {
+            _id
+            jobType
+            jobStatus
+            jobLocation
+            positionTitle
+            jobSalary
+            skillsRequired
+            experienceYears
+            educationLevel
+            jobViews
+            jobLikes
+            jobComments
+            jobRank
+            jobImages
+            companyLogo
+            jobDesc
+            memberId
+            closedAt
+            deletedAt
+            createdAt
+            updatedAt
+            meLiked {
+                memberId
+                likeRefId
+                myFavorite
+            }
+            memberData {
+                _id
+                memberType
+                memberStatus
+                memberAuthType
+                memberPhone
+                memberNick
+                memberFullName
+                memberImage
+                memberAddress
+                memberDesc
+                memberPostedJobs
+                memberArticles
+                memberFollowers
+                memberFollowings
+                memberPoints
+                memberLikes
+                memberViews
+                memberComments
+                memberRank
+                memberWarnings
+                memberBlocks
+                deletedAt
+                createdAt
+                updatedAt
+                accessToken
+            }
+        }
+        metaCounter {
+            total
+        }
+    }
+}
+
 `;
 
 export const GET_VISITED = gql`
