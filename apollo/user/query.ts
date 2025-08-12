@@ -98,6 +98,7 @@ export const GET_JOB = gql`
 			jobType
 			jobStatus
 			jobLocation
+			employmentLevel
 			positionTitle
 			jobSalary
 			skillsRequired
@@ -160,6 +161,7 @@ export const GET_JOBS = gql`
 				jobType
 				jobStatus
 				jobLocation
+				employmentLevel
 				positionTitle
 				jobSalary
 				skillsRequired

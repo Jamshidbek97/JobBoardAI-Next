@@ -94,31 +94,46 @@ export const UPDATE_MEMBER = gql`
 `;
 
 export const LIKE_TARGET_MEMBER = gql`
-	mutation LikeTargetMember($input: String!) {
-		likeTargetMember(memberId: $input) {
-			_id
-			memberType
-			memberStatus
-			memberAuthType
-			memberPhone
-			memberNick
-			memberFullName
-			memberImage
-			memberAddress
-			memberDesc
-			memberWarnings
-			memberBlocks
-			memberProperties
-			memberRank
-			memberPoints
-			memberLikes
-			memberViews
-			deletedAt
-			createdAt
-			updatedAt
-			accessToken
-		}
-	}
+mutation LikeTargetMember($input: String!) {
+    likeTargetMember(memberId: $input) {
+        _id
+        memberType
+        memberStatus
+        memberAuthType
+        memberPhone
+        memberNick
+        memberFullName
+        memberImage
+        memberAddress
+        memberDesc
+        memberPostedJobs
+        memberArticles
+        memberFollowers
+        memberFollowings
+        memberPoints
+        memberLikes
+        memberViews
+        memberComments
+        memberRank
+        memberWarnings
+        memberBlocks
+        deletedAt
+        createdAt
+        updatedAt
+        accessToken
+        meLiked {
+            memberId
+            likeRefId
+            myFavorite
+        }
+        meFollowed {
+            followingId
+            followerId
+            myFollowing
+        }
+    }
+}
+
 `;
 
 /**************************
@@ -132,6 +147,7 @@ export const CREATE_JOB = gql`
 			jobType
 			jobStatus
 			jobLocation
+			employmentLevel
 			jobSalary
 			experienceYears
 			educationLevel
@@ -160,6 +176,7 @@ export const UPDATE_JOB = gql`
 			jobType
 			jobStatus
 			jobLocation
+			employmentLevel
 			positionTitle
 			jobSalary
 			skillsRequired
@@ -188,6 +205,7 @@ export const LIKE_TARGET_JOB = gql`
 			jobType
 			jobStatus
 			jobLocation
+			employmentLevel
 			positionTitle
 			jobSalary
 			skillsRequired
