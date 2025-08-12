@@ -1,81 +1,632 @@
 #pc-wrap {
-	.agent-list-page {
+	.hiring-managers-page {
 		position: relative;
 		padding: 147px 0 75px;
 		width: 100%;
-		height: auto;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
+		min-height: 100vh;
+		background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+
 		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 24px;
 			display: flex;
 			flex-direction: column;
-			.filter {
+			gap: 32px;
+
+			/* Loading State */
+			.loading-state {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 80px 20px;
+				text-align: center;
+
+				.loading-icon {
+					font-size: 48px;
+					color: #64748b;
+					margin-bottom: 16px;
+					animation: pulse 2s infinite;
+				}
+
+				.loading-text {
+					color: #64748b;
+					font-size: 16px;
+					font-weight: 500;
+				}
+			}
+
+			/* Page Header */
+			.page-header {
+				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				.left {
+				padding: 32px 0;
+				border-bottom: 1px solid #e2e8f0;
+
+				.header-content {
 					display: flex;
-					flex-direction: row;
-					input {
-						padding: 22px 10px;
-						width: 333px;
-						height: 50px;
-						border-radius: 40px;
-						border: 1px solid #ddd;
-						background: #fff;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: 26px;
-						box-sizing: border-box;
+					align-items: center;
+					gap: 16px;
+
+					.header-icon {
+						font-size: 62px;
+						color: #3b82f6;
+						background: rgba(59, 130, 246, 0.1);
+						padding: 12px;
+						border-radius: 12px;
+					}
+
+					.header-text {
+						.page-title {
+							font-size: 32px;
+							font-weight: 700;
+							color: #1e293b;
+							margin-bottom: 4px;
+							line-height: 1.2;
+						}
+
+						.page-subtitle {
+							font-size: 16px;
+							color: #64748b;
+							font-weight: 400;
+						}
 					}
 				}
-				.right {
+
+				.total-count {
+					font-size: 14px;
+					color: #64748b;
+					font-weight: 500;
+					background: #f1f5f9;
+					padding: 8px 16px;
+					border-radius: 20px;
+				}
+			}
+
+			/* Search and Filter Section */
+			.search-filter-section {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				padding: 24px;
+				background: white;
+				border-radius: 16px;
+				box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+				.search-box {
+					.search-input {
+						.MuiOutlinedInput-root {
+							border-radius: 12px;
+							background: #f8fafc;
+							border: 2px solid #e2e8f0;
+							transition: all 0.2s ease;
+
+							&:hover {
+								border-color: #cbd5e1;
+							}
+
+							&.Mui-focused {
+								border-color: #3b82f6;
+								background: white;
+								box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+							}
+						}
+
+						.search-icon {
+							color: #64748b;
+						}
+
+						.search-btn {
+							background: #3b82f6;
+							color: white;
+							border-radius: 8px;
+							padding: 8px 16px;
+							font-weight: 600;
+							text-transform: none;
+							box-shadow: none;
+
+							&:hover {
+								background: #2563eb;
+								box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+							}
+						}
+					}
+				}
+
+				.filter-box {
 					display: flex;
-					flex-direction: row;
 					align-items: center;
-					button {
-						margin-left: 10px;
-						color: #181a20;
-						font-family: $font;
+					gap: 12px;
+
+					.filter-label {
+						display: flex;
+						align-items: center;
+						gap: 8px;
+						color: #64748b;
+						font-weight: 500;
 						font-size: 14px;
-						font-style: normal;
-						font-weight: bold;
-						line-height: 26px;
+
+						.filter-icon {
+							font-size: 18px;
+						}
+					}
+
+					.sort-button {
+						background: #f1f5f9;
+						color: #475569;
+						border-radius: 8px;
+						padding: 8px 16px;
+						font-weight: 500;
+						text-transform: none;
+						border: 1px solid #e2e8f0;
+						transition: all 0.2s ease;
+
 						&:hover {
-							background: none;
+							background: #e2e8f0;
+							border-color: #cbd5e1;
 						}
 					}
 				}
 			}
-			.card-wrap {
-				position: relative;
-				margin-top: 35px;
-				width: 100%;
-				min-height: 500px;
-				height: auto;
-				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
+
+			/* Cards Grid */
+			.cards-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+				gap: 24px;
+				padding: 0;
+
+				/* Hiring Manager Card Styles */
+				.hiring-manager-card {
+					background: white;
+					border-radius: 16px;
+					overflow: hidden;
+					box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+					transition: all 0.3s ease;
+					border: 1px solid #f1f5f9;
+
+					&:hover {
+						transform: translateY(-4px);
+						box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+					}
+
+					/* Card Header */
+					.card-header {
+						position: relative;
+						padding: 24px 24px 16px;
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-start;
+
+						.profile-link {
+							text-decoration: none;
+							color: inherit;
+
+							.profile-image-container {
+								position: relative;
+								display: inline-block;
+
+								.profile-image {
+									width: 80px;
+									height: 80px;
+									border-radius: 50%;
+									object-fit: cover;
+									border: 3px solid #f1f5f9;
+									transition: all 0.2s ease;
+								}
+
+								.status-indicator {
+									position: absolute;
+									bottom: 4px;
+									right: 4px;
+									width: 16px;
+									height: 16px;
+									border-radius: 50%;
+									border: 2px solid white;
+
+									&.active {
+										background: #10b981;
+									}
+								}
+							}
+						}
+
+						.header-actions {
+							display: flex;
+							gap: 8px;
+
+							.action-btn {
+								width: 36px;
+								height: 36px;
+								border-radius: 50%;
+								background: #f8fafc;
+								border: 1px solid #e2e8f0;
+								color: #64748b;
+								transition: all 0.2s ease;
+
+								&:hover {
+									background: #f1f5f9;
+									transform: scale(1.05);
+								}
+
+								&.liked {
+									background: #fef2f2;
+									border-color: #fecaca;
+									color: #ef4444;
+
+									&:hover {
+										background: #fee2e2;
+									}
+								}
+
+								&.following {
+									background: #f0f9ff;
+									border-color: #bae6fd;
+									color: #0ea5e9;
+
+									&:hover {
+										background: #e0f2fe;
+										color: #0284c7;
+									}
+								}
+							}
+						}
+					}
+
+					/* Profile Info */
+					.profile-info {
+						padding: 0 24px 20px;
+
+						.name-link {
+							text-decoration: none;
+							color: inherit;
+
+							.member-name {
+								font-size: 20px;
+								font-weight: 700;
+								color: #1e293b;
+								margin-bottom: 8px;
+								line-height: 1.3;
+								transition: color 0.2s ease;
+
+								&:hover {
+									color: #3b82f6;
+								}
+							}
+						}
+
+						.member-meta {
+							display: flex;
+							flex-direction: column;
+							gap: 8px;
+							margin-bottom: 12px;
+
+							.member-type-chip {
+								align-self: flex-start;
+								background: #f0f9ff;
+								color: #0ea5e9;
+								font-weight: 600;
+								border-radius: 20px;
+
+								.MuiChip-icon {
+									color: #0ea5e9;
+								}
+							}
+
+							.location-info {
+								display: flex;
+								align-items: center;
+								gap: 6px;
+								color: #64748b;
+								font-size: 14px;
+
+								.location-icon {
+									font-size: 16px;
+								}
+
+								.location-text {
+									font-size: 14px;
+									color: #64748b;
+								}
+							}
+						}
+
+						.member-description {
+							font-size: 14px;
+							color: #64748b;
+							line-height: 1.5;
+							margin-top: 8px;
+						}
+					}
+
+					/* Stats Grid */
+					.stats-grid {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						gap: 1px;
+						background: #f1f5f9;
+						margin: 0 24px;
+						border-radius: 12px;
+						overflow: hidden;
+
+						.stat-item {
+							display: flex;
+							align-items: center;
+							gap: 12px;
+							padding: 16px;
+							background: white;
+							transition: background 0.2s ease;
+
+							&:hover {
+								background: #f8fafc;
+							}
+
+							.stat-icon {
+								font-size: 20px !important;
+								color: #3b82f6 !important;
+								background: rgba(59, 130, 246, 0.1);
+								padding: 8px;
+								border-radius: 8px;
+								width: 36px !important;
+								height: 36px !important;
+								display: flex !important;
+								align-items: center !important;
+								justify-content: center !important;
+								min-width: 36px !important;
+								min-height: 36px !important;
+								
+								&.MuiSvgIcon-root {
+									font-size: 20px !important;
+									width: 20px !important;
+									height: 20px !important;
+								}
+							}
+
+							.stat-content {
+								.stat-value {
+									font-size: 18px;
+									font-weight: 700;
+									color: #1e293b;
+									line-height: 1;
+								}
+
+								.stat-label {
+									font-size: 12px;
+									color: #64748b;
+									font-weight: 500;
+									margin-top: 2px;
+								}
+							}
+						}
+					}
+
+					/* Card Footer */
+					.card-footer {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						padding: 20px 24px 24px;
+						border-top: 1px solid #f1f5f9;
+						margin-top: 20px;
+
+						.join-info {
+							display: flex;
+							align-items: center;
+							gap: 6px;
+							color: #64748b;
+
+							.time-icon {
+								font-size: 16px;
+							}
+
+							.join-text {
+								font-size: 13px;
+								color: #64748b;
+							}
+						}
+
+						.view-profile-link {
+							text-decoration: none;
+
+							.view-profile-btn {
+								border-radius: 8px;
+								font-weight: 600;
+								text-transform: none;
+								border-color: #3b82f6;
+								color: #3b82f6;
+								padding: 8px 16px;
+								transition: all 0.2s ease;
+
+								&:hover {
+									background: #3b82f6;
+									color: white;
+									border-color: #3b82f6;
+									transform: translateY(-1px);
+									box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+								}
+							}
+						}
+					}
+				}
+
+				/* No Data State */
+				.no-data {
+					grid-column: 1 / -1;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					justify-content: center;
+					padding: 80px 20px;
+					text-align: center;
+					background: white;
+					border-radius: 16px;
+					box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+					.no-data-icon {
+						font-size: 64px;
+						color: #cbd5e1;
+						margin-bottom: 24px;
+					}
+
+					.no-data-title {
+						font-size: 24px;
+						font-weight: 700;
+						color: #475569;
+						margin-bottom: 8px;
+					}
+
+					.no-data-subtitle {
+						font-size: 16px;
+						color: #64748b;
+						max-width: 400px;
+					}
+				}
 			}
-			.pagination {
+
+			/* Pagination Section */
+			.pagination-section {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				span {
-					margin-top: 20px;
-					color: #181a20;
-					font-family: $font;
+				gap: 16px;
+				padding: 32px 0;
+
+				.pagination {
+					.MuiPaginationItem-root {
+						border-radius: 8px;
+						font-weight: 500;
+					}
+
+					.MuiPaginationItem-page {
+						&.Mui-selected {
+							background: #3b82f6;
+							color: white;
+						}
+					}
+				}
+
+				.pagination-info {
 					font-size: 14px;
-					font-style: normal;
-					font-weight: 400;
-					line-height: 26px; /* 185.714% */
+					color: #64748b;
+					font-weight: 500;
 				}
 			}
 		}
+	}
+}
+
+/* Animations */
+@keyframes pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	#pc-wrap {
+		.hiring-managers-page {
+			.container {
+				padding: 0 16px;
+				gap: 24px;
+
+				.page-header {
+					flex-direction: column;
+					align-items: flex-start;
+					gap: 16px;
+
+					.header-content {
+						.header-text {
+							.page-title {
+								font-size: 28px;
+							}
+						}
+					}
+				}
+
+				.search-filter-section {
+					padding: 20px;
+
+					.filter-box {
+						flex-direction: column;
+						align-items: flex-start;
+						gap: 12px;
+					}
+				}
+
+				.cards-grid {
+					grid-template-columns: 1fr;
+					gap: 16px;
+
+					.hiring-manager-card {
+						.card-header {
+							padding: 20px 20px 12px;
+						}
+
+						.profile-info {
+							padding: 0 20px 16px;
+						}
+
+						.stats-grid {
+							margin: 0 20px;
+						}
+
+						.card-footer {
+							padding: 16px 20px 20px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Sort Menu Styling */
+.sort-menu {
+	.MuiPaper-root {
+		border-radius: 12px;
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		border: 1px solid #e2e8f0;
+	}
+
+	.MuiMenuItem-root {
+		font-weight: 500;
+		color: #475569;
+		padding: 12px 20px;
+		transition: all 0.2s ease;
+
+		&:hover {
+			background: #f8fafc;
+			color: #3b82f6;
+		}
+
+		&:focus {
+			background: #f0f9ff;
+		}
+	}
+}
+
+/* Global Material-UI Icon Fixes */
+.MuiSvgIcon-root {
+	&.stat-icon {
+		font-size: 20px !important;
+		width: 20px !important;
+		height: 20px !important;
+		color: #3b82f6 !important;
+	}
+}
+
+/* Ensure all Material-UI icons in stats display properly */
+.hiring-manager-card .stats-grid .stat-item .stat-icon {
+	&.MuiSvgIcon-root {
+		font-size: 20px !important;
+		width: 20px !important;
+		height: 20px !important;
+		color: #3b82f6 !important;
 	}
 }
