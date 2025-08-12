@@ -155,14 +155,14 @@ const HiringManagerList: NextPage = ({ initialInput, ...props }: any) => {
 			if (isFollowing) {
 				await unsubscribe({
 					variables: {
-						input: id,
+						memberId: id,
 					},
 				});
 				await sweetTopSmallSuccessAlert('Unfollowed successfully', 800);
 			} else {
 				await subscribe({
 					variables: {
-						input: id,
+						memberId: id,
 					},
 				});
 				await sweetTopSmallSuccessAlert('Followed successfully', 800);
