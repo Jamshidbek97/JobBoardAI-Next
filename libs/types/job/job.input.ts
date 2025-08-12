@@ -28,7 +28,7 @@ interface JISearch {
 	experienceRange?: number;
 	periodsRange?: PeriodsRange;
 	educationLevelList?: EducationLevel[];
-	employmentLevels: EmploymentLevel[];
+	employmentLevels?: EmploymentLevel[];
 	skillsRequired?: string[];
 	isRemote?: boolean;
 	text?: string;

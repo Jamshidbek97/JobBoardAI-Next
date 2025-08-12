@@ -7,12 +7,13 @@ import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { T } from '../../types/common';
 import { userVar } from '../../../apollo/store';
 import { useRouter } from 'next/router';
-import { UPDATE_PROPERTY } from '../../../apollo/user/mutation';
-import { GET_AGENT_PROPERTIES } from '../../../apollo/user/query';
+
+import { GET_AGENT_JOBS } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 import { Job } from '../../types/job/job';
 import { AgentJobsInquiry } from '../../types/job/job.input';
 import { JobStatus } from '../../enums/job.enum';
+import { UPDATE_JOB } from '../../../apollo/user/mutation';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
@@ -23,19 +24,19 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const router = useRouter();
 
 	/** APOLLO REQUESTS **/
-	const [updateProperty] = useMutation(UPDATE_PROPERTY);
+	const [updateProperty] = useMutation(UPDATE_JOB);
 	const {
 		loading: getAgentPropertiesLoading,
 		data: getAgentPropertiesData,
 		error: getAgentPropertiesError,
 		refetch: getAgentPropertiesRefetch,
-	} = useQuery(GET_AGENT_PROPERTIES, {
+	} = useQuery(GET_AGENT_JOBS, {
 		fetchPolicy: 'network-only',
 		variables: { input: searchFilter },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setAgentProperties(data?.getAgentProperties?.list);
-			setTotal(data?.getAgentProperties?.metaCounter[0]?.total);
+			setAgentProperties(data?.getAgentJobs?.list);
+			setTotal(data?.getAgentJobs?.metaCounter[0]?.total);
 		},
 	});
 

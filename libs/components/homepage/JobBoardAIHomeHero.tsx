@@ -13,9 +13,8 @@ const logos = [
 	{ name: 'Netflix', src: '/img/brands/netflix.png', w: 90, h: 24 },
 	{ name: 'Spotify', src: '/img/brands/spotify.png', w: 90, h: 26 },
 	{ name: 'Airbnb', src: '/img/brands/airbnb.png', w: 84, h: 28 },
-	{ name: 'Uber', src: '/img/brands/uber.png', w: 74, h: 28 },
-	{ name: 'Stripe', src: '/img/brands/stripe.png', w: 80, h: 28 },
-	{ name: 'Meta', src: '/img/brands/meta.png', w: 76, h: 28 },
+	{ name: 'GitHub', src: '/img/brands/github.png', w: 80, h: 28 },
+	{ name: 'Microsoft', src: '/img/brands/Microsoft_logo.svg.png', w: 76, h: 28 },
 ];
 // NOTE: Do NOT import a module stylesheet here —
 // your project loads all SCSS from main.scss globally.
@@ -28,7 +27,15 @@ export default function JobBoardAIHomeHero() {
 		<section className="jobboardai-home-hero">
 			<Container maxWidth="lg" className="jb-inner">
 				{/* Copy */}
-				<Box className="jb-copy">
+				<Box className="jb-copy" sx={{ 
+					display: 'flex', 
+					flexDirection: 'column', 
+					gap: 3,
+					'@media (max-width: 600px)': {
+						gap: 2,
+						textAlign: 'center'
+					}
+				}}>
 					<Typography component="h1" className="jb-title">
 						Still Applying the Old Way? <span>You're Already Behind.</span>
 					</Typography>
@@ -38,14 +45,25 @@ export default function JobBoardAIHomeHero() {
 						first‑mover edge in today's most competitive markets. More speed. More interviews.
 					</Typography>
 
-					<Stack direction="row" spacing={1} className="jb-cta-row">
-						<Button variant="contained" color="primary" size="large" className="jb-cta-primary">
+					<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} className="jb-cta-row">
+						<Button 
+							variant="contained" 
+							color="primary" 
+							size="large" 
+							className="jb-cta-primary"
+							onClick={() => window.location.href = '/jobs'}
+						>
 							Create Your AI Job Hunter
 							<svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" className="jb-cta-icon">
 								<path d="M10.293 15.707a1 1 0 010-1.414L12.586 12H4a1 1 0 110-2h8.586l-2.293-2.293a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
 							</svg>
 						</Button>
-						<Button variant="outlined" size="large" className="jb-cta-secondary">
+						<Button 
+							variant="outlined" 
+							size="large" 
+							className="jb-cta-secondary"
+							onClick={() => console.log('Demo clicked')}
+						>
 							See a Live Demo
 						</Button>
 						<Typography variant="caption" className="jb-caption">
@@ -176,13 +194,35 @@ export default function JobBoardAIHomeHero() {
 
 			{/* Logos strip + link */}
 			<Container maxWidth="lg" className="jb-logos-wrap">
-				<Typography align="center" className="jb-social-proof">
+				<Typography align="center" className="jb-social-proof" sx={{ mb: 3 }}>
 					Join thousands of users who have landed roles at top companies:
 				</Typography>
-				<Box className="jb-logo-row" role="list">
+				<Box 
+					className="jb-logo-row" 
+					role="list"
+					sx={{
+						display: 'flex',
+						flexWrap: 'wrap',
+						justifyContent: 'center',
+						gap: 3,
+						'@media (max-width: 600px)': {
+							gap: 2,
+						}
+					}}
+				>
 					{logos.map((l, i) => (
-						<Paper key={i} className="jb-logo-chip" elevation={0} role="listitem">
-							{/* Optional: link to a filtered jobs page per company */}
+						<Paper 
+							key={i} 
+							className="jb-logo-chip" 
+							elevation={0} 
+							role="listitem"
+							sx={{
+								transition: 'transform 0.2s ease-in-out',
+								'&:hover': {
+									transform: 'scale(1.05)',
+								}
+							}}
+						>
 							<Link href={`/jobs?company=${encodeURIComponent(l.name)}`} aria-label={`View ${l.name} jobs`}>
 								<span className="jb-logo-img">
 									<Image src={l.src} alt={`${l.name} logo`} width={l.w} height={l.h} />
@@ -191,7 +231,7 @@ export default function JobBoardAIHomeHero() {
 						</Paper>
 					))}
 				</Box>
-				<Stack direction="row" justifyContent="center" className="jb-userstories-row">
+				<Stack direction="row" justifyContent="center" className="jb-userstories-row" sx={{ mt: 3 }}>
 					<a href="#stories" className="jb-userstories-link">
 						Read User Stories →
 					</a>

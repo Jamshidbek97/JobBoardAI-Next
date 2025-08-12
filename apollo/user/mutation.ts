@@ -4,6 +4,19 @@ import { gql } from '@apollo/client';
  *         MEMBER         *
  *************************/
 
+// apollo/user/mutation.ts
+
+export const APPLY_JOB = gql`
+  mutation ApplyJob($input: ApplyJobInput!) {
+    applyJob(input: $input) {
+      _id
+      status
+      createdAt
+    }
+  }
+`;
+
+
 export const SIGN_UP = gql`
 	mutation Signup($input: MemberInput!) {
 		signup(input: $input) {
@@ -233,20 +246,22 @@ export const LIKE_TARGET_JOB = gql`
 
 export const CREATE_BOARD_ARTICLE = gql`
 	mutation CreateBoardArticle($input: BoardArticleInput!) {
-		createBoardArticle(input: $input) {
-			_id
-			articleCategory
-			articleStatus
-			articleTitle
-			articleContent
-			articleImage
-			articleViews
-			articleLikes
-			memberId
-			createdAt
-			updatedAt
-		}
-	}
+    createBoardArticle(input: $input) {
+        _id
+        articleCategory
+        articleStatus
+        articleTitle
+        articleContent
+        articleImage
+        articleViews
+        articleLikes
+        articleComments
+        memberId
+        createdAt
+        updatedAt
+    }
+}
+
 `;
 
 export const UPDATE_BOARD_ARTICLE = gql`

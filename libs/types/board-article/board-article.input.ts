@@ -6,7 +6,6 @@ export interface BoardArticleInput {
 	articleTitle: string;
 	articleContent: string;
 	articleImage: string;
-	memberId?: string;
 }
 
 interface BAISearch {

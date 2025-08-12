@@ -1,7 +1,14 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { Stack } from '@mui/material';
+import { 
+	Stack, 
+	Box, 
+	Container,
+	Fade,
+	CircularProgress,
+	Typography
+} from '@mui/material';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MyProperties from '../../libs/components/mypage/MyProperties';
@@ -106,16 +113,82 @@ const MyPage: NextPage = () => {
 		}
 	};
 
+	const getCategoryTitle = (category: string) => {
+		switch (category) {
+			case 'addProperty': return 'Create New Job';
+			case 'myProperties': return 'My Posted Jobs';
+			case 'myFavorites': return 'My Favorites';
+			case 'recentlyVisited': return 'Recently Visited';
+			case 'myArticles': return 'My Articles';
+			case 'writeArticle': return 'Write Article';
+			case 'myProfile': return 'My Profile';
+			case 'followers': return 'My Followers';
+			case 'followings': return 'My Followings';
+			default: return 'My Profile';
+		}
+	};
+
+	if (device === 'mobile') {
+		return <div>MY PAGE MOBILE</div>;
+	}
+
 	return (
-		<div id="my-page" style={{ position: 'relative' }}>
-			<div className="container">
-				<Stack className={'my-page'}>
-					<Stack className={'back-frame'}>
-						<Stack className={'left-config'}>
-							<MyMenu />
-						</Stack>
-						<Stack className="main-config" mb={'76px'}>
-							<Stack className={'list-config'}>
+		<Box className="my-page" sx={{ 
+			minHeight: '100vh',
+			background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+			pt: 8,
+			pb: 6
+		}}>
+			<Container maxWidth="xl">
+				{/* Header Section */}
+				<Box sx={{ mb: 4 }}>
+					<Box sx={{ 
+						display: 'flex', 
+						alignItems: 'center', 
+						justifyContent: 'space-between',
+						p: 3,
+						bgcolor: 'white',
+						borderRadius: 3,
+						boxShadow: '0 2px 20px rgba(0,0,0,0.08)',
+						mb: 4
+					}}>
+						<Box>
+							<Typography variant="h3" sx={{ 
+								fontWeight: 700, 
+								color: '#1a1a1a',
+								mb: 1
+							}}>
+								{getCategoryTitle(category)}
+							</Typography>
+							<Typography variant="body1" sx={{ color: '#666' }}>
+								Manage your account, listings, and preferences
+							</Typography>
+						</Box>
+					</Box>
+				</Box>
+
+				{/* Main Content */}
+				<Box sx={{ display: 'flex', gap: 4 }}>
+					{/* Sidebar */}
+					<Box sx={{ 
+						width: 320, 
+						flexShrink: 0,
+						position: 'sticky',
+						top: 100,
+						height: 'fit-content'
+					}}>
+						<MyMenu />
+					</Box>
+
+					{/* Main Content Area */}
+					<Box sx={{ flex: 1 }}>
+						<Fade in={true} timeout={500}>
+							<Box sx={{ 
+								bgcolor: 'white',
+								borderRadius: 3,
+								boxShadow: '0 2px 20px rgba(0,0,0,0.08)',
+								overflow: 'hidden'
+							}}>
 								{category === 'addProperty' && <AddProperty />}
 								{category === 'myProperties' && <MyProperties />}
 								{category === 'myFavorites' && <MyFavorites />}
@@ -139,12 +212,12 @@ const MyPage: NextPage = () => {
 										redirectToMemberPageHandler={redirectToMemberPageHandler}
 									/>
 								)}
-							</Stack>
-						</Stack>
-					</Stack>
-				</Stack>
-			</div>
-		</div>
+							</Box>
+						</Fade>
+					</Box>
+				</Box>
+			</Container>
+		</Box>
 	);
 };
 

@@ -13,6 +13,7 @@ import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import StarIcon from '@mui/icons-material/Star';
 import { JobType, JobLocation, EducationLevel } from '../../enums/job.enum';
 import { Job } from '../../types/job/job';
 import { AllJobsInquiry } from '../../types/job/job.input';
@@ -47,8 +48,8 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 		
 		try {
 			await likeTargetJobs({ variables: { input: jobId } });
-			await getJobsRefetch({ input: initialInput });
-			window.location.reload();
+			// Refetch jobs data instead of reloading the page
+			await getJobsRefetch();
 		} catch (err) {
 			console.error('Error toggling like:', err);
 		}
@@ -131,7 +132,10 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 				onClick={() => handleCardClick(job._id)}
 				style={{ cursor: 'pointer' }}
 			>
-				<div className="featured-badge">Featured</div>
+				<div className="featured-badge">
+					<StarIcon fontSize="small" />
+					<span>Featured</span>
+				</div>
 
 				<div className="card-header">
 					<div className="company-logo">
@@ -139,8 +143,8 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 							<Image
 								src={logo}
 								alt={`${job.companyName} logo`}
-								width={72}
-								height={72}
+								width={64}
+								height={64}
 								className="logo-image"
 								onError={(e) => {
 									const target = e.target as HTMLImageElement;
@@ -162,67 +166,68 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 						className={`like-button ${isLiked ? 'liked' : ''}`}
 						onClick={(e) => toggleLikeJob(e, job._id)}
 						aria-label={isLiked ? 'Unlike job' : 'Like job'}
-						style={{ fontSize: '24px' }}
 					>
-						{isLiked ? <FavoriteIcon style={{ fontSize: '24px' }} /> : <FavoriteBorderIcon style={{ fontSize: '24px' }} />}
+						{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 					</button>
 				</div>
 
-				<div className="job-title">{job.positionTitle}</div>
+				<div className="job-content">
+					<div className="job-title">{job.positionTitle}</div>
 
-				<div className="company-info">
-					<div className="company-name">{job.companyName || job.memberData?.memberNick || 'Company'}</div>
-					{job.memberData?.memberFullName && (
-						<div className="poster-name">
-							<PersonOutlineIcon fontSize="small" />
-							<span>{job.memberData.memberFullName}</span>
-						</div>
-					)}
-				</div>
-
-				<div className="job-details">
-					<div className="detail-item">
-						<LocationOnOutlinedIcon />
-						<span>{getJobLocationText(job.jobLocation)}</span>
-					</div>
-					<div className="detail-item">
-						<WorkOutlineOutlinedIcon />
-						<span>{getJobTypeText(job.jobType)}</span>
-					</div>
-				</div>
-
-				<div className="job-details">
-					<div className="detail-item">
-						<AttachMoneyOutlinedIcon />
-						<span>${job.jobSalary?.toLocaleString()}/yr</span>
-					</div>
-					<div className="detail-item">
-						<SchoolOutlinedIcon />
-						<span>{getEducationLevelText(job.educationLevel)}</span>
-					</div>
-				</div>
-
-				<div className="engagement-stats">
-					<div className="stat-item">
-						<VisibilityOutlinedIcon fontSize="small" />
-						<span>{job.jobViews || 0} views</span>
-					</div>
-					<div className="stat-item">
-						<FavoriteOutlinedIcon fontSize="small" />
-						<span>{job.jobLikes || 0} likes</span>
-					</div>
-				</div>
-
-				{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
-					<div className="skills-container">
-						{job.skillsRequired.slice(0, 5).map((skill, i) => (
-							<Chip key={i} label={skill} size="small" className="skill-tag" />
-						))}
-						{job.skillsRequired.length > 5 && (
-							<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 5}`} />
+					<div className="company-info">
+						<div className="company-name">{job.companyName || job.memberData?.memberNick || 'Company'}</div>
+						{job.memberData?.memberFullName && (
+							<div className="poster-name">
+								<PersonOutlineIcon fontSize="small" />
+								<span>{job.memberData.memberFullName}</span>
+							</div>
 						)}
 					</div>
-				)}
+
+					<div className="job-details">
+						<div className="detail-item">
+							<LocationOnOutlinedIcon fontSize="small" />
+							<span>{getJobLocationText(job.jobLocation)}</span>
+						</div>
+						<div className="detail-item">
+							<WorkOutlineOutlinedIcon fontSize="small" />
+							<span>{getJobTypeText(job.jobType)}</span>
+						</div>
+					</div>
+
+					<div className="job-details">
+						<div className="detail-item">
+							<AttachMoneyOutlinedIcon fontSize="small" />
+							<span>${job.jobSalary?.toLocaleString()}/yr</span>
+						</div>
+						<div className="detail-item">
+							<SchoolOutlinedIcon fontSize="small" />
+							<span>{getEducationLevelText(job.educationLevel)}</span>
+						</div>
+					</div>
+
+					{Array.isArray(job.skillsRequired) && job.skillsRequired.length > 0 && (
+						<div className="skills-container">
+							{job.skillsRequired.slice(0, 4).map((skill, i) => (
+								<Chip key={i} label={skill} size="small" className="skill-tag" />
+							))}
+							{job.skillsRequired.length > 4 && (
+								<Chip size="small" className="skill-tag more" label={`+${job.skillsRequired.length - 4}`} />
+							)}
+						</div>
+					)}
+
+					<div className="engagement-stats">
+						<div className="stat-item">
+							<VisibilityOutlinedIcon fontSize="small" />
+							<span>{job.jobViews || 0}</span>
+						</div>
+						<div className="stat-item">
+							<FavoriteOutlinedIcon fontSize="small" />
+							<span>{job.jobLikes || 0}</span>
+						</div>
+					</div>
+				</div>
 
 				<div className="job-footer">
 					<span className="time-ago">
@@ -230,7 +235,15 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 							? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
 							: 'Recently posted'}
 					</span>
-					<Button variant="contained" className="apply-button" size="small">
+					<Button 
+						variant="contained" 
+						className="apply-button" 
+						size="small"
+						onClick={(e: React.MouseEvent) => {
+							e.stopPropagation();
+							handleCardClick(job._id);
+						}}
+					>
 						Apply Now
 					</Button>
 				</div>
@@ -273,30 +286,35 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 
 				<Box className="jobs-carousel-container">
 					<div className="navigation-buttons">
-						<button className="fj-prev">
+						<button className="fj-prev" aria-label="Previous jobs">
 							<WestIcon />
 						</button>
-						<button className="fj-next">
+						<button className="fj-next" aria-label="Next jobs">
 							<EastIcon />
 						</button>
 					</div>
 
 					<Swiper
 						modules={[Navigation, Pagination, Autoplay]}
-						spaceBetween={40}
+						spaceBetween={24}
 						slidesPerView={'auto'}
 						navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
-						pagination={{ clickable: true }}
-						autoplay={{ delay: 5000, disableOnInteraction: false }}
+						pagination={{ clickable: true, dynamicBullets: true }}
+						autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+						loop={true}
 						breakpoints={{
-							320: { slidesPerView: 1 },
-							640: { slidesPerView: 2 },
-							960: { slidesPerView: 3 },
-							1280: { slidesPerView: 3 },
+							320: { slidesPerView: 1, spaceBetween: 16 },
+							480: { slidesPerView: 1, spaceBetween: 20 },
+							640: { slidesPerView: 2, spaceBetween: 24 },
+							768: { slidesPerView: 2, spaceBetween: 28 },
+							960: { slidesPerView: 3, spaceBetween: 32 },
+							1200: { slidesPerView: 3, spaceBetween: 36 },
+							1400: { slidesPerView: 4, spaceBetween: 40 },
 						}}
+						className="featured-jobs-swiper"
 					>
 						{getJobsLoading
-							? Array.from({ length: 3 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
+							? Array.from({ length: 6 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
 							: featuredJobs.map((job: any, index: any) => (
 									<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
 							  ))}
@@ -304,8 +322,13 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 				</Box>
 
 				<Box className="view-all-container">
-					<Button variant="outlined" className="view-all-button">
-						View All Jobs <EastIcon className="arrow-icon" />
+					<Button 
+						variant="outlined" 
+						className="view-all-button"
+						onClick={() => router.push('/jobs')}
+						endIcon={<EastIcon className="arrow-icon" />}
+					>
+						View All Jobs
 					</Button>
 				</Box>
 			</div>

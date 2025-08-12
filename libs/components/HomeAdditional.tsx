@@ -5,9 +5,9 @@ import {
 	Rocket as RocketIcon,
 	TrendingUp as TrendingUpIcon,
 	Star as StarIcon,
-	Users as UsersIcon,
-	Briefcase as BriefcaseIcon,
-	Zap as ZapIcon,
+	Group as UsersIcon,
+	Work as BriefcaseIcon,
+	FlashOn as ZapIcon,
 	ArrowForward as ArrowForwardIcon,
 	PlayArrow as PlayArrowIcon
 } from '@mui/icons-material';
@@ -19,7 +19,7 @@ const brands = [
 	{ name: 'GitHub', logo: '/img/brands/github.png', color: '#181717' },
 	{ name: 'Airbnb', logo: '/img/brands/airbnb.png', color: '#FF5A5F' },
 	{ name: 'Spotify', logo: '/img/brands/spotify.png', color: '#1DB954' },
-	{ name: 'Microsoft', logo: '/img/brands/microsoft.png', color: '#0078D4' },
+	{ name: 'Microsoft', logo: '/img/brands/Microsoft_logo.svg.png', color: '#0078D4' },
 	{ name: 'Apple', logo: '/img/brands/apple.png', color: '#000000' },
 ];
 
@@ -230,7 +230,7 @@ export default function HomeAdditional() {
 								<span>Featured Job</span>
 							</div>
 							<div className="ha-card-company">
-								<img src="/img/brands/google.png" alt="Google" className="ha-card-logo" />
+								<img src="/img/brands/github.png" alt="Google" className="ha-card-logo" />
 								<div className="ha-card-company-info">
 									<h4>Senior React Developer</h4>
 									<p>Google • Mountain View, CA</p>

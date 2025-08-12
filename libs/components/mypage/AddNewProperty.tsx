@@ -216,45 +216,91 @@ const AddProperty = () => {
 	}, [jobData, editingId, salaryInput, expInput]);
 
 	return (
-		<div id="add-property-page">
-			<Stack className="main-title-box">
-				<Typography className="main-title">{editingId ? 'Edit Job' : 'Create New Job'}</Typography>
-				<Typography className="sub-title">Post a role and find the right talent.</Typography>
+		<div id="add-property-page" style={{ width: '100%', padding: '20px' }}>
+			<Stack className="main-title-box" style={{ marginBottom: '20px' }}>
+				<Typography className="main-title" style={{ fontSize: '30px', fontWeight: 600, marginBottom: '10px' }}>
+					{editingId ? 'Edit Job' : 'Create New Job'}
+				</Typography>
+				<Typography className="sub-title" style={{ fontSize: '14px', color: '#666' }}>
+					Post a role and find the right talent.
+				</Typography>
 			</Stack>
 
-			<div>
-				<Stack className="config config--with-sidebar">
-					<Stack className="description-box">
-						<Stack className="config-row">
-							<Stack className="config-column">
-								<Typography className="title">Position Title</Typography>
+			<div style={{ width: '100%' }}>
+				<Stack className="config config--with-sidebar" style={{ 
+					display: 'grid', 
+					gridTemplateColumns: '1fr 280px', 
+					gap: '24px',
+					padding: '38px 33px 35px 33px',
+					borderRadius: '12px',
+					border: '1px solid rgba(196, 196, 196, 0.79)',
+					background: '#fff',
+					boxShadow: '0px 1px 4px 0px rgba(24, 26, 32, 0.07)'
+				}}>
+					<Stack className="description-box" style={{ width: '100%' }}>
+						<Stack className="config-row" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+							<Stack className="config-column" style={{ flex: 1 }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Position Title
+								</Typography>
 								<input
 									type="text"
 									className="description-input"
 									placeholder="e.g., Frontend Developer"
 									value={jobData.positionTitle}
 									onChange={(e) => updateField('positionTitle', e.target.value)}
+									style={{
+										width: '100%',
+										height: '47px',
+										outline: 'none',
+										borderRadius: '8px',
+										padding: '0px 15px',
+										border: '1px solid #ddd'
+									}}
 								/>
 							</Stack>
-							<Stack className="config-column">
-								<Typography className="title">Company Name</Typography>
+							<Stack className="config-column" style={{ flex: 1 }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Company Name
+								</Typography>
 								<input
 									type="text"
 									className="description-input"
 									placeholder="e.g., Google"
 									value={jobData.companyName}
 									onChange={(e) => updateField('companyName', e.target.value)}
+									style={{
+										width: '100%',
+										height: '47px',
+										outline: 'none',
+										borderRadius: '8px',
+										padding: '0px 15px',
+										border: '1px solid #ddd'
+									}}
 								/>
 							</Stack>
 						</Stack>
 
-						<Stack className="config-row">
-							<Stack className="price-year-after-price">
-								<Typography className="title">Job Type</Typography>
+						<Stack className="config-row" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+							<Stack className="price-year-after-price" style={{ flex: 1, position: 'relative' }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Job Type
+								</Typography>
 								<select
 									className="select-description"
 									value={jobData.jobType ?? ''}
 									onChange={(e) => updateField('jobType', (e.target.value || null) as JobType | null)}
+									style={{
+										width: '100%',
+										height: '47px',
+										borderRadius: '8px',
+										border: '1px solid #ddd',
+										background: '#fff',
+										outline: 'none',
+										paddingLeft: '15px',
+										appearance: 'none',
+										cursor: 'pointer'
+									}}
 								>
 									<option disabled value="">
 										Select
@@ -265,16 +311,42 @@ const AddProperty = () => {
 										</option>
 									))}
 								</select>
-								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<div className="divider" style={{
+									position: 'absolute',
+									height: '46px',
+									borderLeft: '1px solid #ddd',
+									right: '52px',
+									top: '42px'
+								}} />
+								<img src="/img/icons/Vector.svg" className="arrow-down" style={{
+									position: 'absolute',
+									width: '15px',
+									height: '7px',
+									right: '18px',
+									top: '62px',
+									pointerEvents: 'none'
+								}} />
 							</Stack>
 
-							<Stack className="price-year-after-price">
-								<Typography className="title">Location</Typography>
+							<Stack className="price-year-after-price" style={{ flex: 1, position: 'relative' }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Location
+								</Typography>
 								<select
 									className="select-description"
 									value={jobData.jobLocation ?? ''}
 									onChange={(e) => updateField('jobLocation', (e.target.value || null) as JobLocation | null)}
+									style={{
+										width: '100%',
+										height: '47px',
+										borderRadius: '8px',
+										border: '1px solid #ddd',
+										background: '#fff',
+										outline: 'none',
+										paddingLeft: '15px',
+										appearance: 'none',
+										cursor: 'pointer'
+									}}
 								>
 									<option disabled value="">
 										Select
@@ -285,16 +357,42 @@ const AddProperty = () => {
 										</option>
 									))}
 								</select>
-								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<div className="divider" style={{
+									position: 'absolute',
+									height: '46px',
+									borderLeft: '1px solid #ddd',
+									right: '52px',
+									top: '42px'
+								}} />
+								<img src="/img/icons/Vector.svg" className="arrow-down" style={{
+									position: 'absolute',
+									width: '15px',
+									height: '7px',
+									right: '18px',
+									top: '62px',
+									pointerEvents: 'none'
+								}} />
 							</Stack>
 
-							<Stack className="price-year-after-price">
-								<Typography className="title">Employment Level</Typography>
+							<Stack className="price-year-after-price" style={{ flex: 1, position: 'relative' }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Employment Level
+								</Typography>
 								<select
 									className="select-description"
 									value={jobData.employmentLevel ?? ''}
 									onChange={(e) => updateField('employmentLevel', (e.target.value || null) as EmploymentLevel | null)}
+									style={{
+										width: '100%',
+										height: '47px',
+										borderRadius: '8px',
+										border: '1px solid #ddd',
+										background: '#fff',
+										outline: 'none',
+										paddingLeft: '15px',
+										appearance: 'none',
+										cursor: 'pointer'
+									}}
 								>
 									<option disabled value="">
 										Select
@@ -305,14 +403,29 @@ const AddProperty = () => {
 										</option>
 									))}
 								</select>
-								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<div className="divider" style={{
+									position: 'absolute',
+									height: '46px',
+									borderLeft: '1px solid #ddd',
+									right: '52px',
+									top: '42px'
+								}} />
+								<img src="/img/icons/Vector.svg" className="arrow-down" style={{
+									position: 'absolute',
+									width: '15px',
+									height: '7px',
+									right: '18px',
+									top: '62px',
+									pointerEvents: 'none'
+								}} />
 							</Stack>
 						</Stack>
 
-						<Stack className="config-row">
-							<Stack className="price-year-after-price">
-								<Typography className="title">Salary</Typography>
+						<Stack className="config-row" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+							<Stack className="price-year-after-price" style={{ flex: 1 }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Salary
+								</Typography>
 								<input
 									type="text"
 									inputMode="numeric"
@@ -321,11 +434,21 @@ const AddProperty = () => {
 									placeholder="e.g., 60000000"
 									value={salaryInput}
 									onChange={(e) => setSalaryInput(e.target.value.replace(/[^\d]/g, ''))}
+									style={{
+										width: '100%',
+										height: '47px',
+										outline: 'none',
+										borderRadius: '8px',
+										padding: '0px 15px',
+										border: '1px solid #ddd'
+									}}
 								/>
 							</Stack>
 
-							<Stack className="price-year-after-price">
-								<Typography className="title">Experience (years)</Typography>
+							<Stack className="price-year-after-price" style={{ flex: 1 }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Experience (years)
+								</Typography>
 								<input
 									type="text"
 									inputMode="numeric"
@@ -334,15 +457,36 @@ const AddProperty = () => {
 									placeholder="e.g., 3"
 									value={expInput}
 									onChange={(e) => setExpInput(e.target.value.replace(/[^\d]/g, ''))}
+									style={{
+										width: '100%',
+										height: '47px',
+										outline: 'none',
+										borderRadius: '8px',
+										padding: '0px 15px',
+										border: '1px solid #ddd'
+									}}
 								/>
 							</Stack>
 
-							<Stack className="price-year-after-price">
-								<Typography className="title">Education Level</Typography>
+							<Stack className="price-year-after-price" style={{ flex: 1, position: 'relative' }}>
+								<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+									Education Level
+								</Typography>
 								<select
 									className="select-description"
 									value={jobData.educationLevel ?? ''}
 									onChange={(e) => updateField('educationLevel', (e.target.value || null) as EducationLevel | null)}
+									style={{
+										width: '100%',
+										height: '47px',
+										borderRadius: '8px',
+										border: '1px solid #ddd',
+										background: '#fff',
+										outline: 'none',
+										paddingLeft: '15px',
+										appearance: 'none',
+										cursor: 'pointer'
+									}}
 								>
 									<option disabled value="">
 										Select
@@ -353,14 +497,29 @@ const AddProperty = () => {
 										</option>
 									))}
 								</select>
-								<div className="divider" />
-								<img src="/img/icons/Vector.svg" className="arrow-down" />
+								<div className="divider" style={{
+									position: 'absolute',
+									height: '46px',
+									borderLeft: '1px solid #ddd',
+									right: '52px',
+									top: '42px'
+								}} />
+								<img src="/img/icons/Vector.svg" className="arrow-down" style={{
+									position: 'absolute',
+									width: '15px',
+									height: '7px',
+									right: '18px',
+									top: '62px',
+									pointerEvents: 'none'
+								}} />
 							</Stack>
 						</Stack>
 
 						{/* Skills */}
-						<Stack className="config-column">
-							<Typography className="title">Skills (Enter or comma)</Typography>
+						<Stack className="config-column" style={{ marginBottom: '20px' }}>
+							<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+								Skills (Enter or comma)
+							</Typography>
 							<TextField
 								placeholder="e.g., React, TypeScript, GraphQL"
 								value={skillInput}
@@ -368,6 +527,7 @@ const AddProperty = () => {
 								onKeyDown={onSkillKeyDown}
 								size="small"
 								InputProps={{ className: 'description-input' }}
+								style={{ width: '100%' }}
 							/>
 							<Stack direction="row" gap={1} mt={1} flexWrap="wrap">
 								{jobData.skillsRequired.map((s) => (
@@ -377,9 +537,13 @@ const AddProperty = () => {
 						</Stack>
 
 						{/* Description */}
-						<Typography className="property-title">Job Description</Typography>
+						<Typography className="property-title" style={{ fontSize: '17px', fontWeight: 600, marginBottom: '15px' }}>
+							Job Description
+						</Typography>
 						<Stack className="config-column">
-							<Typography className="title">Description</Typography>
+							<Typography className="title" style={{ fontSize: '14px', fontWeight: 600, marginBottom: '10px' }}>
+								Description
+							</Typography>
 
 							{/* simple editor textarea for now */}
 							<textarea
@@ -388,30 +552,78 @@ const AddProperty = () => {
 								placeholder="Markdown supported. Describe responsibilities, requirements, benefits..."
 								value={jobData.jobDesc}
 								onChange={(e) => updateField('jobDesc', e.target.value)}
+								style={{
+									width: '100%',
+									minHeight: '160px',
+									borderRadius: '8px',
+									padding: '10px 15px',
+									border: '1px solid #ddd',
+									outline: 'none',
+									resize: 'vertical',
+									background: '#fff',
+									fontSize: '14px',
+									lineHeight: '1.6'
+								}}
 							/>
 
 							{/* Live preview (ToastViewer) */}
 							{jobData.jobDesc ? (
-								<div className="viewer-wrapper">
+								<div className="viewer-wrapper" style={{
+									marginTop: '10px',
+									border: '1px solid #e5e7eb',
+									borderRadius: '10px',
+									padding: '12px',
+									background: '#fff'
+								}}>
 									<ToastViewerComponent markdown={jobData.jobDesc} className={'ytb_play'} />
 								</div>
 							) : (
-								<Typography className="viewer-empty">Start typing to see a preview…</Typography>
+								<Typography className="viewer-empty" style={{
+									marginTop: '8px',
+									fontSize: '13px',
+									color: '#717171'
+								}}>
+									Start typing to see a preview…
+								</Typography>
 							)}
 						</Stack>
 					</Stack>
 
 					{/* RIGHT: compact company logo uploader (sticky, small) */}
-					<aside className="images-box images-box--compact">
-						<Typography className="upload-title">Company Logo</Typography>
+					<aside className="images-box images-box--compact" style={{
+						position: 'sticky',
+						top: '88px',
+						alignSelf: 'start',
+						maxWidth: '280px'
+					}}>
+						<Typography className="upload-title" style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
+							Company Logo
+						</Typography>
 
-						<Stack className="upload-box upload-box--compact">
-							<Stack className="text-box">
-								<Typography className="drag-title">Choose logo</Typography>
-								<Typography className="format-title">JPEG/PNG • single file</Typography>
+						<Stack className="upload-box upload-box--compact" style={{
+							padding: '12px',
+							border: '1px dashed #eb6753',
+							borderRadius: '12px',
+							background: '#fafafa',
+							gap: '10px'
+						}}>
+							<Stack className="text-box" style={{ alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+								<Typography className="drag-title" style={{ fontSize: '14px', fontWeight: 600 }}>
+									Choose logo
+								</Typography>
+								<Typography className="format-title" style={{ fontSize: '12px', color: '#6b7280' }}>
+									JPEG/PNG • single file
+								</Typography>
 							</Stack>
-							<Button className="browse-button" onClick={() => logoInputRef.current?.click()}>
-								<Typography className="browse-button-text">
+							<Button className="browse-button" onClick={() => logoInputRef.current?.click()} style={{
+								width: '100%',
+								padding: '10px 14px',
+								borderRadius: '12px',
+								border: '1px solid #181a20',
+								background: 'transparent',
+								color: '#181a20'
+							}}>
+								<Typography className="browse-button-text" style={{ fontSize: '15px', fontWeight: 600 }}>
 									{jobData.companyLogo ? 'Change Logo' : 'Upload Logo'}
 								</Typography>
 								<input
@@ -425,12 +637,33 @@ const AddProperty = () => {
 						</Stack>
 
 						{jobData.companyLogo && (
-							<Stack className="gallery-box gallery-box--compact">
-								<Stack className="image-box image-box--compact">
-									<img src={`${REACT_APP_API_URL}/${jobData.companyLogo}`} alt="company logo" />
+							<Stack className="gallery-box gallery-box--compact" style={{ marginTop: '12px' }}>
+								<Stack className="image-box image-box--compact" style={{
+									width: '100%',
+									height: '140px',
+									borderRadius: '12px',
+									overflow: 'hidden',
+									border: '1px solid #e5e7eb',
+									background: '#fff'
+								}}>
+									<img src={`${REACT_APP_API_URL}/${jobData.companyLogo}`} alt="company logo" style={{
+										width: '100%',
+										height: '100%',
+										objectFit: 'contain',
+										display: 'block'
+									}} />
 								</Stack>
-								<Button className="next-button next-button--danger" onClick={removeCompanyLogo}>
-									<Typography className="next-button-text">Remove Logo</Typography>
+								<Button className="next-button next-button--danger" onClick={removeCompanyLogo} style={{
+									marginTop: '8px',
+									background: '#eb6753',
+									color: '#fff',
+									padding: '10px 14px',
+									borderRadius: '12px',
+									border: 'none'
+								}}>
+									<Typography className="next-button-text" style={{ color: '#fff', fontSize: '15px', fontWeight: 600 }}>
+										Remove Logo
+									</Typography>
 								</Button>
 							</Stack>
 						)}
@@ -438,9 +671,19 @@ const AddProperty = () => {
 				</Stack>
 
 				{/* Actions */}
-				<Stack className="buttons-row">
-					<Button className="next-button" disabled={isDisabled()} onClick={saveHandler}>
-						<Typography className="next-button-text">Save</Typography>
+				<Stack className="buttons-row" style={{ marginTop: '20px', justifyContent: 'flex-end' }}>
+					<Button className="next-button" disabled={isDisabled()} onClick={saveHandler} style={{
+						width: '190px',
+						height: '44px',
+						padding: '16px 30px',
+						borderRadius: '12px',
+						background: '#181a20',
+						color: '#fff',
+						border: 'none'
+					}}>
+						<Typography className="next-button-text" style={{ color: '#fff', fontSize: '15px', fontWeight: 600 }}>
+							Save
+						</Typography>
 					</Button>
 				</Stack>
 			</div>
