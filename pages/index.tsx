@@ -18,8 +18,8 @@ const Home: NextPage = () => {
 	return (
 		<Stack className={'home-page'}>
 			<FeaturedJobs />
-			{/* <TrendProperties /> */}
-			{/* <PopularProperties /> */}
+			
+			
 			{/* <Advertisement /> */}
 			{/* <TopProperties /> */}
 			{/* <TopAgents /> */}
