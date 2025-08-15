@@ -15,6 +15,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import { JobType, JobLocation, EducationLevel } from '../../enums/job.enum';
+import { Direction } from '../../enums/common.enum';
 import { Job } from '../../types/job/job';
 import { AllJobsInquiry } from '../../types/job/job.input';
 import { LIKE_TARGET_JOB } from '../../../apollo/user/mutation';
@@ -24,13 +25,16 @@ import { T } from '../../types/common';
 import Image from 'next/image';
 import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
+import ApplicationModal from '../job/ApplicationModal';
 
 interface FeaturedJobsProps {
-	initialInput: AllJobsInquiry;
+	initialInput?: AllJobsInquiry;
 }
 
-const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
+const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', direction: Direction.DESC, search: {} } }: FeaturedJobsProps) => {
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
+	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
+	const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 	const router = useRouter();
 
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
@@ -241,7 +245,8 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 						size="small"
 						onClick={(e: React.MouseEvent) => {
 							e.stopPropagation();
-							handleCardClick(job._id);
+							setSelectedJob(job);
+							setApplicationModalOpen(true);
 						}}
 					>
 						Apply Now
@@ -275,69 +280,87 @@ const FeaturedJobs = ({ initialInput }: FeaturedJobsProps) => {
 	);
 
 	return (
-		<section className="featured-job">
-			<div className="featured-jobs-container">
-				<Box className="section-header">
-					<Typography variant="h3" className="section-title">
-						Featured Job Opportunities
-					</Typography>
-					<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
-				</Box>
+		<>
+			<section className="featured-job">
+				<div className="featured-jobs-container">
+					<Box className="section-header">
+						<Typography variant="h3" className="section-title">
+							Featured Job Opportunities
+						</Typography>
+						<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
+					</Box>
 
-				<Box className="jobs-carousel-container">
-					<div className="navigation-buttons">
-						<button className="fj-prev" aria-label="Previous jobs">
-							<WestIcon />
-						</button>
-						<button className="fj-next" aria-label="Next jobs">
-							<EastIcon />
-						</button>
-					</div>
+					<Box className="jobs-carousel-container">
+						<div className="navigation-buttons">
+							<button className="fj-prev" aria-label="Previous jobs">
+								<WestIcon />
+							</button>
+							<button className="fj-next" aria-label="Next jobs">
+								<EastIcon />
+							</button>
+						</div>
 
-					<Swiper
-						modules={[Navigation, Pagination, Autoplay]}
-						spaceBetween={24}
-						slidesPerView={'auto'}
-						navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
-						pagination={{ clickable: true, dynamicBullets: true }}
-						autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-						loop={true}
-						breakpoints={{
-							320: { slidesPerView: 1, spaceBetween: 16 },
-							480: { slidesPerView: 1, spaceBetween: 20 },
-							640: { slidesPerView: 2, spaceBetween: 24 },
-							768: { slidesPerView: 2, spaceBetween: 28 },
-							960: { slidesPerView: 3, spaceBetween: 32 },
-							1200: { slidesPerView: 3, spaceBetween: 36 },
-							1400: { slidesPerView: 4, spaceBetween: 40 },
-						}}
-						className="featured-jobs-swiper"
-					>
-						{getJobsLoading
-							? Array.from({ length: 6 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
-							: featuredJobs.map((job: any, index: any) => (
-									<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
-							  ))}
-					</Swiper>
-				</Box>
+						<Swiper
+							modules={[Navigation, Pagination, Autoplay]}
+							spaceBetween={24}
+							slidesPerView={'auto'}
+							navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
+							pagination={{ clickable: true, dynamicBullets: true }}
+							autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
+							loop={true}
+							breakpoints={{
+								320: { slidesPerView: 1, spaceBetween: 16 },
+								480: { slidesPerView: 1, spaceBetween: 20 },
+								640: { slidesPerView: 2, spaceBetween: 24 },
+								768: { slidesPerView: 2, spaceBetween: 28 },
+								960: { slidesPerView: 3, spaceBetween: 32 },
+								1200: { slidesPerView: 3, spaceBetween: 36 },
+								1400: { slidesPerView: 4, spaceBetween: 40 },
+							}}
+							className="featured-jobs-swiper"
+						>
+							{getJobsLoading
+								? Array.from({ length: 6 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
+								: featuredJobs.map((job: any, index: any) => (
+										<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
+								  ))}
+						</Swiper>
+					</Box>
 
-				<Box className="view-all-container">
-					<Button 
-						variant="outlined" 
-						className="view-all-button"
-						onClick={() => router.push('/jobs')}
-						endIcon={<EastIcon className="arrow-icon" />}
-					>
-						View All Jobs
-					</Button>
-				</Box>
-			</div>
-		</section>
+					<Box className="view-all-container">
+						<Button 
+							variant="outlined" 
+							className="view-all-button"
+							onClick={() => router.push('/jobs')}
+							endIcon={<EastIcon className="arrow-icon" />}
+						>
+							View All Jobs
+						</Button>
+					</Box>
+				</div>
+			</section>
+
+			{/* Application Modal */}
+			{selectedJob && (
+				<ApplicationModal
+					open={applicationModalOpen}
+					onClose={() => {
+						setApplicationModalOpen(false);
+						setSelectedJob(null);
+					}}
+					job={selectedJob as {
+						_id: string;
+						positionTitle: string;
+						companyName: string;
+						jobLocation: string;
+						jobSalary: number | string;
+						companyLogo?: string;
+						jobDesc?: string;
+					}}
+				/>
+			)}
+		</>
 	);
-};
-
-FeaturedJobs.defaultProps = {
-	initialInput: { page: 1, limit: 8, sort: 'jobRank', direction: 'DESC', search: {} },
 };
 
 export default FeaturedJobs;
