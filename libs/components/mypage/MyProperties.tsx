@@ -17,7 +17,11 @@ import { UPDATE_JOB } from '../../../apollo/user/mutation';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 	const device = useDeviceDetect();
-	const [searchFilter, setSearchFilter] = useState<AgentJobsInquiry>(initialInput);
+	const [searchFilter, setSearchFilter] = useState<AgentJobsInquiry>(initialInput || {
+		page: 1,
+		limit: 10,
+		search: { jobStatus: JobStatus.OPEN }
+	});
 	const [agentProperties, setAgentProperties] = useState<Job[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const user = useReactiveVar(userVar);
@@ -56,7 +60,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: 'DELETE',
+							jobStatus: JobStatus.CLOSED,
 						},
 					},
 				});
@@ -75,7 +79,7 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 					variables: {
 						input: {
 							_id: id,
-							propertyStatus: status,
+							jobStatus: status,
 						},
 					},
 				});
@@ -162,6 +166,30 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 					</Stack>
 					
 					<Stack className="list-box">
+						{/* Error and Loading States */}
+						{getAgentPropertiesError && (
+							<div style={{
+								padding: '15px',
+								background: '#fee',
+								border: '1px solid #fcc',
+								borderRadius: '8px',
+								marginBottom: '20px',
+								color: '#c33'
+							}}>
+								<strong>Error:</strong> {getAgentPropertiesError.message}
+							</div>
+						)}
+						
+						{getAgentPropertiesLoading && (
+							<div style={{
+								padding: '15px',
+								textAlign: 'center',
+								color: '#666'
+							}}>
+								Loading jobs...
+							</div>
+						)}
+						
 						<Stack className="listing-title-box" style={{
 							display: 'grid',
 							gridTemplateColumns: searchFilter.search.jobStatus === 'OPEN' 
@@ -418,7 +446,7 @@ MyProperties.defaultProps = {
 		limit: 5,
 		sort: 'createdAt',
 		search: {
-			propertyStatus: 'ACTIVE',
+			jobStatus: JobStatus.OPEN,
 		},
 	},
 };
