@@ -26,13 +26,15 @@ import {
 	Favorite as FavoriteOutlinedIcon,
 	ArrowBack as ArrowBackIcon,
 	CalendarToday as CalendarIcon,
+	SmartToy as SmartToyIcon,
 } from '@mui/icons-material';
-import { GET_JOB, GET_JOBS } from '../../../apollo/user/query';
+import { GET_JOB, GET_SIMILAR_JOBS } from '../../../apollo/user/query';
 import { LIKE_TARGET_JOB } from '../../../apollo/user/mutation';
 import { REACT_APP_API_URL } from '../../../libs/config';
 import withLayoutBasic from '../../../libs/components/layout/LayoutBasic';
 import { T } from '../../../libs/types/common';
 import Image from 'next/image';
+import ApplicationModal from '../../../libs/components/job/ApplicationModal';
 
 type Job = {
 	_id: string;
@@ -70,7 +72,7 @@ type Job = {
 const JobDetailPage: NextPage = () => {
 	const router = useRouter();
 	const { jobId } = router.query as { jobId: string };
-	const [similar, setSimilarJobs] = useState<Job[]>([]);
+	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
 
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
 
@@ -80,6 +82,15 @@ const JobDetailPage: NextPage = () => {
 		fetchPolicy: 'network-only',
 		notifyOnNetworkStatusChange: true,
 	});
+
+	const { data: similarJobsData, loading: simLoading, error: simError } = useQuery<{ getSimilarJobs: { list: Job[] } }>(GET_SIMILAR_JOBS, {
+		variables: { jobId, limit: 6.0 },
+		skip: !jobId,
+		fetchPolicy: 'network-only',
+		notifyOnNetworkStatusChange: true,
+	});
+
+	const similarJobs = similarJobsData?.getSimilarJobs?.list || [];
 
 	// Check if job is liked by current user
 	const isJobLiked = (job: Job) => {
@@ -101,29 +112,8 @@ const JobDetailPage: NextPage = () => {
 
 	const job = data?.getJob;
 
-	// Similar jobs: by jobType + a few skills
-	const {
-		loading: simLoading,
-		data: getPropertiesData,
-		error: getPropertiesError,
-		refetch: getPropertiesRefetch,
-	} = useQuery(GET_JOBS, {
-		fetchPolicy: 'network-only',
-		variables: {
-			input: {
-				page: 1,
-				limit: 8,
-				sort: 'createdAt',
-				direction: 'DESC',
-				search: {},
-			},
-		},
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setSimilarJobs(data?.getJobs?.list);
-		},
-	});
 
+	
 	const statusTone = useMemo(() => {
 		const s = (job?.jobStatus || '').toLowerCase();
 		if (s.includes('open')) return 'open';
@@ -200,7 +190,8 @@ const JobDetailPage: NextPage = () => {
 	const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
 
 	return (
-		<div className={styles.wrap}>
+		<>
+			<div className={styles.wrap}>
 			{/* Back Navigation */}
 			<div className={styles.backNav}>
 				<button onClick={() => router.back()} className={styles.backBtn}>
@@ -277,7 +268,12 @@ const JobDetailPage: NextPage = () => {
 							<button className={styles.shareBtn} onClick={copyLink} aria-label="Share">
 								<ShareIcon />
 							</button>
-							<button className={styles.applyBtn}>Apply Now</button>
+							<button 
+								className={styles.applyBtn} 
+								onClick={() => setApplicationModalOpen(true)}
+							>
+								Apply Now
+							</button>
 						</div>
 					</div>
 				</div>
@@ -357,73 +353,76 @@ const JobDetailPage: NextPage = () => {
 						</section>
 					)}
 
-					{/* Similar Jobs */}
-					<section className={styles.similarSection}>
-						<div className={styles.sectionHeader}>
-							<h2 className={styles.sectionTitle}>Similar Jobs</h2>
-							{!simLoading && similar.length > 0 && (
-								<Link className={styles.viewAllLink} href={`/search?type=${job.jobType || ''}`}>
-									View all
-								</Link>
-							)}
-						</div>
+					{/* AI Matched Jobs */}
+<section className={styles.similarSection}>
+	<div className={styles.sectionHeader}>
+		<h2 className={styles.sectionTitle}>
+			<SmartToyIcon style={{ marginRight: '8px', color: '#6366f1' }} />
+			AI Matched Jobs
+		</h2>
+		{!simLoading && similarJobs.length > 0 && (
+			<Link className={styles.viewAllLink} href={`/search?type=${job.jobType || ''}`}>
+				View all
+			</Link>
+		)}
+	</div>
 
-						{simLoading && (
-							<div className={styles.similarGrid}>
-								{Array.from({ length: 6 }).map((_, i) => (
-									<div key={i} className={styles.similarCardSkeleton} />
+	{simLoading && (
+		<div className={styles.similarGrid}>
+			{Array.from({ length: 6 }).map((_, i) => (
+				<div key={i} className={styles.similarCardSkeleton} />
+			))}
+		</div>
+	)}
+
+	{!simLoading && similarJobs.length === 0 && (
+		<div className={styles.noSimilar}>
+			<p>No similar jobs found yet.</p>
+		</div>
+	)}
+
+	{!simLoading && similarJobs.length > 0 && (
+		<div className={styles.similarGrid}>
+			{similarJobs.map((s: Job) => {
+				const sLogo = s.companyLogo
+					? `${REACT_APP_API_URL}/${s.companyLogo}`
+					: '/img/brands/g.png';
+				return (
+					<Link key={s._id} href={`/jobs/${s._id}`} className={styles.similarCard}>
+						<div className={styles.similarHeader}>
+							<div className={styles.similarLogo}>
+								<Image
+									src={sLogo}
+									alt="logo"
+									width={40}
+									height={40}
+									className={styles.similarLogoImg}
+								/>
+							</div>
+							<div className={styles.similarMeta}>
+								<div className={styles.similarTitle}>{s.positionTitle}</div>
+								<div className={styles.similarCompany}>{s.companyName || '—'}</div>
+							</div>
+						</div>
+						<div className={styles.similarInfo}>
+							<span>{pretty(s.jobLocation) || '—'}</span>
+							<span>•</span>
+							<span>{pretty(s.jobType) || '—'}</span>
+						</div>
+						<div className={styles.similarSalary}>{formatCurrency(s.jobSalary)}</div>
+						{Array.isArray(s.skillsRequired) && s.skillsRequired.length > 0 && (
+							<div className={styles.similarSkills}>
+								{s.skillsRequired.slice(0, 3).map((k: string) => (
+									<span key={k} className={styles.similarSkill}>{k}</span>
 								))}
 							</div>
 						)}
-
-						{!simLoading && similar.length === 0 && (
-							<div className={styles.noSimilar}>
-								<p>No similar jobs found yet.</p>
-							</div>
-						)}
-
-						{!simLoading && similar.length > 0 && (
-							<div className={styles.similarGrid}>
-								{similar.map((s) => {
-									const sLogo = s.companyLogo
-										? `${REACT_APP_API_URL}/${s.companyLogo}`
-										: '/img/brands/g.png';
-									return (
-										<Link key={s._id} href={`/jobs/${s._id}`} className={styles.similarCard}>
-											<div className={styles.similarHeader}>
-												<div className={styles.similarLogo}>
-													<Image
-														src={sLogo}
-														alt="logo"
-														width={40}
-														height={40}
-														className={styles.similarLogoImg}
-													/>
-												</div>
-												<div className={styles.similarMeta}>
-													<div className={styles.similarTitle}>{s.positionTitle}</div>
-													<div className={styles.similarCompany}>{s.companyName || '—'}</div>
-												</div>
-											</div>
-											<div className={styles.similarInfo}>
-												<span>{pretty(s.jobLocation) || '—'}</span>
-												<span>•</span>
-												<span>{pretty(s.jobType) || '—'}</span>
-											</div>
-											<div className={styles.similarSalary}>{formatCurrency(s.jobSalary)}</div>
-											{Array.isArray(s.skillsRequired) && s.skillsRequired.length > 0 && (
-												<div className={styles.similarSkills}>
-													{s.skillsRequired.slice(0, 3).map((k) => (
-														<span key={k} className={styles.similarSkill}>{k}</span>
-													))}
-												</div>
-											)}
-										</Link>
-									);
-								})}
-							</div>
-						)}
-					</section>
+					</Link>
+				);
+			})}
+		</div>
+	)}
+</section>
 				</div>
 
 				{/* Right Sidebar */}
@@ -482,7 +481,12 @@ const JobDetailPage: NextPage = () => {
 							<div className={styles.salaryLabel}>Salary</div>
 							<div className={styles.salaryAmount}>{formatCurrency(job.jobSalary)}</div>
 						</div>
-						<button className={styles.primaryApplyBtn}>Apply Now</button>
+						<button 
+							className={styles.primaryApplyBtn}
+							onClick={() => setApplicationModalOpen(true)}
+						>
+							Apply Now
+						</button>
 						<div className={styles.jobSummary}>
 							<div className={styles.summaryItem}>
 								<span className={styles.summaryLabel}>Status</span>
@@ -512,7 +516,25 @@ const JobDetailPage: NextPage = () => {
 					</section>
 				</div>
 			</div>
-		</div>
+			</div>
+
+			{/* Application Modal */}
+			{job && (
+				<ApplicationModal
+					open={applicationModalOpen}
+					onClose={() => setApplicationModalOpen(false)}
+					job={job as {
+						_id: string;
+						positionTitle: string;
+						companyName: string;
+						jobLocation: string;
+						jobSalary: number | string;
+						companyLogo?: string;
+						jobDesc?: string;
+					}}
+				/>
+			)}
+		</>
 	);
 };
 
