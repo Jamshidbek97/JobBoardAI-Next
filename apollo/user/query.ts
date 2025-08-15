@@ -227,6 +227,47 @@ export const GET_JOBS = gql`
 	}
 `;
 
+export const GET_SIMILAR_JOBS = gql`
+	query GetSimilarJobs($jobId: String!, $limit: Float) {
+	getSimilarJobs(jobId: $jobId, limit: $limit) {
+	  list {
+		_id
+		positionTitle
+		companyName
+		jobSalary
+		jobLocation
+		jobType
+		educationLevel
+		employmentLevel
+		experienceYears
+		companyLogo
+		jobDesc
+		skillsRequired
+		jobViews
+		jobLikes
+		jobComments
+		jobRank
+		memberId
+		createdAt
+		updatedAt
+		memberData {
+		  _id
+		  memberNick
+		  memberType
+		  memberImage
+		}
+		meLiked {
+		  memberId
+		  likeRefId
+		  myFavorite
+		}
+	  }
+	  metaCounter {
+		total
+	  }
+	}
+  }`;
+
 export const GET_AGENT_JOBS = gql`
 	query GetAgentJobs($input: AgentJobsInquiry!) {
     getAgentJobs(input: $input) {
@@ -246,6 +287,7 @@ export const GET_AGENT_JOBS = gql`
             jobRank
             jobImages
             companyLogo
+            companyName
             jobDesc
             memberId
             closedAt
@@ -361,65 +403,68 @@ export const GET_FAVORITES = gql`
 
 export const GET_VISITED = gql`
 	query GetVisited($input: OrdinaryInquiry!) {
-		getVisited(input: $input) {
-			list {
-				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyComments
-				propertyRank
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
-				memberId
-				soldAt
-				deletedAt
-				constructedAt
-				createdAt
-				updatedAt
-				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberPostedJobs
-					memberArticles
-					memberPoints
-					memberLikes
-					memberViews
-					memberComments
-					memberFollowings
-					memberFollowers
-					memberRank
-					memberWarnings
-					memberBlocks
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
-				}
-			}
-			metaCounter {
-				total
-			}
-		}
-	}
+    getVisited(input: $input) {
+        list {
+            _id
+            jobType
+            jobStatus
+            jobLocation
+            positionTitle
+            jobSalary
+            skillsRequired
+            experienceYears
+            educationLevel
+            jobViews
+            jobLikes
+            jobComments
+            jobRank
+            jobImages
+            companyLogo
+            jobDesc
+            memberId
+            closedAt
+            deletedAt
+            createdAt
+            updatedAt
+            memberData {
+                _id
+                memberType
+                memberStatus
+                memberAuthType
+                memberPhone
+                memberNick
+                memberFullName
+                memberImage
+                memberAddress
+                memberDesc
+                memberPostedJobs
+                memberArticles
+                memberFollowers
+                memberFollowings
+                memberPoints
+                memberLikes
+                memberViews
+                memberComments
+                memberRank
+                memberWarnings
+                memberBlocks
+                deletedAt
+                createdAt
+                updatedAt
+                accessToken
+            }
+            meLiked {
+                memberId
+                likeRefId
+                myFavorite
+            }
+        }
+        metaCounter {
+            total
+        }
+    }
+}
+
 `;
 
 /**************************
@@ -695,6 +740,213 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					followerId
 					myFollowing
 				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_APPLICATION = gql`
+	query GetApplication($applicationId: String!) {
+		getApplication(applicationId: $applicationId) {
+			_id
+			jobId {
+				_id
+				positionTitle
+				companyName
+				jobLocation
+				jobSalary
+				jobDesc
+				companyLogo
+				jobType
+				employmentLevel
+				experienceYears
+				educationLevel
+				skillsRequired
+			}
+			applicantId {
+				_id
+				memberFullName
+				memberEmail
+				memberPhone
+				memberImage
+				profile {
+					skills
+					experience
+					education
+				}
+			}
+			status
+			coverLetter
+			resumeUrl
+			expectedSalary
+			additionalDocuments
+			notes
+			interviewDate
+			feedback
+			isViewed
+			viewedAt
+			appliedAt
+			updatedAt
+		}
+	}
+`;
+
+export const GET_APPLICATIONS = gql`
+	query GetApplications($input: ApplicationsInquiry!) {
+		getApplications(input: $input) {
+			list {
+				_id
+				jobId {
+					_id
+					positionTitle
+					companyName
+					jobLocation
+					jobSalary
+					companyLogo
+					jobType
+					employmentLevel
+				}
+				applicantId {
+					_id
+					memberFullName
+					memberEmail
+					memberPhone
+					memberImage
+				}
+				status
+				coverLetter
+				resumeUrl
+				expectedSalary
+				additionalDocuments
+				isViewed
+				appliedAt
+				updatedAt
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_APPLICATION_STATS = gql`
+	query GetApplicationStats {
+		getApplicationStats {
+			totalApplications
+			pendingApplications
+			reviewingApplications
+			acceptedApplications
+			rejectedApplications
+			withdrawnApplications
+			applicationsThisMonth
+			applicationsThisWeek
+		}
+	}
+`;
+
+export const GET_MY_APPLICATIONS = gql`
+	query GetMyApplications {
+  getMyApplications {
+    list {
+      _id
+      jobId
+      applicantId
+      companyId
+      status
+      appliedAt
+      expectedSalary
+      coverLetter
+      resumeUrl
+     additionalDocuments
+            notes
+            interviewDate
+            feedback
+            isActive
+            expectedSalary
+            availabilityDate
+            isRemotePreferred
+            relevantExperience
+            skills
+            currentPosition
+            currentCompany
+            yearsOfExperience
+            preferredWorkSchedule
+            isRelocationWilling
+            relocationLocation
+            earliestStartDate
+            motivation
+            references
+            applicationSource
+            isViewedByCompany
+            viewedAt
+            viewCount
+            createdAt
+            jobData {
+                _id
+                jobType
+                jobStatus
+                jobLocation
+                positionTitle
+                jobSalary
+                skillsRequired
+                experienceYears
+                educationLevel
+                jobViews
+                jobLikes
+                jobComments
+                jobApplications
+                jobRank
+                jobImages
+                companyLogo
+                employmentLevel
+                jobDesc
+                companyName
+                memberId
+                closedAt
+                deletedAt
+                applications
+                applicationCount
+                applicationDeadline
+                maxApplications
+                createdAt
+                updatedAt
+            }
+    }
+    metaCounter {
+      total
+    }
+  }
+}
+`;
+
+export const GET_JOB_APPLICATIONS = gql`
+	query GetJobApplications($jobId: String!, $input: ApplicationsInquiry!) {
+		getJobApplications(jobId: $jobId, input: $input) {
+			list {
+				_id
+				applicantId {
+					_id
+					memberFullName
+					memberEmail
+					memberPhone
+					memberImage
+					profile {
+						skills
+						experience
+						education
+					}
+				}
+				status
+				coverLetter
+				resumeUrl
+				expectedSalary
+				additionalDocuments
+				isViewed
+				appliedAt
+				updatedAt
 			}
 			metaCounter {
 				total
