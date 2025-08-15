@@ -16,6 +16,120 @@ export const APPLY_JOB = gql`
   }
 `;
 
+/**************************
+ *      APPLICATION       *
+ *************************/
+
+export const CREATE_APPLICATION = gql`
+  mutation CreateApplication($input: ApplicationInput!) {
+    createApplication(input: $input) {
+        _id
+        jobId
+        applicantId
+        companyId
+        status
+        appliedAt
+        updatedAt
+        coverLetter
+        resumeUrl
+        additionalDocuments
+        notes
+        interviewDate
+        feedback
+        isActive
+        expectedSalary
+        availabilityDate
+        isRemotePreferred
+        relevantExperience
+        skills
+        currentPosition
+        currentCompany
+        yearsOfExperience
+        preferredWorkSchedule
+        isRelocationWilling
+        relocationLocation
+        earliestStartDate
+        motivation
+        references
+        applicationSource
+        isViewedByCompany
+        viewedAt
+        viewCount
+        createdAt
+    }
+}
+
+`;
+
+export const UPDATE_APPLICATION = gql`
+  mutation UpdateApplication($input: ApplicationUpdate!) {
+    updateApplication(input: $input) {
+      _id
+      status
+      coverLetter
+      expectedSalary
+      additionalDocuments
+      notes
+      interviewDate
+      feedback
+      updatedAt
+    }
+  }
+`;
+
+export const WITHDRAW_APPLICATION = gql`
+  mutation WithdrawApplication($applicationId: String!) {
+    withdrawApplication(applicationId: $applicationId) {
+      _id
+      status
+      updatedAt
+    }
+  }
+`;
+
+export const MARK_AS_VIEWED = gql`
+  mutation MarkAsViewed($applicationId: String!) {
+    markApplicationAsViewed(applicationId: $applicationId) {
+      _id
+      isViewed
+      viewedAt
+    }
+  }
+`;
+
+export const DELETE_APPLICATION = gql`
+  mutation DeleteApplication($applicationId: String!) {
+    deleteApplication(applicationId: $applicationId) {
+      _id
+      isActive
+    }
+  }
+`;
+
+export const UPLOAD_RESUME = gql`
+  mutation UploadResume($file: Upload!) {
+    uploadResume(file: $file)
+  }
+`;
+
+export const SAVE_JOB = gql`
+  mutation SaveJob($jobId: String!) {
+    saveJob(jobId: $jobId) {
+      _id
+      savedJobs
+    }
+  }
+`;
+
+export const UNSAVE_JOB = gql`
+  mutation UnsaveJob($jobId: String!) {
+    unsaveJob(jobId: $jobId) {
+      _id
+      savedJobs
+    }
+  }
+`;
+
 
 export const SIGN_UP = gql`
 	mutation Signup($input: MemberInput!) {
