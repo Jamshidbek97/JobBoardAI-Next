@@ -16,6 +16,7 @@ const Top = () => {
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [lang, setLang] = useState<string>('en');
+	const [isClient, setIsClient] = useState(false);
 	
 	// Ensure translations are loaded
 	useEffect(() => {
@@ -23,6 +24,11 @@ const Top = () => {
 			i18n.changeLanguage(lang);
 		}
 	}, [lang, i18n]);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	const [scrolled, setScrolled] = useState(false);
 	const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
@@ -89,7 +95,7 @@ const Top = () => {
 				</div>
 
 				<nav className="main-nav">
-					{navItems.map((item) => (
+					{isClient && navItems.map((item) => (
 						<Link key={item.path} href={item.path} className={router.pathname === item.path ? 'active' : ''}>
 							{item.label}
 						</Link>
@@ -116,11 +122,11 @@ const Top = () => {
 					) : (
 						<div className="auth-buttons">
 							<Link href="/account/login">
-								<Button variant="text">{t('Login')}</Button>
+								<Button variant="text">{isClient ? t('Login') : ''}</Button>
 							</Link>
 							<Link href="/account/join">
 								<Button variant="contained" className="signup-btn">
-									{t('Register')}
+									{isClient ? t('Register') : ''}
 								</Button>
 							</Link>
 						</div>
@@ -136,15 +142,15 @@ const Top = () => {
 			>
 				<MenuItem onClick={() => handleLangChange('en')}>
 					<span className="flag flag-en"></span>
-					{t('English')}
+					{isClient ? t('English') : ''}
 				</MenuItem>
 				<MenuItem onClick={() => handleLangChange('kr')}>
 					<span className="flag flag-kr"></span>
-					{t('Korean')}
+					{isClient ? t('Korean') : ''}
 				</MenuItem>
 				<MenuItem onClick={() => handleLangChange('ru')}>
 					<span className="flag flag-ru"></span>
-					{t('Russian')}
+					{isClient ? t('Russian') : ''}
 				</MenuItem>
 			</Menu>
 
@@ -155,18 +161,18 @@ const Top = () => {
 				onClose={handleUserMenuClose}
 				className="user-menu"
 			>
-				<MenuItem onClick={() => router.push('/mypage')}>{t('My Profile')}</MenuItem>
-				<MenuItem onClick={() => router.push('/mypage/applications')}>{t('My Applications')}</MenuItem>
-				<MenuItem onClick={() => router.push('/mypage/notifications')}>{t('Notifications')}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage')}>{isClient ? t('My Profile') : ''}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage/applications')}>{isClient ? t('My Applications') : ''}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage/notifications')}>{isClient ? t('Notifications') : ''}</MenuItem>
 				{/* Show Application Management for agents (users who post jobs) */}
 				<MenuItem onClick={() => router.push('/mypage/applications-management')}>
-					{t('Application Management')}
+					{isClient ? t('Application Management') : ''}
 				</MenuItem>
-				<MenuItem onClick={() => router.push('/mypage')}>{t('Account Settings')}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage')}>{isClient ? t('Account Settings') : ''}</MenuItem>
 				<Divider />
 				<MenuItem onClick={handleLogout}>
 					<Logout fontSize="small" className="logout-icon" />
-					{t('Logout')}
+					{isClient ? t('Logout') : ''}
 				</MenuItem>
 			</Menu>
 		</header>

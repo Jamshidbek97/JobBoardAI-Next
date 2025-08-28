@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button, Chip, Container, LinearProgress, Paper, Stack, Typography, Avatar } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,8 +22,13 @@ const logos = [
 // Make sure you `@use` the SCSS below from main.scss.
 
 export default function JobBoardAIHomeHero() {
-	const { t } = useTranslation('common');
+	const { t, i18n } = useTranslation('common');
 	const [hovered, setHovered] = useState(false);
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	return (
 		<section className="jobboardai-home-hero">
@@ -39,11 +44,11 @@ export default function JobBoardAIHomeHero() {
 					}
 				}}>
 					<Typography component="h1" className="jb-title">
-						{t('Still Applying the Old Way? You\'re Already Behind.')}
+						{isClient ? t('Still Applying the Old Way? You\'re Already Behind.') : ''}
 					</Typography>
 
 					<Typography variant="body1" className="jb-subtitle">
-						{t('Your AI Job Hunter works 24/7 — applying to jobs in real time the moment they\'re posted, giving you a first‑mover edge in today\'s most competitive markets. More speed. More interviews.')}
+						{isClient ? t('Your AI Job Hunter works 24/7 — applying to jobs in real time the moment they\'re posted, giving you a first‑mover edge in today\'s most competitive markets. More speed. More interviews.') : ''}
 					</Typography>
 
 					<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} className="jb-cta-row">
@@ -54,7 +59,7 @@ export default function JobBoardAIHomeHero() {
 							className="jb-cta-primary"
 							onClick={() => window.location.href = '/jobs'}
 						>
-							{t('Create Your AI Job Hunter')}
+							{isClient ? t('Create Your AI Job Hunter') : ''}
 							<svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" className="jb-cta-icon">
 								<path d="M10.293 15.707a1 1 0 010-1.414L12.586 12H4a1 1 0 110-2h8.586l-2.293-2.293a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
 							</svg>
@@ -65,10 +70,10 @@ export default function JobBoardAIHomeHero() {
 							className="jb-cta-secondary"
 							onClick={() => console.log('Demo clicked')}
 						>
-							{t('See a Live Demo')}
+							{isClient ? t('See a Live Demo') : ''}
 						</Button>
 						<Typography variant="caption" className="jb-caption">
-							{t('Takes less than 60 seconds.')}
+							{isClient ? t('Takes less than 60 seconds.') : ''}
 						</Typography>
 					</Stack>
 				</Box>
@@ -90,11 +95,11 @@ export default function JobBoardAIHomeHero() {
 								<Stack direction="row" spacing={1.2} alignItems="center" className="jb-agent">
 									<Avatar className="jb-avatar">SM</Avatar>
 									<Box>
-										<Typography className="jb-agent-name">{t('Agent for Sarah M.')}</Typography>
-										<Typography className="jb-agent-sub">{t('Active • Searching Now')}</Typography>
+										<Typography className="jb-agent-name">{isClient ? t('Agent for Sarah M.') : ''}</Typography>
+										<Typography className="jb-agent-sub">{isClient ? t('Active • Searching Now') : ''}</Typography>
 									</Box>
 								</Stack>
-								<Chip label={`⚡ ${t('Auto‑Apply')}`} className="jb-badge-auto" size="small" />
+								<Chip label={isClient ? `⚡ ${t('Auto‑Apply')}` : ''} className="jb-badge-auto" size="small" />
 							</Stack>
 
 							{/* Target Roles + Progress */}
@@ -196,7 +201,7 @@ export default function JobBoardAIHomeHero() {
 			{/* Logos strip + link */}
 			<Container maxWidth="lg" className="jb-logos-wrap">
 				<Typography align="center" className="jb-social-proof" sx={{ mb: 3 }}>
-					{t('Join thousands of users who have landed roles at top companies:')}
+					{isClient ? t('Join thousands of users who have landed roles at top companies:') : ''}
 				</Typography>
 				<Box 
 					className="jb-logo-row" 
@@ -234,7 +239,7 @@ export default function JobBoardAIHomeHero() {
 				</Box>
 				<Stack direction="row" justifyContent="center" className="jb-userstories-row" sx={{ mt: 3 }}>
 					<a href="#stories" className="jb-userstories-link">
-						{t('Read User Stories →')}
+						{isClient ? t('Read User Stories →') : ''}
 					</a>
 				</Stack>
 			</Container>
