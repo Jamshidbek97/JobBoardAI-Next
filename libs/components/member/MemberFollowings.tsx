@@ -24,11 +24,17 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 	const { initialInput, subscribeHandler, unsubscribeHandler, redirectToMemberPageHandler, likeMemberHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
 	const [total, setTotal] = useState<number>(0);
 	const category: any = router.query?.category ?? 'properties';
-	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>(initialInput);
+	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>({
+		...initialInput,
+		search: {
+			...initialInput.search,
+			followerId: user?._id || ''
+		}
+	});
 	const [memberFollowings, setMemberFollowings] = useState<Following[]>([]);
-	const user = useReactiveVar(userVar);
 
 	/** APOLLO REQUESTS **/
 	const {
@@ -76,6 +82,30 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 					</Stack>
 				</Stack>
 				<Stack className="follows-list-box">
+					{/* Error and Debug Info */}
+					{getFollowingsError && (
+						<div style={{
+							padding: '15px',
+							background: '#fee',
+							border: '1px solid #fcc',
+							borderRadius: '8px',
+							marginBottom: '20px',
+							color: '#c33'
+						}}>
+							<strong>Error:</strong> {getFollowingsError.message}
+						</div>
+					)}
+					
+					{getFollowingsLoading && (
+						<div style={{
+							padding: '15px',
+							textAlign: 'center',
+							color: '#666'
+						}}>
+							Loading followings...
+						</div>
+					)}
+					
 					<Stack className="listing-title-box">
 						<Typography className="title-text">Name</Typography>
 						<Typography className="title-text">Details</Typography>
@@ -128,14 +158,23 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 										<span>({follower?.followingData?.memberLikes})</span>
 									</Box>
 								</Stack>
-								{user?._id !== follower?.followingId && (
+								{user?._id !== follower?.followingData?._id && (
 									<Stack className="action-box">
 										{follower.meFollowed && follower.meFollowed[0]?.myFollowing ? (
 											<>
-												<Typography>Following</Typography>
+												<Typography sx={{ fontSize: '12px', color: '#666', mb: 1 }}>Following</Typography>
 												<Button
 													variant="outlined"
-													sx={{ background: '#f78181', ':hover': { background: '#f06363' } }}
+													size="small"
+													sx={{ 
+														background: '#f78181', 
+														color: '#fff',
+														borderColor: '#f78181',
+														':hover': { 
+															background: '#f06363',
+															borderColor: '#f06363'
+														} 
+													}}
 													onClick={() =>
 														unsubscribeHandler(follower?.followingData?._id, getFollowingsRefetch, followInquiry)
 													}
@@ -146,7 +185,11 @@ const MemberFollowings = (props: MemberFollowingsProps) => {
 										) : (
 											<Button
 												variant="contained"
-												sx={{ background: '#60eb60d4', ':hover': { background: '#60eb60d4' } }}
+												size="small"
+												sx={{ 
+													background: '#60eb60d4', 
+													':hover': { background: '#60eb60d4' } 
+												}}
 												onClick={() =>
 													subscribeHandler(follower?.followingData?._id, getFollowingsRefetch, followInquiry)
 												}
@@ -185,9 +228,7 @@ MemberFollowings.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 5,
-		search: {
-			followerId: '',
-		},
+		search: {},
 	},
 };
 

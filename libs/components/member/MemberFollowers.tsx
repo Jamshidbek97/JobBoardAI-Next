@@ -24,11 +24,17 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 	const { initialInput, subscribeHandler, unsubscribeHandler, redirectToMemberPageHandler, likeMemberHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const user = useReactiveVar(userVar);
 	const [total, setTotal] = useState<number>(0);
 	const category: any = router.query?.category ?? 'properties';
-	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>(initialInput);
+	const [followInquiry, setFollowInquiry] = useState<FollowInquiry>({
+		...initialInput,
+		search: {
+			...initialInput.search,
+			followingId: user?._id || ''
+		}
+	});
 	const [memberFollowers, setMemberFollowers] = useState<Follower[]>([]);
-	const user = useReactiveVar(userVar);
 
 	/** APOLLO REQUESTS **/
 	const {
@@ -76,6 +82,30 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 					</Stack>
 				</Stack>
 				<Stack className="follows-list-box">
+					{/* Error and Debug Info */}
+					{getFollowersError && (
+						<div style={{
+							padding: '15px',
+							background: '#fee',
+							border: '1px solid #fcc',
+							borderRadius: '8px',
+							marginBottom: '20px',
+							color: '#c33'
+						}}>
+							<strong>Error:</strong> {getFollowersError.message}
+						</div>
+					)}
+					
+					{getFollowersLoading && (
+						<div style={{
+							padding: '15px',
+							textAlign: 'center',
+							color: '#666'
+						}}>
+							Loading followers...
+						</div>
+					)}
+					
 					<Stack className="listing-title-box">
 						<Typography className="title-text">Name</Typography>
 						<Typography className="title-text">Details</Typography>
@@ -91,6 +121,8 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 						const imagePath: string = follower?.followerData?.memberImage
 							? `${REACT_APP_API_URL}/${follower?.followerData?.memberImage}`
 							: '/img/profile/defaultUser.svg';
+						
+
 						return (
 							<Stack className="follows-card-box" key={follower._id}>
 								<Stack className={'info'} onClick={() => redirectToMemberPageHandler(follower?.followerData?._id)}>
@@ -128,14 +160,29 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 										<span>({follower?.followerData?.memberLikes})</span>
 									</Box>
 								</Stack>
-								{user?._id !== follower?.followerId && (
+								{user?._id !== follower?.followerData?._id && (
 									<Stack className="action-box">
-										{follower.meFollowed && follower.meFollowed[0]?.myFollowing ? (
+										{/* Debug info */}
+										<div style={{ fontSize: '8px', color: '#ccc', marginBottom: '2px' }}>
+											meFollowed: {follower.meFollowed?.length || 0} items
+										</div>
+										
+										{/* Check if current user is following this follower */}
+										{follower.meFollowed && follower.meFollowed.length > 0 ? (
 											<>
-												<Typography>Following</Typography>
+												<Typography sx={{ fontSize: '12px', color: '#666', mb: 1 }}>Following</Typography>
 												<Button
 													variant="outlined"
-													sx={{ background: '#ed5858', ':hover': { background: '#ee7171' } }}
+													size="small"
+													sx={{ 
+														background: '#ed5858', 
+														color: '#fff',
+														borderColor: '#ed5858',
+														':hover': { 
+															background: '#ee7171',
+															borderColor: '#ee7171'
+														} 
+													}}
 													onClick={() =>
 														unsubscribeHandler(follower?.followerData?._id, getFollowersRefetch, followInquiry)
 													}
@@ -146,7 +193,11 @@ const MemberFollowers = (props: MemberFollowsProps) => {
 										) : (
 											<Button
 												variant="contained"
-												sx={{ background: '#60eb60d4', ':hover': { background: '#60eb60d4' } }}
+												size="small"
+												sx={{ 
+													background: '#60eb60d4', 
+													':hover': { background: '#60eb60d4' } 
+												}}
 												onClick={() =>
 													subscribeHandler(follower?.followerData?._id, getFollowersRefetch, followInquiry)
 												}
@@ -185,9 +236,7 @@ MemberFollowers.defaultProps = {
 	initialInput: {
 		page: 1,
 		limit: 5,
-		search: {
-			followingId: '',
-		},
+		search: {},
 	},
 };
 

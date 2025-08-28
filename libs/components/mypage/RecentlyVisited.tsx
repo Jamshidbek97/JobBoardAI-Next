@@ -48,13 +48,13 @@ const RecentlyVisited: NextPage = () => {
 				</Stack>
 				<Stack className="favorites-list-box">
 					{recentlyVisited?.length ? (
-						recentlyVisited?.map((property: Job) => {
-							return <PropertyCard property={property} recentlyVisited={true} />;
+						recentlyVisited?.map((job: Job) => {
+							return <PropertyCard job={job} />;
 						})
 					) : (
 						<div className={'no-data'}>
 							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Properties found!</p>
+							<p>No Recently Visited Jobs found!</p>
 						</div>
 					)}
 				</Stack>

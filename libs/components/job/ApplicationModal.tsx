@@ -29,6 +29,10 @@ import {
 import { useMutation } from '@apollo/client';
 import { CREATE_APPLICATION, UPLOAD_RESUME } from '../../../apollo/user/mutation';
 import { REACT_APP_API_URL } from '../../../libs/config';
+import { useCreateNotification, createJobApplicationNotification } from '../../../libs/utils/notificationService';
+import { useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 
 interface ApplicationModalProps {
@@ -42,10 +46,12 @@ interface ApplicationModalProps {
 		jobSalary: number | string;
 		companyLogo?: string;
 		jobDesc?: string;
+		memberId?: string;
 	};
 }
 
 const ApplicationModal: React.FC<ApplicationModalProps> = ({ open, onClose, job }) => {
+	const user = useReactiveVar(userVar);
 	const [coverLetter, setCoverLetter] = useState('');
 	const [expectedSalary, setExpectedSalary] = useState('');
 	const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -67,6 +73,7 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ open, onClose, job 
 
 		const [createApplication] = useMutation(CREATE_APPLICATION);
 	const [uploadResume] = useMutation(UPLOAD_RESUME);
+	const { sendNotification, t } = useCreateNotification();
 
 	const handleFileUpload = async (file: File): Promise<string> => {
 		try {
@@ -217,6 +224,19 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ open, onClose, job 
 					},
 				},
 			});
+
+			// Send notification to job owner
+			if (job.memberId && user?._id) {
+				const notificationData = createJobApplicationNotification(
+					job.memberId, // recipient (job owner)
+					user._id, // sender (applicant)
+					job._id,
+					job.positionTitle,
+					user.memberFullName || user.memberNick || 'Anonymous',
+					t
+				);
+				await sendNotification(notificationData);
+			}
 
 			setSuccess(true);
 			setTimeout(() => {
