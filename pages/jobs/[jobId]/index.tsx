@@ -2,8 +2,10 @@ import React, { useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
 import styles from './DetailPage.module.scss';
+import appStyles from './ApplicationsSection.module.scss';
 import {
 	FavoriteBorder as FavoriteBorderIcon,
 	Favorite as FavoriteIcon,
@@ -35,6 +37,7 @@ import withLayoutBasic from '../../../libs/components/layout/LayoutBasic';
 import { T } from '../../../libs/types/common';
 import Image from 'next/image';
 import ApplicationModal from '../../../libs/components/job/ApplicationModal';
+import JobApplicationsManager from '../../../libs/components/job/JobApplicationsManager';
 
 type Job = {
 	_id: string;
@@ -55,6 +58,7 @@ type Job = {
 	jobViews?: number | null;
 	jobLikes?: number | null;
 	memberData?: {
+		_id?: string | null;
 		memberNick?: string | null;
 		memberFullName?: string | null;
 		memberEmail?: string | null;
@@ -72,7 +76,9 @@ type Job = {
 const JobDetailPage: NextPage = () => {
 	const router = useRouter();
 	const { jobId } = router.query as { jobId: string };
+	const user = useReactiveVar(userVar);
 	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
+	const [showApplications, setShowApplications] = useState(false);
 
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
 
@@ -533,6 +539,27 @@ const JobDetailPage: NextPage = () => {
 						jobDesc?: string;
 					}}
 				/>
+			)}
+
+			{/* Applications Management Section - Only for Job Owner */}
+			{user?._id === job?.memberData?._id && (
+				<div className={appStyles.applicationsSection}>
+					<div className={appStyles.applicationsHeader}>
+						<h2>Applications Management</h2>
+						<button 
+							className={appStyles.toggleApplicationsBtn}
+							onClick={() => setShowApplications(!showApplications)}
+						>
+							{showApplications ? 'Hide Applications' : 'View Applications'}
+						</button>
+					</div>
+					
+					{showApplications && (
+						<div className={appStyles.applicationsContent}>
+							<JobApplicationsManager jobId={jobId} />
+						</div>
+					)}
+				</div>
 			)}
 		</>
 	);

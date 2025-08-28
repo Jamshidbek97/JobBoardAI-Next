@@ -56,7 +56,7 @@ const MemberPage: NextPage = () => {
 
 			await subscribe({
 				variables: {
-					input: id,
+					memberId: id,
 				},
 			});
 			await sweetTopSmallSuccessAlert('Subscribed', 800);
@@ -73,7 +73,7 @@ const MemberPage: NextPage = () => {
 
 			await unsubscribe({
 				variables: {
-					input: id,
+					memberId: id,
 				},
 			});
 			await sweetTopSmallSuccessAlert('Subscribed', 800);
