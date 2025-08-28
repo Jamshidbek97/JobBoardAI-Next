@@ -786,7 +786,7 @@ export const GET_APPLICATION = gql`
 			notes
 			interviewDate
 			feedback
-			isViewed
+			isViewedByCompany
 			viewedAt
 			appliedAt
 			updatedAt
@@ -821,7 +821,7 @@ export const GET_APPLICATIONS = gql`
 				resumeUrl
 				expectedSalary
 				additionalDocuments
-				isViewed
+				isViewedByCompany
 				appliedAt
 				updatedAt
 			}
@@ -923,33 +923,166 @@ export const GET_MY_APPLICATIONS = gql`
 `;
 
 export const GET_JOB_APPLICATIONS = gql`
-	query GetJobApplications($jobId: String!, $input: ApplicationsInquiry!) {
-		getJobApplications(jobId: $jobId, input: $input) {
+	query GetJobApplications($input: ApplicationsInquiry!) {
+		getJobApplications(input: $input) {
 			list {
 				_id
-				applicantId {
-					_id
-					memberFullName
-					memberEmail
-					memberPhone
-					memberImage
-					profile {
-						skills
-						experience
-						education
-					}
-				}
+				jobId
+				applicantId
 				status
+				appliedAt
+				expectedSalary
 				coverLetter
 				resumeUrl
-				expectedSalary
 				additionalDocuments
-				isViewed
-				appliedAt
+				notes
+				interviewDate
+				feedback
+				isActive
+				availabilityDate
+				isRemotePreferred
+				relevantExperience
+				skills
+				currentPosition
+				currentCompany
+				yearsOfExperience
+				preferredWorkSchedule
+				isRelocationWilling
+				relocationLocation
+				earliestStartDate
+				motivation
+				references
+				applicationSource
+				isViewedByCompany
+				viewedAt
+				viewCount
+				createdAt
 				updatedAt
+				jobData {
+					_id
+					jobType
+					jobStatus
+					jobLocation
+					positionTitle
+					jobSalary
+					skillsRequired
+					experienceYears
+					educationLevel
+					jobViews
+					jobLikes
+					jobComments
+					jobApplications
+					jobRank
+					jobImages
+					companyLogo
+					employmentLevel
+					jobDesc
+					companyName
+					memberId
+					closedAt
+					deletedAt
+					applications
+					applicationCount
+					applicationDeadline
+					maxApplications
+					createdAt
+					updatedAt
+				}
+				applicantData {
+					_id
+					memberType
+					memberStatus
+					memberAuthType
+					memberPhone
+					memberNick
+					memberFullName
+					memberImage
+					memberAddress
+					memberDesc
+					memberPostedJobs
+					memberArticles
+					memberFollowers
+					memberFollowings
+					memberPoints
+					memberLikes
+					memberViews
+					memberComments
+					memberRank
+					memberWarnings
+					memberBlocks
+					deletedAt
+					createdAt
+					updatedAt
+					accessToken
+				}
 			}
 			metaCounter {
 				total
+			}
+		}
+	}
+`;
+
+export const GET_NOTIFICATIONS = gql`
+	query GetNotifications($input: NotificationInquiry!) {
+		getNotifications(input: $input) {
+			list {
+				_id
+				recipientId
+				senderId
+				type
+				title
+				message
+				relatedEntityId
+				relatedEntityType
+				isRead
+				isActive
+				createdAt
+				updatedAt
+				readAt
+				senderData {
+					_id
+					memberNick
+					memberFullName
+					memberImage
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_UNREAD_NOTIFICATIONS_COUNT = gql`
+	query GetUnreadNotificationsCount {
+		getUnreadNotificationsCount {
+			count
+		}
+	}
+`;
+
+export const GET_NOTIFICATION_BY_ID = gql`
+	query GetNotificationById($id: String!) {
+		getNotificationById(id: $id) {
+			_id
+			recipientId
+			senderId
+			type
+			title
+			message
+			relatedEntityId
+			relatedEntityType
+			isRead
+			isActive
+			createdAt
+			updatedAt
+			readAt
+			senderData {
+				_id
+				memberNick
+				memberFullName
+				memberImage
 			}
 		}
 	}

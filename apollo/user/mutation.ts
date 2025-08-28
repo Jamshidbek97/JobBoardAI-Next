@@ -91,7 +91,7 @@ export const MARK_AS_VIEWED = gql`
   mutation MarkAsViewed($applicationId: String!) {
     markApplicationAsViewed(applicationId: $applicationId) {
       _id
-      isViewed
+      isViewedByCompany
       viewedAt
     }
   }
@@ -472,6 +472,64 @@ export const UNSUBSCRIBE = gql`
 			followerId
 			createdAt
 			updatedAt
+		}
+	}
+`;
+
+export const CREATE_NOTIFICATION = gql`
+	mutation CreateNotification($input: CreateNotificationInput!) {
+		createNotification(input: $input) {
+			_id
+			recipientId
+			senderId
+			type
+			title
+			message
+			relatedEntityId
+			relatedEntityType
+			isRead
+			isActive
+			createdAt
+			updatedAt
+		}
+	}
+`;
+
+export const UPDATE_NOTIFICATION = gql`
+	mutation UpdateNotification($input: UpdateNotificationInput!) {
+		updateNotification(input: $input) {
+			_id
+			isRead
+			isActive
+			readAt
+			updatedAt
+		}
+	}
+`;
+
+export const MARK_NOTIFICATIONS_AS_READ = gql`
+	mutation MarkNotificationsAsRead($input: MarkNotificationsAsReadInput!) {
+		markNotificationsAsRead(input: $input) {
+			success
+			updatedCount
+		}
+	}
+`;
+
+export const DELETE_NOTIFICATIONS = gql`
+	mutation DeleteNotifications($input: DeleteNotificationsInput!) {
+		deleteNotifications(input: $input) {
+			success
+			deletedCount
+		}
+	}
+`;
+
+export const MARK_ALL_NOTIFICATIONS_AS_READ = gql`
+	mutation MarkAllNotificationsAsRead {
+		markAllNotificationsAsRead {
+			success
+			updatedCount
 		}
 	}
 `;
