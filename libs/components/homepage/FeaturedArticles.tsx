@@ -130,11 +130,18 @@ const FeaturedArticles = ({
 			<div className="featured-article-card" onClick={() => handleCardClick(article._id, article.articleCategory)}>
 				<div className="article-image-container">
 					<Image 
-						src={article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/community/articleImg.png'}
+						src={article.articleImage && article.articleImage !== 'undefined' && article.articleImage !== 'null' 
+							? `${REACT_APP_API_URL}/${article.articleImage}` 
+							: '/img/community/articleImg.png'}
 						alt={article.articleTitle}
 						width={400}
 						height={200}
 						className="article-image"
+						onError={(e) => {
+							// Fallback to default image if loading fails
+							const target = e.target as HTMLImageElement;
+							target.src = '/img/community/articleImg.png';
+						}}
 					/>
 					<div className="article-overlay">
 						<Button
@@ -166,9 +173,13 @@ const FeaturedArticles = ({
 					</Typography>
 					
 					<Typography className="article-excerpt" variant="body2">
-						{isClient ? (article.articleContent.length > 120 
-							? `${article.articleContent.substring(0, 120)}...` 
-							: article.articleContent) : ''}
+						{isClient ? (() => {
+							// Remove HTML tags and get clean text
+							const cleanContent = article.articleContent.replace(/<[^>]*>/g, '').trim();
+							return cleanContent.length > 120 
+								? `${cleanContent.substring(0, 120)}...` 
+								: cleanContent;
+						})() : ''}
 					</Typography>
 
 					<div className="article-meta">
@@ -264,7 +275,7 @@ const FeaturedArticles = ({
 					<Swiper
 						modules={[Navigation, Pagination, Autoplay]}
 						spaceBetween={24}
-						slidesPerView={'auto'}
+						slidesPerView={1}
 						navigation={{
 							prevEl: '.art-prev',
 							nextEl: '.art-next',

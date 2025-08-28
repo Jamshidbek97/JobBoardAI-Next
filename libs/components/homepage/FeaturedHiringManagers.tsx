@@ -261,7 +261,7 @@ const FeaturedHiringManagers = ({
 					<Swiper
 						modules={[Navigation, Pagination, Autoplay]}
 						spaceBetween={24}
-						slidesPerView={'auto'}
+						slidesPerView={1}
 						navigation={{
 							prevEl: '.hm-prev',
 							nextEl: '.hm-next',

@@ -127,10 +127,10 @@
 						gap: 40px;
 						padding: 20px 5px 56px;
 
-										.swiper-slide {
-					width: 390px !important;
-					height: 480px !important;
-				}
+						.swiper-slide {
+							width: 320px !important;
+							height: 400px !important;
+						}
 					}
 				}
 
@@ -140,7 +140,7 @@
 			background: #fff;
 			border-radius: 16px;
 			border: 1px solid #eef2f7;
-			padding: 24px;
+			padding: 20px;
 			display: flex;
 			flex-direction: column;
 			height: 100%;
@@ -997,13 +997,13 @@
 
 		.hiring-managers-carousel-container {
 			position: relative;
-			padding: 0 40px;
+			padding: 0 60px;
 
 			.navigation-buttons {
 				position: absolute;
 				top: 50%;
-				left: -20px;
-				right: -20px;
+				left: -30px;
+				right: -30px;
 				transform: translateY(-50%);
 				display: flex;
 				justify-content: space-between;
@@ -1035,11 +1035,11 @@
 
 			.hiring-managers-swiper {
 				gap: 24px;
-				padding: 20px 5px 56px;
+				padding: 0px 5px 0px;
 
 				.swiper-slide {
-					width: 390px !important;
-					height: 480px !important;
+					width: 320px !important;
+					height: 400px !important;
 				}
 			}
 		}
@@ -1049,7 +1049,7 @@
 			background: #fff;
 			border-radius: 16px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			padding: 24px;
+			padding: 20px;
 			display: flex;
 			flex-direction: column;
 			height: 100%;
@@ -1293,13 +1293,13 @@
 
 		.articles-carousel-container {
 			position: relative;
-			padding: 0 40px;
+			padding: 0 60px;
 
 			.navigation-buttons {
 				position: absolute;
 				top: 50%;
-				left: -20px;
-				right: -20px;
+				left: -30px;
+				right: -30px;
 				transform: translateY(-50%);
 				display: flex;
 				justify-content: space-between;
@@ -1334,8 +1334,8 @@
 				padding: 20px 5px 56px;
 
 				.swiper-slide {
-					width: 390px !important;
-					height: 480px !important;
+					width: 320px !important;
+					height: 400px !important;
 				}
 			}
 		}
@@ -1361,7 +1361,7 @@
 
 			.article-image-container {
 				position: relative;
-				height: 200px;
+				height: 160px;
 				overflow: hidden;
 
 				.article-image {
