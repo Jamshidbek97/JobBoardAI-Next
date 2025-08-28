@@ -6,6 +6,8 @@ import TopProperties from '../libs/components/homepage/FeaturedJobs';
 import { Stack } from '@mui/material';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import FeaturedJobs from '../libs/components/homepage/FeaturedJobs';
+import FeaturedHiringManagers from '../libs/components/homepage/FeaturedHiringManagers';
+import FeaturedArticles from '../libs/components/homepage/FeaturedArticles';
 import JobBoardAIHomeHero from '../libs/components/homepage/JobBoardAIHomeHero';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -18,12 +20,12 @@ const Home: NextPage = () => {
 	return (
 		<Stack className={'home-page'}>
 			<FeaturedJobs />
-			
-			
+			<FeaturedHiringManagers />
+			<FeaturedArticles />
+			<JobBoardAIHomeHero />
 			{/* <Advertisement /> */}
 			{/* <TopProperties /> */}
 			{/* <TopAgents /> */}
-			<JobBoardAIHomeHero />
 			{/* <CommunityBoards /> */}
 		</Stack>
 	);
