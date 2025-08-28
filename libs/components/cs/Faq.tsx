@@ -1,6 +1,6 @@
 import React, { SyntheticEvent, useState } from 'react';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import { AccordionDetails, Box, Stack, Typography } from '@mui/material';
+import { AccordionDetails, Box, Stack, Typography, Chip } from '@mui/material';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
@@ -33,7 +33,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const Faq = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [category, setCategory] = useState<string>('property');
+	const [category, setCategory] = useState<string>('jobs');
 	const [expanded, setExpanded] = useState<string | false>('panel1');
 
 	/** APOLLO REQUESTS **/
@@ -48,387 +48,146 @@ const Faq = () => {
 		setExpanded(newExpanded ? panel : false);
 	};
 
+	const categories = [
+		{ key: 'jobs', label: 'Available Jobs', color: '#10b981' },
+		{ key: 'application', label: 'Application Process', color: '#3b82f6' },
+		{ key: 'companies', label: 'Companies', color: '#8b5cf6' },
+		{ key: 'membership', label: 'Membership', color: '#f59e0b' },
+		{ key: 'community', label: 'Community', color: '#ef4444' },
+		{ key: 'other', label: 'Other', color: '#6b7280' },
+	];
+
 	const data: any = {
-		property: [
+		jobs: [
 			{
 				id: '00f5a45ed8897f8090116a01',
-				subject: 'Are the properties displayed on the site reliable?',
-				content: 'of course we only have verified properties',
+				subject: 'Are the job listings on the site reliable and up-to-date?',
+				content: 'Yes, we only display verified job postings from legitimate companies. All listings are regularly updated and monitored for accuracy.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a22',
-				subject: 'What types of properties do you offer?',
-				content: 'We offer single-family homes, condos, townhouses, apartments, and penthouses',
+				subject: 'What types of jobs do you offer?',
+				content: 'We offer a wide range of job opportunities including full-time, part-time, contract, remote, and freelance positions across various industries.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a21',
-				subject: 'How can I search for properties on your website?',
-				content: 'Simply use our search bar to enter location, price range, bedrooms/bathrooms, and property type.',
+				subject: 'How can I search for jobs on your website?',
+				content: 'Simply use our search bar to enter keywords, location, job type, or company name. You can also use our advanced filters to narrow down your search.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a23',
-				subject: 'Do you provide assistance for first-time homebuyers?',
-				content: 'Yes, we guide you through the process and help find suitable financing.',
+				subject: 'Do you provide assistance for job seekers?',
+				content: 'Yes, we offer career guidance, resume tips, and interview preparation resources to help you succeed in your job search.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a24',
-				subject: 'What should I consider when buying a property?',
-				content: 'Location, condition, size, amenities, and future development plans.',
+				subject: 'What should I consider when applying for a job?',
+				content: 'Consider the job requirements, company culture, location, salary, benefits, and growth opportunities before applying.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a25',
-				subject: 'How long does the home-buying process typically take?',
-				content: 'Usually 3 to 6 days, depending on various factors.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a29',
-				subject: 'What happens if I encounter issues with the property after purchase?',
-				content: 'We offer post-purchase support to address any concerns promptly.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a28',
-				subject: 'Do you offer properties in specific neighborhoods?',
-				content: 'Yes, we have listings in various neighborhoods based on your preferences.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a27',
-				subject: 'Can I sell my property through your website?',
-				content: 'Absolutely, we provide services for selling properties as well.',
-			},
-			{
-				id: '00f5a45ed8897f8090116b99',
-				subject: 'What if I need help understanding legal aspects of property purchase?',
-				content: 'Our team can provide basic guidance and recommend legal professionals if needed.',
+				subject: 'How long does the job application process typically take?',
+				content: 'The application process varies by company, but typically takes 1-4 weeks from application to offer.',
 			},
 		],
-		payment: [
+		application: [
 			{
 				id: '00f5a45ed8897f8090116a02',
-				subject: 'How can I make the payment?',
-				content: 'you make the payment through an agent!',
+				subject: 'How do I apply for a job?',
+				content: 'Click the "Apply Now" button on any job listing. You can apply directly through our platform or be redirected to the company\'s application system.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a91',
-				subject: 'Are there any additional fees for using your services?',
-				content: 'No, our services are free for buyers. Sellers pay a commission upon successful sale.',
+				subject: 'Is there a fee to apply for jobs?',
+				content: 'No, job applications are completely free for job seekers. Companies pay fees for posting job listings.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a92',
-				subject: 'Is there an option for installment payments?',
-				content: 'Yes, we offer installment payment plans for certain properties. Please inquire for more details.',
+				subject: 'Can I save job applications for later?',
+				content: 'Yes, you can save job listings to your favorites and apply later. You can also track your application status.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a93',
-				subject: 'Is my payment information secure on your website?',
-				content:
-					'Yes, we use industry-standard encryption technology to ensure the security of your payment information.',
+				subject: 'How do I know if my application was received?',
+				content: 'You will receive an email confirmation when your application is submitted successfully.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a94',
-				subject: 'Can I make payments online through your website?',
-				content: "Yes, you can securely make payments online through our website's payment portal.",
+				subject: 'Can I apply to multiple jobs at the same company?',
+				content: 'Yes, you can apply to multiple positions at the same company if you meet the qualifications for each role.',
+			},
+		],
+		companies: [
+			{
+				id: '00f5a45ed8897f8090116a03',
+				subject: 'How do I know if a company is legitimate?',
+				content: 'We verify all companies before allowing them to post jobs. You can also research companies through their profiles and reviews.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a95',
-				subject: "What happens if there's an issue with my payment?",
-				content: 'If you encounter any issues with your payment, please contact our support team for assistance.',
+				subject: 'Can I see company reviews and ratings?',
+				content: 'Yes, we provide company reviews and ratings from current and former employees to help you make informed decisions.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a96',
-				subject: 'Do you offer refunds for payments made?',
-				content:
-					'Refund policies vary depending on the circumstances. Please refer to our refund policy or contact us for more information.',
+				subject: 'How do companies post job listings?',
+				content: 'Companies can create an account and post job listings through our employer portal. All listings are reviewed before going live.',
 			},
 			{
 				id: '00f5a45ed8897f8090116a97',
-				subject: 'Are there any discounts or incentives for early payments?',
-				content:
-					'We occasionally offer discounts or incentives for early payments. Check our promotions or contact us for current offers.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a99',
-				subject: 'How long does it take for payments to be processed?',
-				content:
-					'Payment processing times vary depending on the payment method used. Typically, credit/debit card payments are processed instantly',
-			},
-			{
-				id: '00f5a45ed8897f8090116a98',
-				subject: 'Are there penalties for late payments?',
-				content:
-					'Late payment penalties may apply depending on the terms of your agreement. Please refer to your contract or contact us for details.',
-			},
-		],
-		buyers: [
-			{
-				id: '00f5a45ed8897f8090116a03',
-				subject: 'What should buyers pay attention to?',
-				content: 'Buyers should check and decide whether the property they want to buy or rent is actually suitable!',
-			},
-			{
-				id: '00f5a45ed8897f8090116a85',
-				subject: 'How can I determine if a property is within my budget?',
-				content:
-					'Calculate your budget by considering your income, down payment, and potential mortgage payments. Our agents can assist you within your budget.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a84',
-				subject: 'What documents do I need to provide when purchasing a property?',
-				content:
-					"You'll typically need identification, proof of income, bank statements, and any necessary loan documentation. Our team will guide you through.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a83',
-				subject: 'What factors should I consider when choosing a neighborhood?',
-				content:
-					'Consider factors such as location, safety, schools, amenities, transportation, and future development plans.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a82',
-				subject: 'Can I negotiate the price of a property?',
-				content:
-					'Yes, you can negotiate the price of a property. Our agents will assist you in making competitive offers and negotiating terms with the seller.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a81',
-				subject: 'What are some red flags to watch out for when viewing properties?',
-				content:
-					'Watch out for signs of structural damage, water damage, mold, outdated systems, and undesirable neighborhood conditions.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a80',
-				subject: 'Do you provide assistance with property inspections?',
-				content:
-					'Yes, we can recommend reputable inspectors and accompany you during property inspections to identify any potential issues.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a79',
-				subject: 'How long does it typically take to find the right property?',
-				content:
-					'The timeframe varies depending on your preferences and market conditions. Our agents will work diligently to find the right property as quickly as possible.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a78',
-				subject: 'What are the advantages of using a real estate agent when buying a property?',
-				content:
-					'Real estate agents provide expertise, negotiation skills, and guidance throughout the buying process, ultimately saving you time and hassle.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a77',
-				subject: 'What happens if I change my mind about a property after making an offer?',
-				content:
-					'Depending on the terms of the offer and the stage of the transaction, you may have options to withdraw your offer.',
-			},
-		],
-
-		agents: [
-			{
-				id: '00f5a45ed8897f8090116a04',
-				subject: 'What do I need to do if I want to become an agent?',
-				content:
-					'If you really decide to become an agent, you should read our terms and conditions and contact the admin!',
-			},
-			{
-				id: '00f5a45ed8897f8090116a62',
-				subject: 'What qualifications do I need to become a real estate agent?',
-				content: 'Complete pre-licensing course, pass licensing exam, meet state requirements.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a63',
-				subject: 'How do I find clients as a new real estate agent?',
-				content: 'Build network, use online/offline marketing, join reputable brokerage.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a64',
-				subject: 'What are some effective marketing strategies for selling properties?',
-				content: 'Use social media, online platforms, networking events, and direct mail.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a65',
-				subject: 'How do I handle negotiations with buyers and sellers?',
-				content: 'Develop strong negotiation skills, understand market trends, represent client interests.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a66',
-				subject: 'What should I do to stay updated with market trends and changes?',
-				content: 'Attend industry events, follow real estate news, participate in training.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a67',
-				subject: 'How do I handle difficult clients or situations?',
-				content:
-					'Approach with professionalism, empathy, and patience. Listen actively, address issues collaboratively.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a68',
-				subject: 'What tools and technologies should I utilize as a real estate agent?',
-				content: 'Use CRM software, virtual tours, digital marketing tools, and mobile apps.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a69',
-				subject: 'How do I ensure compliance with real estate laws and regulations?',
-				content: 'Stay updated with laws, attend education courses, consult legal professionals.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a70',
-				subject: 'What strategies can I use to grow my real estate business?',
-				content: 'Build relationships, provide exceptional service, seek referrals, and continuously improve skills.',
+				subject: 'What information do companies provide about themselves?',
+				content: 'Companies provide information about their mission, culture, benefits, location, and other relevant details.',
 			},
 		],
 		membership: [
 			{
-				id: '00f5a45ed8897f8090116a05',
-				subject: 'Do you have a membership service on your site?',
-				content: 'membership service is not available on our site yet!',
+				id: '00f5a45ed8897f8090116a04',
+				subject: 'Do I need to create an account to apply for jobs?',
+				content: 'While you can browse jobs without an account, creating a free account allows you to save jobs, track applications, and receive job alerts.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a60',
-				subject: 'What are the benefits of becoming a member on your website?',
-				content: 'We currently do not offer membership benefits, but stay tuned for updates on any future offerings.',
+				id: '00f5a45ed8897f8090116a98',
+				subject: 'Are there premium membership options?',
+				content: 'Yes, we offer premium memberships with additional features like priority application status, advanced search filters, and career coaching.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a59',
-				subject: 'Is there a fee associated with becoming a member?',
-				content: 'As membership services are not available, there are no associated fees at this time.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a58',
-				subject: 'Will membership provide access to exclusive content or features?',
-				content: "We don't currently have membership-exclusive content or features.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a57',
-				subject: 'How can I sign up for a membership on your site?',
-				content: 'As of now, we do not have a sign-up process for memberships.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a56',
-				subject: 'Do members receive discounts on property listings or services?',
-				content: 'Membership discounts are not part of our current offerings.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a55',
-				subject: 'Are there plans to introduce a membership program in the future?',
-				content:
-					"While we can't confirm any plans at this time, we're always exploring ways to enhance our services for users.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a54',
-				subject: 'What kind of content or benefits can members expect if a membership program is introduced?',
-				content: "We're evaluating potential benefits and features, but specifics are not available yet.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a33',
-				subject: 'Do you offer a premium membership option on your platform?',
-				content: 'Currently, we do not provide a premium membership option.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a32',
-				subject: 'Will membership grant access to exclusive deals or discounts?',
-				content: 'Membership perks, including deals or discounts, are not available at this time.',
+				id: '00f5a45ed8897f8090116a99',
+				subject: 'How do I update my profile information?',
+				content: 'You can update your profile, resume, and preferences anytime through your account dashboard.',
 			},
 		],
 		community: [
 			{
-				id: '00f5a45ed8897f8090116a06',
+				id: '00f5a45ed8897f8090116a05',
 				subject: 'What should I do if there is abusive or criminal behavior in the community section?',
-				content: 'If you encounter this situation, please report it immediately or contact the admin!',
+				content: 'Please report any inappropriate behavior immediately through our reporting system. We take all reports seriously and will investigate promptly.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a44',
-				subject: 'How can I participate in the community section of your website?',
-				content: 'Create an account and engage in discussions.',
+				id: '00f5a45ed8897f8090116a100',
+				subject: 'Can I connect with other job seekers?',
+				content: 'Yes, our community features allow you to connect with other professionals, share experiences, and network.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a45',
-				subject: 'Are there guidelines for posting?',
-				content: 'Yes, follow our community guidelines.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a46',
-				subject: 'What should I do if I encounter spam or irrelevant posts?',
-				content: 'Report them to the admin.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a47',
-				subject: 'Can I connect with other members outside of the community section?',
-				content: 'Currently, no.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a48',
-				subject: 'Can I share personal experiences or recommendations?',
-				content: 'Yes, if relevant you can share personal experiences and recommendations.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a49',
-				subject: 'How can I ensure privacy?',
-				content: 'Avoid sharing sensitive information.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a50',
-				subject: 'How can I contribute positively?',
-				content: 'Respect others and engage constructively.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a51',
-				subject: 'What if I notice misinformation?',
-				content: 'Provide correct information or report to the admin.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a52',
-				subject: 'Are there moderators?',
-				content: 'Yes, we have moderators.',
+				id: '00f5a45ed8897f8090116a101',
+				subject: 'Are there community guidelines I should follow?',
+				content: 'Yes, we have community guidelines to ensure a respectful and professional environment for all users.',
 			},
 		],
 		other: [
 			{
-				id: '00f5a45ed8897f8090116a40',
-				subject: 'Who should I contact if I want to buy your site?',
-				content: 'We have no plans to sell the site at this time!',
+				id: '00f5a45ed8897f8090116a06',
+				subject: 'How do I contact customer support?',
+				content: 'You can contact our support team through email, phone, or live chat. We typically respond within 24 hours.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a39',
-				subject: 'Can I advertise my services on your website?',
-				content: 'We currently do not offer advertising opportunities on our site.',
+				id: '00f5a45ed8897f8090116a102',
+				subject: 'Can I suggest new features for the platform?',
+				content: 'Yes, we welcome feedback and suggestions. You can submit your ideas through our feedback form.',
 			},
 			{
-				id: '00f5a45ed8897f8090116a38',
-				subject: 'Are there sponsorship opportunities available on your platform?',
-				content: 'At this time, we do not have sponsorship opportunities.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a36',
-				subject: 'Can I contribute guest posts or articles to your website?',
-				content: "We're not accepting guest posts or articles at the moment.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a35',
-				subject: 'Is there a referral program for recommending your website to others?',
-				content: "We don't have a referral program in place currently.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a34',
-				subject: 'Do you offer affiliate partnerships for promoting your services?',
-				content: 'Affiliate partnerships are not available at this time.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a33',
-				subject: 'Can I purchase merchandise related to your website?',
-				content: "We don't have merchandise available for purchase.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a32',
-				subject: 'Are there any job openings or opportunities to work with your team?',
-				content: 'Currently, we do not have any job openings or opportunities available.',
-			},
-			{
-				id: '00f5a45ed8897f8090116a31',
-				subject: 'Do you host events or webinars related to real estate?',
-				content: "We're not hosting events or webinars at this time.",
-			},
-			{
-				id: '00f5a45ed8897f8090116a30',
-				subject: 'Can I request custom features or functionalities for your website?',
-				content: "We're not accepting requests for custom features or functionalities.",
+				id: '00f5a45ed8897f8090116a103',
+				subject: 'Is my personal information secure?',
+				content: 'Yes, we use industry-standard security measures to protect your personal information and ensure your privacy.',
 			},
 		],
 	};
@@ -439,62 +198,26 @@ const Faq = () => {
 		return (
 			<Stack className={'faq-content'}>
 				<Box className={'categories'} component={'div'}>
-					<div
-						className={category === 'property' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('property');
-						}}
-					>
-						Property
-					</div>
-					<div
-						className={category === 'payment' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('payment');
-						}}
-					>
-						Payment
-					</div>
-					<div
-						className={category === 'buyers' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('buyers');
-						}}
-					>
-						Foy Buyers
-					</div>
-					<div
-						className={category === 'agents' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('agents');
-						}}
-					>
-						For Agents
-					</div>
-					<div
-						className={category === 'membership' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('membership');
-						}}
-					>
-						Membership
-					</div>
-					<div
-						className={category === 'community' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('community');
-						}}
-					>
-						Community
-					</div>
-					<div
-						className={category === 'other' ? 'active' : ''}
-						onClick={() => {
-							changeCategoryHandler('other');
-						}}
-					>
-						Other
-					</div>
+					{categories.map((cat) => (
+						<Chip
+							key={cat.key}
+							label={cat.label}
+							onClick={() => changeCategoryHandler(cat.key)}
+							className={`category-chip ${category === cat.key ? 'active' : ''}`}
+							style={{
+								backgroundColor: category === cat.key ? cat.color : 'white',
+								color: category === cat.key ? 'white' : '#64748b',
+								border: `2px solid ${category === cat.key ? cat.color : '#e2e8f0'}`,
+								cursor: 'pointer',
+								fontWeight: category === cat.key ? 600 : 500,
+								transition: 'all 0.3s ease',
+								'&:hover': {
+									borderColor: cat.color,
+									backgroundColor: category === cat.key ? cat.color : `${cat.color}10`,
+								}
+							}}
+						/>
+					))}
 				</Box>
 				<Box className={'wrap'} component={'div'}>
 					{data[category] &&

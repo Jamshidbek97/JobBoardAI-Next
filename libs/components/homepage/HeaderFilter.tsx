@@ -199,7 +199,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const employmentLevelHandler = useCallback(
 		async (level: EmploymentLevel) => {
 			try {
-				const currentList = searchFilter.search.employmentLevels;
+				const currentList = searchFilter.search.employmentLevels || [];
 				const newList = currentList.includes(level) ? currentList.filter((l) => l !== level) : [...currentList, level];
 
 				setSearchFilter({
@@ -319,7 +319,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 									</svg>
 								</div>
 								<div className="filter-text">
-									<span className="filter-label">Location</span>
+									<span className="filter-label">{t('Location')}</span>
 									<span className="filter-value">
 										{searchFilter?.search?.locationList?.length
 											? searchFilter.search.locationList[0]
@@ -355,7 +355,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 									</svg>
 								</div>
 								<div className="filter-text">
-									<span className="filter-label">Job Type</span>
+									<span className="filter-label">{t('Job Type')}</span>
 									<span className="filter-value">
 										{searchFilter?.search?.typeList?.length ? searchFilter.search.typeList[0] : t('Any type')}
 									</span>
@@ -382,7 +382,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 									</svg>
 								</div>
 								<div className="filter-text">
-									<span className="filter-label">Salary</span>
+									<span className="filter-label">{t('Salary')}</span>
 									<span className="filter-value">
 										{searchFilter?.search?.salaryRange
 											? `$${searchFilter.search.salaryRange.start.toLocaleString()}+`
@@ -411,7 +411,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 								<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
 								<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
 							</svg>
-							<span>Search</span>
+							<span>{t('Search')}</span>
 						</button>
 					</div>
 
@@ -588,7 +588,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 												className="checkbox-item"
 												control={
 													<Checkbox
-														checked={searchFilter.search.employmentLevels.includes(level)}
+														checked={searchFilter?.search?.employmentLevels?.includes(level)}
 														onChange={() => employmentLevelHandler(level)}
 														color="primary"
 													/>

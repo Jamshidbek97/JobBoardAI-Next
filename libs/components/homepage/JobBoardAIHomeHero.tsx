@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Box, Button, Chip, Container, LinearProgress, Paper, Stack, Typography, Avatar } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,6 +22,7 @@ const logos = [
 // Make sure you `@use` the SCSS below from main.scss.
 
 export default function JobBoardAIHomeHero() {
+	const { t } = useTranslation('common');
 	const [hovered, setHovered] = useState(false);
 
 	return (
@@ -37,12 +39,11 @@ export default function JobBoardAIHomeHero() {
 					}
 				}}>
 					<Typography component="h1" className="jb-title">
-						Still Applying the Old Way? <span>You're Already Behind.</span>
+						{t('Still Applying the Old Way? You\'re Already Behind.')}
 					</Typography>
 
 					<Typography variant="body1" className="jb-subtitle">
-						Your AI Job Hunter works 24/7 — applying to jobs in real time the moment they're posted, giving you a
-						first‑mover edge in today's most competitive markets. More speed. More interviews.
+						{t('Your AI Job Hunter works 24/7 — applying to jobs in real time the moment they\'re posted, giving you a first‑mover edge in today\'s most competitive markets. More speed. More interviews.')}
 					</Typography>
 
 					<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} className="jb-cta-row">
@@ -53,7 +54,7 @@ export default function JobBoardAIHomeHero() {
 							className="jb-cta-primary"
 							onClick={() => window.location.href = '/jobs'}
 						>
-							Create Your AI Job Hunter
+							{t('Create Your AI Job Hunter')}
 							<svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor" className="jb-cta-icon">
 								<path d="M10.293 15.707a1 1 0 010-1.414L12.586 12H4a1 1 0 110-2h8.586l-2.293-2.293a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
 							</svg>
@@ -64,10 +65,10 @@ export default function JobBoardAIHomeHero() {
 							className="jb-cta-secondary"
 							onClick={() => console.log('Demo clicked')}
 						>
-							See a Live Demo
+							{t('See a Live Demo')}
 						</Button>
 						<Typography variant="caption" className="jb-caption">
-							Takes less than 60 seconds.
+							{t('Takes less than 60 seconds.')}
 						</Typography>
 					</Stack>
 				</Box>
@@ -89,19 +90,19 @@ export default function JobBoardAIHomeHero() {
 								<Stack direction="row" spacing={1.2} alignItems="center" className="jb-agent">
 									<Avatar className="jb-avatar">SM</Avatar>
 									<Box>
-										<Typography className="jb-agent-name">Agent for Sarah M.</Typography>
-										<Typography className="jb-agent-sub">Active • Searching Now</Typography>
+										<Typography className="jb-agent-name">{t('Agent for Sarah M.')}</Typography>
+										<Typography className="jb-agent-sub">{t('Active • Searching Now')}</Typography>
 									</Box>
 								</Stack>
-								<Chip label="⚡ Auto‑Apply" className="jb-badge-auto" size="small" />
+								<Chip label={`⚡ ${t('Auto‑Apply')}`} className="jb-badge-auto" size="small" />
 							</Stack>
 
 							{/* Target Roles + Progress */}
 							<Box className="jb-targets">
-								<Typography className="jb-label">Target Roles</Typography>
+								<Typography className="jb-label">{t('Target Roles')}</Typography>
 								<Stack direction="row" spacing={1} flexWrap="wrap">
-									<Chip label="Senior Product Designer" className="jb-tag" size="small" />
-									<Chip label="Remote" className="jb-tag" size="small" />
+									<Chip label={t('Senior Product Designer')} className="jb-tag" size="small" />
+									<Chip label={t('Remote')} className="jb-tag" size="small" />
 								</Stack>
 								<Box className="jb-progress-wrap">
 									<LinearProgress
@@ -125,24 +126,24 @@ export default function JobBoardAIHomeHero() {
 											className="jb-summary"
 										>
 											<Box className="jb-stats">
-												<Stat value={26} label="Applications" />
-												<Stat value={8} label="Responses" />
-												<Stat value={3} label="Interviews" />
+												<Stat value={26} label={t('Applications')} />
+												<Stat value={8} label={t('Responses')} />
+												<Stat value={3} label={t('Interviews')} />
 											</Box>
 
 											<Box className="jb-upcoming">
-												<Typography className="jb-section-title">Upcoming</Typography>
+												<Typography className="jb-section-title">{t('Upcoming')}</Typography>
 												<ListItem
-													title="Senior Product Designer"
-													sub="Acme Corporation • San Francisco, CA"
+													title={t('Senior Product Designer')}
+													sub={t('Acme Corporation • San Francisco, CA')}
 													meta="3 mins ago"
-													badge="Interview Scheduled"
+													badge={t('Interview Scheduled')}
 												/>
 												<ListItem
-													title="UX Researcher"
-													sub="Globex Inc • Remote"
-													meta="Applying in 2 mins"
-													badge="Applying Soon"
+													title={t('UX Researcher')}
+													sub={t('Globex Inc • Remote')}
+													meta={t('Applying in 2 mins')}
+													badge={t('Applying Soon')}
 												/>
 											</Box>
 										</motion.div>
@@ -156,18 +157,18 @@ export default function JobBoardAIHomeHero() {
 											className="jb-details"
 										>
 											<Box className="jb-kpis">
-												<KPI label="First to Apply" value="72%" trend="up" />
-												<KPI label="Match Quality" value="86%" trend="up" />
-												<KPI label="Avg. Response" value="1.8d" trend="down" />
-												<KPI label="Interview Rate" value="11%" trend="up" />
+												<KPI label={t('First to Apply')} value="72%" trend="up" />
+												<KPI label={t('Match Quality')} value="86%" trend="up" />
+												<KPI label={t('Avg. Response')} value="1.8d" trend="down" />
+												<KPI label={t('Interview Rate')} value="11%" trend="up" />
 											</Box>
 
 											<Box className="jb-feed">
 												{[
-													{ tag: 'Applied', title: 'Senior UX Designer', time: 'Just now' },
-													{ tag: 'Saved', title: 'Product Designer – Mobile', time: '2m' },
-													{ tag: 'Response', title: 'Lead Designer • Atlas', time: '11m' },
-													{ tag: 'Follow‑up', title: 'Researcher • Lyra', time: '32m' },
+													{ tag: t('Applied'), title: t('Senior UX Designer'), time: t('Just now') },
+													{ tag: t('Saved'), title: t('Product Designer – Mobile'), time: '2m' },
+													{ tag: t('Response'), title: t('Lead Designer • Atlas'), time: '11m' },
+													{ tag: t('Follow‑up'), title: t('Researcher • Lyra'), time: '32m' },
 												].map((log, i) => (
 													<div key={i} className="jb-feed-row">
 														<span className="jb-dot" />
@@ -195,7 +196,7 @@ export default function JobBoardAIHomeHero() {
 			{/* Logos strip + link */}
 			<Container maxWidth="lg" className="jb-logos-wrap">
 				<Typography align="center" className="jb-social-proof" sx={{ mb: 3 }}>
-					Join thousands of users who have landed roles at top companies:
+					{t('Join thousands of users who have landed roles at top companies:')}
 				</Typography>
 				<Box 
 					className="jb-logo-row" 
@@ -233,7 +234,7 @@ export default function JobBoardAIHomeHero() {
 				</Box>
 				<Stack direction="row" justifyContent="center" className="jb-userstories-row" sx={{ mt: 3 }}>
 					<a href="#stories" className="jb-userstories-link">
-						Read User Stories →
+						{t('Read User Stories →')}
 					</a>
 				</Stack>
 			</Container>

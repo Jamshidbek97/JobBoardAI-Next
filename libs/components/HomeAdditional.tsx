@@ -205,7 +205,7 @@ export default function HomeAdditional() {
 					</div>
 
 					{/* Features */}
-					<div className="ha-features">
+					{/* <div className="ha-features">
 						{features.map((feature, index) => (
 							<div key={index} className="ha-feature">
 								<div className="ha-feature-icon">
@@ -217,7 +217,7 @@ export default function HomeAdditional() {
 								</div>
 							</div>
 						))}
-					</div>
+					</div> */}
 				</div>
 
 				{/* Right Visual */}

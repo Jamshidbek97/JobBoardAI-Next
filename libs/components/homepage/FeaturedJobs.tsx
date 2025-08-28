@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import EastIcon from '@mui/icons-material/East';
 import WestIcon from '@mui/icons-material/West';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -32,6 +33,7 @@ interface FeaturedJobsProps {
 }
 
 const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', direction: Direction.DESC, search: {} } }: FeaturedJobsProps) => {
+	const { t } = useTranslation('common');
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
 	const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -72,13 +74,13 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 	const getJobTypeText = (type: JobType) => {
 		switch (type) {
 			case JobType.FULL_TIME:
-				return 'Full-time';
+				return t('Full-time');
 			case JobType.PART_TIME:
-				return 'Part-time';
+				return t('Part-time');
 			case JobType.CONTRACT:
-				return 'Contract';
+				return t('Contract');
 			case JobType.INTERN:
-				return 'Internship';
+				return t('Internship');
 			default:
 				return type;
 		}
@@ -87,15 +89,15 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 	const getJobLocationText = (location: JobLocation) => {
 		switch (location) {
 			case JobLocation.SEOUL:
-				return 'Seoul';
+				return t('Seoul');
 			case JobLocation.DAEGU:
-				return 'Gyeongido';
+				return t('Gyeongido');
 			case JobLocation.BUSAN:
-				return 'Busan';
+				return t('Busan');
 			case JobLocation.JEJU:
-				return 'Jejudo';
+				return t('Jejudo');
 			case JobLocation.INCHEON:
-				return 'Incheon';
+				return t('Incheon');
 			default:
 				return location;
 		}
@@ -104,13 +106,13 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 	const getEducationLevelText = (level: EducationLevel) => {
 		switch (level) {
 			case EducationLevel.HIGH_SCHOOL:
-				return 'High School';
+				return t('High School');
 			case EducationLevel.BACHELOR:
-				return "Bachelor's";
+				return t("Bachelor's");
 			case EducationLevel.MASTER:
-				return "Master's";
+				return t("Master's");
 			case EducationLevel.DOCTORATE:
-				return 'PhD';
+				return t('PhD');
 			default:
 				return level;
 		}
@@ -120,9 +122,9 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 		const createdDate = new Date(createdAt);
 		const now = new Date();
 		const diffDays = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
-		if (diffDays === 0) return 'Today';
-		if (diffDays === 1) return '1 day ago';
-		return `${diffDays} days ago`;
+		if (diffDays === 0) return t('Today');
+		if (diffDays === 1) return `1 ${t('day ago')}`;
+		return `${diffDays} ${t('days ago')}`;
 	};
 
 	const renderJobCard = (job: Job, index: number) => {
@@ -138,7 +140,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 			>
 				<div className="featured-badge">
 					<StarIcon fontSize="small" />
-					<span>Featured</span>
+					<span>{t('Featured')}</span>
 				</div>
 
 				<div className="card-header">
@@ -179,7 +181,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 					<div className="job-title">{job.positionTitle}</div>
 
 					<div className="company-info">
-						<div className="company-name">{job.companyName || job.memberData?.memberNick || 'Company'}</div>
+						<div className="company-name">{job.companyName || job.memberData?.memberNick || t('Company')}</div>
 						{job.memberData?.memberFullName && (
 							<div className="poster-name">
 								<PersonOutlineIcon fontSize="small" />
@@ -237,7 +239,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 					<span className="time-ago">
 						{job.createdAt
 							? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
-							: 'Recently posted'}
+							: t('Recently posted')}
 					</span>
 					<Button 
 						variant="contained" 
@@ -249,7 +251,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 							setApplicationModalOpen(true);
 						}}
 					>
-						Apply Now
+						{t('Apply Now')}
 					</Button>
 				</div>
 			</div>
@@ -285,9 +287,9 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 				<div className="featured-jobs-container">
 					<Box className="section-header">
 						<Typography variant="h3" className="section-title">
-							Featured Job Opportunities
+							{t('Featured Job Opportunities')}
 						</Typography>
-						<Typography className="section-subtitle">Discover top positions from leading companies</Typography>
+						<Typography className="section-subtitle">{t('Discover top positions from leading companies')}</Typography>
 					</Box>
 
 					<Box className="jobs-carousel-container">
@@ -334,7 +336,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 							onClick={() => router.push('/jobs')}
 							endIcon={<EastIcon className="arrow-icon" />}
 						>
-							View All Jobs
+							{t('View All Jobs')}
 						</Button>
 					</Box>
 				</div>

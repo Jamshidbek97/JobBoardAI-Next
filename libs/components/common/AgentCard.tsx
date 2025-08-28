@@ -38,7 +38,7 @@ const AgentCard = (props: AgentCardProps) => {
 	const isLiked = agent?.meLiked && agent?.meLiked[0]?.myFavorite;
 
 	// Check if current user is following this hiring manager
-	const isFollowing = agent?.meFollowed && agent?.meFollowed.length > 0 && agent?.meFollowed[0]?.myFollowing === true;
+	const isFollowing = agent?.meFollowed && agent?.meFollowed.length > 0;
 
 	// Format member type for display
 	const getMemberTypeDisplay = (type: string) => {
@@ -119,16 +119,28 @@ const AgentCard = (props: AgentCardProps) => {
 						onClick={handleLikeToggle}
 						aria-label={isLiked ? 'Unlike' : 'Like'}
 						title={isLiked ? 'Unlike' : 'Like'}
+						sx={{
+							color: isLiked ? '#e91e63' : '#666',
+							'&:hover': {
+								backgroundColor: isLiked ? 'rgba(233, 30, 99, 0.1)' : 'rgba(102, 102, 102, 0.1)',
+							}
+						}}
 					>
 						{isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 					</IconButton>
 
-					{followMemberHandler && (
+					{followMemberHandler && user?._id !== agent?._id && (
 						<IconButton
 							className={`action-btn follow-btn ${isFollowing ? 'following' : ''}`}
 							onClick={handleFollowToggle}
 							aria-label={isFollowing ? 'Unfollow' : 'Follow'}
 							title={isFollowing ? 'Unfollow' : 'Follow'}
+							sx={{
+								color: isFollowing ? '#ed5858' : '#60eb60d4',
+								'&:hover': {
+									backgroundColor: isFollowing ? 'rgba(237, 88, 88, 0.1)' : 'rgba(96, 235, 96, 0.1)',
+								}
+							}}
 						>
 							{isFollowing ? <UnfollowIcon /> : <FollowIcon />}
 						</IconButton>

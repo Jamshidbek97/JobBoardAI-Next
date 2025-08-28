@@ -80,9 +80,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY CARD MOBILE</div>;
-	} else {
+
 		return (
 			<Fade in={true} timeout={600}>
 				<Card 
@@ -278,6 +276,6 @@ const CommunityCard = (props: CommunityCardProps) => {
 			</Fade>
 		);
 	}
-};
+
 
 export default CommunityCard;
