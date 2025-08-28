@@ -449,9 +449,9 @@
 	animation: fadeIn 0.8s ease-out 0.3s both;
 
 	.sectionHeader {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 		margin-bottom: 1.5rem;
 
 		.sectionTitle {
@@ -871,7 +871,7 @@
 	}
 }
 
-.errorBox {
+  .errorBox {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
