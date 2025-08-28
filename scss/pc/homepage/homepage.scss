@@ -127,26 +127,27 @@
 						gap: 40px;
 						padding: 20px 5px 56px;
 
-						.swiper-slide {
-							width: 390px !important;
-							height: auto;
-						}
+										.swiper-slide {
+					width: 390px !important;
+					height: 480px !important;
+				}
 					}
 				}
 
 				/* Card */
-				.featured-job-card {
-					position: relative;
-					background: #fff;
-					border-radius: 16px;
-					border: 1px solid #eef2f7;
-					padding: 24px;
-					display: flex;
-					flex-direction: column;
-					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-					transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
-					cursor: pointer;
-					overflow: hidden;
+						.featured-job-card {
+			position: relative;
+			background: #fff;
+			border-radius: 16px;
+			border: 1px solid #eef2f7;
+			padding: 24px;
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+			transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
+			cursor: pointer;
+			overflow: hidden;
 
 					&:hover {
 						transform: translateY(-6px);
@@ -1037,8 +1038,8 @@
 				padding: 20px 5px 56px;
 
 				.swiper-slide {
-					width: 350px !important;
-					height: auto;
+					width: 390px !important;
+					height: 480px !important;
 				}
 			}
 		}
@@ -1051,6 +1052,7 @@
 			padding: 24px;
 			display: flex;
 			flex-direction: column;
+			height: 100%;
 			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 			transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
 			cursor: pointer;
@@ -1174,6 +1176,7 @@
 				align-items: center;
 				justify-content: space-between;
 				margin-top: auto;
+				padding-top: 12px;
 
 				.joined-time {
 					font-size: 12px;
@@ -1331,8 +1334,8 @@
 				padding: 20px 5px 56px;
 
 				.swiper-slide {
-					width: 400px !important;
-					height: auto;
+					width: 390px !important;
+					height: 480px !important;
 				}
 			}
 		}
@@ -1343,6 +1346,9 @@
 			border-radius: 16px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
 			overflow: hidden;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
 			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 			transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
 			cursor: pointer;
@@ -1400,6 +1406,9 @@
 
 			.article-content {
 				padding: 20px;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
 
 				.article-title {
 					font-weight: 700;
@@ -1455,6 +1464,7 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
+					margin-top: auto;
 
 					.posted-time {
 						font-size: 12px;

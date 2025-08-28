@@ -264,7 +264,7 @@ const FeaturedArticles = ({
 					<Swiper
 						modules={[Navigation, Pagination, Autoplay]}
 						spaceBetween={24}
-						slidesPerView={1}
+						slidesPerView={'auto'}
 						navigation={{
 							prevEl: '.art-prev',
 							nextEl: '.art-next',
@@ -278,8 +278,13 @@ const FeaturedArticles = ({
 							disableOnInteraction: false,
 						}}
 						breakpoints={{
-							640: { slidesPerView: 2 },
-							1024: { slidesPerView: 3 },
+							320: { slidesPerView: 1, spaceBetween: 16 },
+							480: { slidesPerView: 1, spaceBetween: 20 },
+							640: { slidesPerView: 2, spaceBetween: 24 },
+							768: { slidesPerView: 2, spaceBetween: 28 },
+							960: { slidesPerView: 3, spaceBetween: 32 },
+							1200: { slidesPerView: 3, spaceBetween: 36 },
+							1400: { slidesPerView: 4, spaceBetween: 40 },
 						}}
 						className="articles-swiper"
 					>
