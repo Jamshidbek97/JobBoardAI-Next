@@ -3,23 +3,31 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
 import { Box, Menu, MenuItem, Button, Avatar, Badge, Divider } from '@mui/material';
-import { CaretDown, Bell } from 'phosphor-react';
+import { CaretDown } from 'phosphor-react';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
+import NotificationBell from './common/NotificationBell';
 
 const Top = () => {
 	const user = useReactiveVar(userVar);
 	const { t, i18n } = useTranslation('common');
 	const router = useRouter();
 	const [lang, setLang] = useState<string>('en');
+	
+	// Ensure translations are loaded
+	useEffect(() => {
+		if (i18n.language !== lang) {
+			i18n.changeLanguage(lang);
+		}
+	}, [lang, i18n]);
 	const [scrolled, setScrolled] = useState(false);
 	const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
 
-	// Navigation items
+	// Navigation items - moved inside render to ensure translations update
 	const navItems = [
 		{ label: t('Home'), path: '/' },
 		{ label: t('Jobs'), path: '/jobs' },
@@ -49,6 +57,9 @@ const Top = () => {
 		setLang(newLang);
 		localStorage.setItem('locale', newLang);
 		setLangMenuAnchor(null);
+		// Update i18n language
+		await i18n.changeLanguage(newLang);
+		// Navigate to the same page with new locale
 		await router.push(router.asPath, router.asPath, { locale: newLang });
 	};
 
@@ -86,11 +97,7 @@ const Top = () => {
 				</nav>
 
 				<div className="user-actions">
-					{user?._id && (
-						<Badge badgeContent={3} color="error" className="notification-badge">
-							<Bell size={24} weight="duotone" />
-						</Badge>
-					)}
+					{user?._id && <NotificationBell />}
 
 					<div className="lang-selector" onClick={(e) => setLangMenuAnchor(e.currentTarget)}>
 						<span className={`flag flag-${lang}`}></span>
@@ -150,7 +157,12 @@ const Top = () => {
 			>
 				<MenuItem onClick={() => router.push('/mypage')}>{t('My Profile')}</MenuItem>
 				<MenuItem onClick={() => router.push('/mypage/applications')}>{t('My Applications')}</MenuItem>
-				<MenuItem onClick={() => router.push('/mypage/settings')}>{t('Account Settings')}</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage/notifications')}>{t('Notifications')}</MenuItem>
+				{/* Show Application Management for agents (users who post jobs) */}
+				<MenuItem onClick={() => router.push('/mypage/applications-management')}>
+					{t('Application Management')}
+				</MenuItem>
+				<MenuItem onClick={() => router.push('/mypage')}>{t('Account Settings')}</MenuItem>
 				<Divider />
 				<MenuItem onClick={handleLogout}>
 					<Logout fontSize="small" className="logout-icon" />
