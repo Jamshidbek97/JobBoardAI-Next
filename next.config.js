@@ -14,10 +14,72 @@ const nextConfig = {
 	// },
 	// Optional: if you use next/image with external hosts
 	images: {
+		remotePatterns: [
+			{
+				protocol: 'http',
+				hostname: 'localhost',
+				port: '3001',
+				pathname: '/**',
+			},
+			{
+				protocol: 'http',
+				hostname: '127.0.0.1',
+				port: '3001',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'www.msn.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.msn.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.microsoft.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.bing.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.google.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.googleapis.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.amazonaws.com',
+				pathname: '/**',
+			},
+			{
+				protocol: 'https',
+				hostname: '**.cloudfront.net',
+				pathname: '/**',
+			},
+		],
+		// Keep domains for backward compatibility (deprecated but still works)
 		domains: [
 			'localhost',
 			'127.0.0.1',
-			// 'www.logoai.com', // add hosts you actually load images from
+			'www.msn.com',
+			'msn.com',
+			'microsoft.com',
+			'bing.com',
+			'google.com',
+			'googleapis.com',
+			'amazonaws.com',
+			'cloudfront.net',
 		],
 	},
 };
