@@ -139,8 +139,26 @@ const FeaturedArticles = ({
 								return '/img/community/articleImg.png';
 							}
 							
+							// Check if it's an article URL (contains /en-us/news/ or similar patterns)
+							if (article.articleImage.includes('/en-us/news/') || 
+								article.articleImage.includes('/news/') ||
+								article.articleImage.includes('?ocid=') ||
+								article.articleImage.includes('&pc=') ||
+								article.articleImage.includes('&cvid=') ||
+								article.articleImage.includes('&ei=')) {
+								return '/img/community/articleImg.png';
+							}
+							
 							// Check if it's already a full URL (starts with http/https)
 							if (article.articleImage.startsWith('http://') || article.articleImage.startsWith('https://')) {
+								// Additional check: ensure it looks like an image URL
+								const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+								const hasImageExtension = imageExtensions.some(ext => 
+									article.articleImage.toLowerCase().includes(ext)
+								);
+								if (!hasImageExtension) {
+									return '/img/community/articleImg.png';
+								}
 								return article.articleImage;
 							}
 							
