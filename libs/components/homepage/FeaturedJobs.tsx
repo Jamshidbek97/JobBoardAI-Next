@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import EastIcon from '@mui/icons-material/East';
@@ -37,7 +37,12 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
 	const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+	const [isClient, setIsClient] = useState(false);
 	const router = useRouter();
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	const [likeTargetJobs] = useMutation(LIKE_TARGET_JOB);
 
@@ -138,10 +143,10 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 				onClick={() => handleCardClick(job._id)}
 				style={{ cursor: 'pointer' }}
 			>
-				<div className="featured-badge">
-					<StarIcon fontSize="small" />
-					<span>{t('Featured')}</span>
-				</div>
+									<div className="featured-badge">
+						<StarIcon fontSize="small" />
+						<span>{isClient ? t('Featured') : ''}</span>
+					</div>
 
 				<div className="card-header">
 					<div className="company-logo">
@@ -181,7 +186,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 					<div className="job-title">{job.positionTitle}</div>
 
 					<div className="company-info">
-						<div className="company-name">{job.companyName || job.memberData?.memberNick || t('Company')}</div>
+						<div className="company-name">{job.companyName || job.memberData?.memberNick || (isClient ? t('Company') : '')}</div>
 						{job.memberData?.memberFullName && (
 							<div className="poster-name">
 								<PersonOutlineIcon fontSize="small" />
@@ -239,7 +244,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 					<span className="time-ago">
 						{job.createdAt
 							? getPostedTime(typeof job.createdAt === 'string' ? job.createdAt : job.createdAt.toISOString())
-							: t('Recently posted')}
+							: (isClient ? t('Recently posted') : '')}
 					</span>
 					<Button 
 						variant="contained" 
@@ -251,7 +256,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 							setApplicationModalOpen(true);
 						}}
 					>
-						{t('Apply Now')}
+						{isClient ? t('Apply Now') : ''}
 					</Button>
 				</div>
 			</div>
@@ -281,15 +286,19 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 		</div>
 	);
 
+	if (!isClient) {
+		return null;
+	}
+
 	return (
 		<>
 			<section className="featured-job">
 				<div className="featured-jobs-container">
 					<Box className="section-header">
 						<Typography variant="h3" className="section-title">
-							{t('Featured Job Opportunities')}
+							{isClient ? t('Featured Job Opportunities') : ''}
 						</Typography>
-						<Typography className="section-subtitle">{t('Discover top positions from leading companies')}</Typography>
+						<Typography className="section-subtitle">{isClient ? t('Discover top positions from leading companies') : ''}</Typography>
 					</Box>
 
 					<Box className="jobs-carousel-container">
@@ -336,7 +345,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 							onClick={() => router.push('/jobs')}
 							endIcon={<EastIcon className="arrow-icon" />}
 						>
-							{t('View All Jobs')}
+							{isClient ? t('View All Jobs') : ''}
 						</Button>
 					</Box>
 				</div>

@@ -108,9 +108,9 @@ const FeaturedArticles = ({
 					icon: <SentimentSatisfiedAltIcon />,
 					color: '#E91E63'
 				};
-			case BoardArticleCategory.TRENDING:
+			case BoardArticleCategory.FREE:
 				return {
-					title: t('Trending'),
+					title: t('Free'),
 					icon: <TrendingUpIcon />,
 					color: '#4CAF50'
 				};
@@ -178,7 +178,7 @@ const FeaturedArticles = ({
 					<div className="article-overlay">
 						<Button
 							className={`like-button ${isArticleLiked(article) ? 'liked' : ''}`}
-							onClick={(e) => toggleLikeArticle(e, article._id)}
+							onClick={(e: any) => toggleLikeArticle(e, article._id)}
 							sx={{ minWidth: 'auto', p: 1 }}
 						>
 							{isArticleLiked(article) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
