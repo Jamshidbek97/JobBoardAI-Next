@@ -305,7 +305,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 						<Swiper
 							modules={[Navigation, Pagination, Autoplay]}
 							spaceBetween={24}
-							slidesPerView={'auto'}
+							slidesPerView={1}
 							navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
 							pagination={{ clickable: true, dynamicBullets: true }}
 							autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
