@@ -121,7 +121,23 @@ const FeaturedHiringManagers = ({
 				<div className="profile-section">
 					<div className="avatar-container">
 						<Avatar 
-							src={member?.memberImage ? `${REACT_APP_API_URL}/${member.memberImage}` : '/img/defaultMember.jpg'}
+							src={(() => {
+								// Check if memberImage exists and is valid
+								if (!member?.memberImage || 
+									member.memberImage === 'undefined' || 
+									member.memberImage === 'null' ||
+									member.memberImage.trim() === '') {
+									return '/img/defaultMember.jpg';
+								}
+								
+								// Check if it's already a full URL (starts with http/https)
+								if (member.memberImage.startsWith('http://') || member.memberImage.startsWith('https://')) {
+									return member.memberImage;
+								}
+								
+								// Otherwise, prepend the API URL
+								return `${REACT_APP_API_URL}/${member.memberImage}`;
+							})()}
 							className="member-avatar"
 							sx={{ width: 80, height: 80 }}
 						/>

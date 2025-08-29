@@ -130,9 +130,23 @@ const FeaturedArticles = ({
 			<div className="featured-article-card" onClick={() => handleCardClick(article._id, article.articleCategory)}>
 				<div className="article-image-container">
 					<Image 
-						src={article.articleImage && article.articleImage !== 'undefined' && article.articleImage !== 'null' 
-							? `${REACT_APP_API_URL}/${article.articleImage}` 
-							: '/img/community/articleImg.png'}
+						src={(() => {
+							// Check if articleImage exists and is valid
+							if (!article.articleImage || 
+								article.articleImage === 'undefined' || 
+								article.articleImage === 'null' ||
+								article.articleImage.trim() === '') {
+								return '/img/community/articleImg.png';
+							}
+							
+							// Check if it's already a full URL (starts with http/https)
+							if (article.articleImage.startsWith('http://') || article.articleImage.startsWith('https://')) {
+								return article.articleImage;
+							}
+							
+							// Otherwise, prepend the API URL
+							return `${REACT_APP_API_URL}/${article.articleImage}`;
+						})()}
 						alt={article.articleTitle}
 						width={400}
 						height={200}
@@ -185,7 +199,23 @@ const FeaturedArticles = ({
 					<div className="article-meta">
 						<div className="author-info">
 							<Avatar 
-								src={article.memberData?.memberImage ? `${REACT_APP_API_URL}/${article.memberData.memberImage}` : '/img/defaultMember.jpg'}
+								src={(() => {
+									// Check if memberImage exists and is valid
+									if (!article.memberData?.memberImage || 
+										article.memberData.memberImage === 'undefined' || 
+										article.memberData.memberImage === 'null' ||
+										article.memberData.memberImage.trim() === '') {
+										return '/img/defaultMember.jpg';
+									}
+									
+									// Check if it's already a full URL (starts with http/https)
+									if (article.memberData.memberImage.startsWith('http://') || article.memberData.memberImage.startsWith('https://')) {
+										return article.memberData.memberImage;
+									}
+									
+									// Otherwise, prepend the API URL
+									return `${REACT_APP_API_URL}/${article.memberData.memberImage}`;
+								})()}
 								className="author-avatar"
 								sx={{ width: 24, height: 24 }}
 							/>
