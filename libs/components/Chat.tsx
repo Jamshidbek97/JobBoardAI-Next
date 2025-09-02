@@ -58,33 +58,71 @@ const Chat = () => {
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [open, setOpen] = useState(false);
 	const [openButton, setOpenButton] = useState(false);
+	const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const socket = useReactiveVar(socketVar);
 
 	/** LIFECYCLE **/
 	useEffect(() => {
-		socket.onmessage = (msg) => {
-			const data = JSON.parse(msg.data);
-			console.log('Websocket message', data);
+		if (!socket) {
+			console.log('No socket available');
+			setConnectionStatus('disconnected');
+			return;
+		}
 
-			switch (data.event) {
-				case 'info':
-					const newInfo: InfoPayload = data;
-					setOnlineUsers(newInfo.totalClients);
-					break;
-				case 'getMessages':
-					const list: MessagePayload[] = data.list;
-					setMessagesList(list);
-					break;
-				case 'message':
-					const newMessage: MessagePayload = data;
-					messagesList.push(newMessage);
-					setMessagesList([...messagesList]);
-					break;
+		console.log('Setting up WebSocket handlers, current state:', socket.readyState);
+
+		// Set up WebSocket event handlers
+		socket.onopen = () => {
+			console.log('WebSocket connected successfully');
+			setConnectionStatus('connected');
+		};
+
+		socket.onclose = (event) => {
+			console.log('WebSocket disconnected:', event.code, event.reason);
+			setConnectionStatus('disconnected');
+		};
+
+		socket.onerror = (error) => {
+			console.error('WebSocket error:', error);
+			setConnectionStatus('disconnected');
+		};
+
+ 		socket.onmessage = (msg) => {
+			try {
+				const data = JSON.parse(msg.data);
+				console.log('Websocket message', data);
+
+				switch (data.event) {
+					case 'info':
+						const newInfo: InfoPayload = data;
+						setOnlineUsers(newInfo.totalClients);
+						break;
+					case 'getMessages':
+						const list: MessagePayload[] = data.list;
+						setMessagesList(list);
+						break;
+					case 'message':
+						const newMessage: MessagePayload = data;
+						setMessagesList(prev => [...prev, newMessage]);
+						break;
+				}
+			} catch (error) {
+				console.error('Error parsing WebSocket message:', error);
 			}
 		};
-	}, [socket, messagesList]);
+
+		// Cleanup function
+		return () => {
+			if (socket) {
+				socket.onopen = null;
+				socket.onclose = null;
+				socket.onerror = null;
+				socket.onmessage = null;
+			}
+		};
+	}, [socket]);
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -121,11 +159,22 @@ const Chat = () => {
 	};
 
 	const onClickHandler = () => {
-		if (!messageInput) {
+		if (!messageInput.trim()) {
 			sweetErrorAlert(Messages.error4);
-		} else {
-			socket.send(JSON.stringify({ event: 'message', data: messageInput }));
+			return;
+		}
+
+		if (!socket || connectionStatus !== 'connected') {
+			sweetErrorAlert('Chat is not connected. Please try again.');
+			return;
+		}
+
+		try {
+			socket.send(JSON.stringify({ event: 'message', data: messageInput.trim() }));
 			setMessageInput('');
+		} catch (error) {
+			console.error('Error sending message:', error);
+			sweetErrorAlert('Failed to send message. Please try again.');
 		}
 	};
 
@@ -138,14 +187,29 @@ const Chat = () => {
 			) : null}
 			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
 				<Box className={'chat-top'} component={'div'}>
-					<div style={{ fontFamily: 'Nunito' }}>Online Chat</div>
+					<div style={{ fontFamily: 'Nunito' }}>
+						Online Chat
+						<span style={{ 
+							fontSize: '12px', 
+							marginLeft: '8px',
+							color: connectionStatus === 'connected' ? '#4caf50' : 
+								   connectionStatus === 'connecting' ? '#ff9800' : '#f44336'
+						}}>
+							{connectionStatus === 'connected' ? '●' : 
+							 connectionStatus === 'connecting' ? '●' : '●'}
+						</span>
+					</div>
 					<RippleBadge style={{ margin: '-18px 0 0 21px' }} badgeContent={onlineUsers} />
 				</Box>
 				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
 					<ScrollableFeed>
 						<Stack className={'chat-main'}>
 							<Box flexDirection={'row'} style={{ display: 'flex' }} sx={{ m: '10px 0px' }} component={'div'}>
-								<div className={'welcome'}>Welcome to Live chat!</div>
+								<div className={'welcome'}>
+									{connectionStatus === 'connected' ? 'Welcome to Live chat!' :
+									 connectionStatus === 'connecting' ? 'Connecting to chat...' :
+									 'Chat disconnected. Please refresh the page.'}
+								</div>
 							</Box>
 							{messagesList.map((ele: MessagePayload) => {
 								const { text, memberData } = ele;
@@ -181,12 +245,21 @@ const Chat = () => {
 						type={'text'}
 						name={'message'}
 						className={'msg-input'}
-						placeholder={'Type message'}
+						placeholder={connectionStatus === 'connected' ? 'Type message' : 'Chat disconnected'}
 						onChange={getInputMessageHandler}
 						onKeyDown={getKeyHandler}
 						value={messageInput}
+						disabled={connectionStatus !== 'connected'}
 					/>
-					<button className={'send-msg-btn'} onClick={onClickHandler}>
+					<button 
+						className={'send-msg-btn'} 
+						onClick={onClickHandler}
+						disabled={connectionStatus !== 'connected' || !messageInput.trim()}
+						style={{ 
+							opacity: connectionStatus !== 'connected' || !messageInput.trim() ? 0.5 : 1,
+							cursor: connectionStatus !== 'connected' || !messageInput.trim() ? 'not-allowed' : 'pointer'
+						}}
+					>
 						<SendIcon style={{ color: '#fff' }} />
 					</button>
 				</Box>

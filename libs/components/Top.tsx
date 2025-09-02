@@ -20,7 +20,7 @@ const Top = () => {
 	
 	// Ensure translations are loaded
 	useEffect(() => {
-		if (i18n.language !== lang) {
+		if (i18n && i18n.language && i18n.language !== lang) {
 			i18n.changeLanguage(lang);
 		}
 	}, [lang, i18n]);
@@ -35,11 +35,11 @@ const Top = () => {
 
 	// Navigation items - moved inside render to ensure translations update
 	const navItems = [
-		{ label: t('Home'), path: '/' },
-		{ label: t('Jobs'), path: '/jobs' },
-		{ label: t('Companies'), path: '/agent' },
-		{ label: t('Community'), path: '/community?articleCategory=FREE' },
-		{ label: t('CS'), path: '/cs' }, // Changed from Resources to CS
+		{ label: t ? t('Home') : 'Home', path: '/' },
+		{ label: t ? t('Jobs') : 'Jobs', path: '/jobs' },
+		{ label: t ? t('Companies') : 'Companies', path: '/agent' },
+		{ label: t ? t('Community') : 'Community', path: '/community?articleCategory=FREE' },
+		{ label: t ? t('CS') : 'CS', path: '/cs' }, // Changed from Resources to CS
 	];
 
 	useEffect(() => {
@@ -64,7 +64,9 @@ const Top = () => {
 		localStorage.setItem('locale', newLang);
 		setLangMenuAnchor(null);
 		// Update i18n language
-		await i18n.changeLanguage(newLang);
+		if (i18n && i18n.changeLanguage) {
+			await i18n.changeLanguage(newLang);
+		}
 		// Navigate to the same page with new locale
 		await router.push(router.asPath, router.asPath, { locale: newLang });
 	};
