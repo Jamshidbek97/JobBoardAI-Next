@@ -72,17 +72,7 @@ const NotificationBell: React.FC = () => {
 		}
 	});
 
-	// Test query to get all notifications without filters
-	const { data: testNotificationsData, loading: testLoading } = useQuery(GET_ALL_NOTIFICATIONS, {
-		skip: !user?._id,
-		fetchPolicy: 'cache-first', // Use cache first
-		onCompleted: (data) => {
-			console.log('Test query - GET_ALL_NOTIFICATIONS completed:', data);
-			if (data?.getNotifications) {
-				console.log('Test query - Raw response:', JSON.stringify(data.getNotifications, null, 2));
-			}
-		}
-	});
+
 
 	const [markAsRead] = useMutation(MARK_NOTIFICATIONS_AS_READ);
 	const [markAllAsRead] = useMutation(MARK_ALL_NOTIFICATIONS_AS_READ);
@@ -241,9 +231,9 @@ const NotificationBell: React.FC = () => {
 				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
 				anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 			>
-				<Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+				<Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' } as const}>
 					<Stack direction="row" justifyContent="space-between" alignItems="center">
-						<Typography variant="h6" sx={{ fontWeight: 600 }}>
+						<Typography variant="h6" sx={{ fontWeight: 600 } as const}>
 							{t('Notifications')}
 						</Typography>
 						<Stack direction="row" spacing={1}>
@@ -281,17 +271,17 @@ const NotificationBell: React.FC = () => {
 					</Stack>
 				</Box>
 
-				<Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+				<Box sx={{ maxHeight: 400, overflow: 'auto' } as const}>
 					{/* Debug Info */}
-					<Box sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText', mb: 2 }}>
+					<Box sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText', mb: 2 } as const}>
 						<Typography variant="body2">
-							Debug: Unread: {unreadCount} | Showing: {notifications.length} | Total: {allNotifications.length} | Test: {testNotificationsData?.getNotifications?.list?.length || 0}
+							Debug: Unread: {unreadCount} | Showing: {notifications.length} | Total: {allNotifications.length}
 						</Typography>
 					</Box>
 					
 					{/* Error Display */}
 					{(notificationsError || unreadCountError) && (
-						<Box sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText', mb: 2 }}>
+						<Box sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText', mb: 2 } as const}>
 							<Typography variant="body2">
 								Error loading notifications. Check console for details.
 							</Typography>
@@ -299,12 +289,12 @@ const NotificationBell: React.FC = () => {
 					)}
 					
 					{loading ? (
-						<Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+						<Box sx={{ display: 'flex', justifyContent: 'center', p: 3 } as const}>
 							<CircularProgress size={24} />
 						</Box>
 					) : notifications.length === 0 ? (
-						<Box sx={{ p: 3, textAlign: 'center' }}>
-							<Typography color="text.secondary" sx={{ mb: 1 }}>
+						<Box sx={{ p: 3, textAlign: 'center' } as const}>
+							<Typography color="text.secondary" sx={{ mb: 1 } as const}>
 								{t('No unread notifications')}
 							</Typography>
 							<Typography variant="caption" color="text.secondary">
@@ -332,7 +322,7 @@ const NotificationBell: React.FC = () => {
 										},
 									} as const}
 								>
-									<Stack direction="row" spacing={3} sx={{ width: '100%' }}>
+									<Stack direction="row" spacing={3} sx={{ width: '100%' } as const}>
 										{/* Notification Icon */}
 										<Box
 											sx={{
@@ -352,7 +342,7 @@ const NotificationBell: React.FC = () => {
 										</Box>
 
 										{/* Notification Content */}
-										<Box sx={{ flex: 1, minWidth: 0, pr: 2 }}>
+										<Box sx={{ flex: 1, minWidth: 0, pr: 2 } as const}>
 											<Typography
 												variant="body2"
 												sx={{
@@ -387,7 +377,7 @@ const NotificationBell: React.FC = () => {
 													display: 'block',
 													fontSize: '0.75rem',
 													opacity: 0.8
-												}}
+												} as const}
 											>
 												{formatTimeAgo(notification.createdAt)}
 											</Typography>
@@ -414,7 +404,7 @@ const NotificationBell: React.FC = () => {
 				</Box>
 
 				{notifications.length > 0 && (
-					<Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+					<Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' } as const}>
 						<Button
 							fullWidth
 							onClick={() => {
