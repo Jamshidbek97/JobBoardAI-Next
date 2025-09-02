@@ -7,15 +7,12 @@ services:
       - 4000:3000
     environment:
       - PORT=3000
-
+      - NEXT_PUBLIC_API_URL=http://localhost:4001
+      - NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4001/graphql
+      - NEXT_PUBLIC_WS_URL=ws://localhost:4001
     volumes:
       - ./:/usr/src/jobBoardAi-next
     working_dir: /usr/src/jobBoardAi-next
-    networks:
-      - client-network
+    network_mode: host
 
     command: bash -c "yarn install && yarn build && yarn run start"
-
-networks:
-  client-network:
-    driver: bridge
