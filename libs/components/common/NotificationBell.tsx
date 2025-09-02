@@ -116,8 +116,8 @@ const NotificationBell: React.FC = () => {
 				
 				if (result.data?.markNotificationsAsRead) {
 					console.log('Notification marked as read successfully');
-					refetch();
-					refetchCount();
+					// Force refetch to update the UI immediately
+					await Promise.all([refetch(), refetchCount()]);
 				}
 			} catch (error) {
 				console.error('Error marking notification as read:', error);
@@ -150,8 +150,8 @@ const NotificationBell: React.FC = () => {
 			
 			if (result.data?.markAllNotificationsAsRead) {
 				console.log('All notifications marked as read successfully');
-				refetch();
-				refetchCount();
+				// Force refetch to update the UI immediately
+				await Promise.all([refetch(), refetchCount()]);
 			}
 		} catch (error) {
 			console.error('Error marking all notifications as read:', error);
@@ -173,8 +173,8 @@ const NotificationBell: React.FC = () => {
 			if (result.data?.deleteNotifications) {
 				console.log('Notifications deleted successfully');
 				setSelectedNotifications([]);
-				refetch();
-				refetchCount();
+				// Force refetch to update the UI immediately
+				await Promise.all([refetch(), refetchCount()]);
 			}
 		} catch (error) {
 			console.error('Error deleting notifications:', error);
@@ -232,7 +232,7 @@ const NotificationBell: React.FC = () => {
 				onClose={handleClose}
 				PaperProps={{
 					sx: {
-						width: 400,
+						width: 500, // Increased from 400 to 500
 						maxHeight: 500,
 					},
 				}}
@@ -327,19 +327,19 @@ const NotificationBell: React.FC = () => {
 										},
 									} as const}
 								>
-									<Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+									<Stack direction="row" spacing={3} sx={{ width: '100%' }}>
 										{/* Notification Icon */}
 										<Box
 											sx={{
-												width: 40,
-												height: 40,
+												width: 48, // Increased from 40 to 48
+												height: 48, // Increased from 40 to 48
 												borderRadius: '50%',
 												display: 'flex',
 												alignItems: 'center',
 												justifyContent: 'center',
 												backgroundColor: `${icon.color}20`,
 												color: icon.color,
-												fontSize: 20,
+												fontSize: 24, // Increased from 20 to 24
 												flexShrink: 0,
 											} as const}
 										>
@@ -347,26 +347,29 @@ const NotificationBell: React.FC = () => {
 										</Box>
 
 										{/* Notification Content */}
-										<Box sx={{ flex: 1, minWidth: 0 }}>
+										<Box sx={{ flex: 1, minWidth: 0, pr: 2 }}>
 											<Typography
 												variant="body2"
 												sx={{
 													fontWeight: notification.isRead ? 400 : 600,
-													mb: 0.5,
-													lineHeight: 1.3,
+													mb: 1,
+													lineHeight: 1.4,
+													fontSize: '0.95rem',
 												} as const}
 											>
 												{notification.title}
 											</Typography>
 											<Typography
-												variant="caption"
+												variant="body2"
 												color="text.secondary"
 												sx={{
 													display: '-webkit-box',
-													WebkitLineClamp: 2,
+													WebkitLineClamp: 3, // Increased from 2 to 3
 													WebkitBoxOrient: 'vertical',
 													overflow: 'hidden',
-													lineHeight: 1.2,
+													lineHeight: 1.3,
+													mb: 1,
+													fontSize: '0.875rem',
 												} as const}
 											>
 												{notification.message}
@@ -374,7 +377,12 @@ const NotificationBell: React.FC = () => {
 											<Typography
 												variant="caption"
 												color="text.secondary"
-												sx={{ mt: 0.5, display: 'block' }}
+												sx={{ 
+													mt: 0.5, 
+													display: 'block',
+													fontSize: '0.75rem',
+													opacity: 0.8
+												}}
 											>
 												{formatTimeAgo(notification.createdAt)}
 											</Typography>
