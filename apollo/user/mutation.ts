@@ -264,7 +264,7 @@ mutation LikeTargetMember($input: String!) {
 `;
 
 /**************************
- *        PROPERTY        *
+ *        JOB        *
  *************************/
 
 export const CREATE_JOB = gql`

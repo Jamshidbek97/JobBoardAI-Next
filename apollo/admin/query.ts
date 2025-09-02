@@ -39,7 +39,7 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *        JOB        *
  *************************/
 
 export const GET_ALL_JOBS_BY_ADMIN = gql`

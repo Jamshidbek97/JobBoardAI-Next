@@ -95,7 +95,7 @@ query GetMember($input: String!) {
 `);
 
 /**************************
- *        PROPERTY        *
+ *        JOB        *
  *************************/
 
 export const GET_JOB = gql`

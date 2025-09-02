@@ -204,7 +204,7 @@ const Faq = () => {
 							label={cat.label}
 							onClick={() => changeCategoryHandler(cat.key)}
 							className={`category-chip ${category === cat.key ? 'active' : ''}`}
-							style={{
+							sx={{
 								backgroundColor: category === cat.key ? cat.color : 'white',
 								color: category === cat.key ? 'white' : '#64748b',
 								border: `2px solid ${category === cat.key ? cat.color : '#e2e8f0'}`,
