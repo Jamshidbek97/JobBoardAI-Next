@@ -23,7 +23,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
-import { GET_NOTIFICATIONS, GET_UNREAD_NOTIFICATIONS_COUNT } from '../../../apollo/user/query';
+import { GET_NOTIFICATIONS, GET_UNREAD_NOTIFICATIONS_COUNT, GET_ALL_NOTIFICATIONS } from '../../../apollo/user/query';
 import { MARK_NOTIFICATIONS_AS_READ, MARK_ALL_NOTIFICATIONS_AS_READ, DELETE_NOTIFICATIONS } from '../../../apollo/user/mutation';
 import { Notification, getNotificationIcon } from '../../types/notification/notification';
 import { REACT_APP_API_URL } from '../../config';
@@ -42,29 +42,45 @@ const NotificationBell: React.FC = () => {
 			input: {
 				page: 1,
 				limit: 10,
-				search: {
-					isRead: false,
-				},
 			},
 		},
 		skip: !user?._id,
-		pollInterval: 30000, // Poll every 30 seconds
+		// Remove polling to prevent constant requests
+		// pollInterval: 30000,
+		fetchPolicy: 'cache-first', // Use cache first, only fetch if no data
 		onError: (error) => {
 			console.error('NotificationBell - GET_NOTIFICATIONS error:', error);
 		},
 		onCompleted: (data) => {
 			console.log('NotificationBell - GET_NOTIFICATIONS completed:', data);
+			if (data?.getNotifications) {
+				console.log('Raw notifications response:', JSON.stringify(data.getNotifications, null, 2));
+			}
 		}
 	});
 
 	const { data: unreadCountData, refetch: refetchCount, error: unreadCountError } = useQuery(GET_UNREAD_NOTIFICATIONS_COUNT, {
 		skip: !user?._id,
-		pollInterval: 30000,
+		// Remove polling to prevent constant requests
+		// pollInterval: 30000,
+		fetchPolicy: 'cache-first', // Use cache first, only fetch if no data
 		onError: (error) => {
 			console.error('NotificationBell - GET_UNREAD_NOTIFICATIONS_COUNT error:', error);
 		},
 		onCompleted: (data) => {
 			console.log('NotificationBell - GET_UNREAD_NOTIFICATIONS_COUNT completed:', data);
+		}
+	});
+
+	// Test query to get all notifications without filters
+	const { data: testNotificationsData, loading: testLoading } = useQuery(GET_ALL_NOTIFICATIONS, {
+		skip: !user?._id,
+		fetchPolicy: 'cache-first', // Use cache first
+		onCompleted: (data) => {
+			console.log('Test query - GET_ALL_NOTIFICATIONS completed:', data);
+			if (data?.getNotifications) {
+				console.log('Test query - Raw response:', JSON.stringify(data.getNotifications, null, 2));
+			}
 		}
 	});
 
@@ -77,6 +93,9 @@ const NotificationBell: React.FC = () => {
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
+		// Refresh notifications when opening the menu
+		refetch();
+		refetchCount();
 	};
 
 	const handleClose = () => {
@@ -160,14 +179,26 @@ const NotificationBell: React.FC = () => {
 
 
 
-	// Debug logging
+	// Debug logging - only run once on mount and when user changes
 	useEffect(() => {
 		console.log('NotificationBell - User:', user);
-		console.log('NotificationBell - Notifications data:', notificationsData);
-		console.log('NotificationBell - Unread count data:', unreadCountData);
-		console.log('NotificationBell - Notifications error:', notificationsError);
-		console.log('NotificationBell - Unread count error:', unreadCountError);
-	}, [user, notificationsData, unreadCountData, notificationsError, unreadCountError]);
+	}, [user]);
+
+	// Debug logging for notifications - only run when data actually changes
+	useEffect(() => {
+		if (notificationsData) {
+			console.log('NotificationBell - Notifications data:', notificationsData);
+		}
+		if (unreadCountData) {
+			console.log('NotificationBell - Unread count data:', unreadCountData);
+		}
+		if (notificationsError) {
+			console.error('NotificationBell - Notifications error:', notificationsError);
+		}
+		if (unreadCountError) {
+			console.error('NotificationBell - Unread count error:', unreadCountError);
+		}
+	}, [notificationsData, unreadCountData, notificationsError, unreadCountError]);
 
 	if (!user) return null;
 
@@ -202,6 +233,17 @@ const NotificationBell: React.FC = () => {
 							{t('Notifications')}
 						</Typography>
 						<Stack direction="row" spacing={1}>
+							<Button
+								size="small"
+								startIcon={<CheckIcon />}
+								onClick={() => {
+									refetch();
+									refetchCount();
+								}}
+								color="primary"
+							>
+								{t('Refresh')}
+							</Button>
 							{selectedNotifications.length > 0 && (
 								<Button
 									size="small"
@@ -226,6 +268,13 @@ const NotificationBell: React.FC = () => {
 				</Box>
 
 				<Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+					{/* Debug Info */}
+					<Box sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText', mb: 2 }}>
+						<Typography variant="body2">
+							Debug: Unread: {unreadCount} | Notifications: {notifications.length} | Test: {testNotificationsData?.getNotifications?.list?.length || 0}
+						</Typography>
+					</Box>
+					
 					{/* Error Display */}
 					{(notificationsError || unreadCountError) && (
 						<Box sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText', mb: 2 }}>

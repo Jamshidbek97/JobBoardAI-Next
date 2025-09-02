@@ -1054,7 +1054,7 @@ export const GET_NOTIFICATIONS = gql`
 				}
 				jobData {
 					_id
-					jobTitle
+					positionTitle
 					companyName
 					companyLogo
 				}
@@ -1063,6 +1063,32 @@ export const GET_NOTIFICATIONS = gql`
 					articleTitle
 					articleImage
 				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+// Add a test query to get all notifications without filters
+export const GET_ALL_NOTIFICATIONS = gql`
+	query GetAllNotifications {
+		getNotifications(input: { page: 1, limit: 50 }) {
+			list {
+				_id
+				recipientId
+				senderId
+				type
+				title
+				message
+				relatedEntityId
+				relatedEntityType
+				isRead
+				isActive
+				createdAt
+				updatedAt
+				readAt
 			}
 			metaCounter {
 				total

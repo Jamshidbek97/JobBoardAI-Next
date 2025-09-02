@@ -36,7 +36,7 @@ export const createJobApplicationNotification = (
 	recipientId: string,
 	senderId: string,
 	jobId: string,
-	jobTitle: string,
+	positionTitle: string,
 	applicantName: string,
 	t: (key: string) => string
 ) => ({
@@ -44,7 +44,7 @@ export const createJobApplicationNotification = (
 	senderId,
 	type: NotificationType.JOB_APPLICATION_RECEIVED,
 	title: t('New Job Application Received'),
-	message: `${applicantName} ${t('has applied for your job posting')}: ${jobTitle}`,
+	message: `${applicantName} ${t('has applied for your job posting')}: ${positionTitle}`,
 	relatedEntityId: jobId,
 	relatedEntityType: 'JOB',
 });
@@ -52,7 +52,7 @@ export const createJobApplicationNotification = (
 export const createApplicationStatusNotification = (
 	recipientId: string,
 	jobId: string,
-	jobTitle: string,
+	positionTitle: string,
 	status: string,
 	companyName: string
 ) => ({
@@ -60,7 +60,7 @@ export const createApplicationStatusNotification = (
 	senderId: undefined, // System notification
 	type: NotificationType.JOB_APPLICATION_STATUS_CHANGED,
 	title: 'Application Status Updated',
-	message: `Your application for ${jobTitle} at ${companyName} has been ${status.toLowerCase()}`,
+	message: `Your application for ${positionTitle} at ${companyName} has been ${status.toLowerCase()}`,
 	relatedEntityId: jobId,
 	relatedEntityType: 'JOB',
 });
@@ -68,7 +68,7 @@ export const createApplicationStatusNotification = (
 export const createInterviewNotification = (
 	recipientId: string,
 	jobId: string,
-	jobTitle: string,
+	positionTitle: string,
 	interviewDate: string,
 	companyName: string
 ) => ({
@@ -76,7 +76,7 @@ export const createInterviewNotification = (
 	senderId: undefined,
 	type: NotificationType.JOB_INTERVIEW_SCHEDULED,
 	title: 'Interview Scheduled',
-	message: `An interview has been scheduled for ${jobTitle} at ${companyName} on ${interviewDate}`,
+	message: `An interview has been scheduled for ${positionTitle} at ${companyName} on ${interviewDate}`,
 	relatedEntityId: jobId,
 	relatedEntityType: 'JOB',
 });
@@ -140,14 +140,14 @@ export const createWelcomeNotification = (recipientId: string, userName: string)
 export const createJobExpiryNotification = (
 	recipientId: string,
 	jobId: string,
-	jobTitle: string,
+	positionTitle: string,
 	daysLeft: number
 ) => ({
 	recipientId,
 	senderId: undefined,
 	type: NotificationType.JOB_POSTING_EXPIRES_SOON,
 	title: 'Job Posting Expires Soon',
-	message: `Your job posting "${jobTitle}" will expire in ${daysLeft} day${daysLeft > 1 ? 's' : ''}. Consider extending it to reach more candidates.`,
+	message: `Your job posting "${positionTitle}" will expire in ${daysLeft} day${daysLeft > 1 ? 's' : ''}. Consider extending it to reach more candidates.`,
 	relatedEntityId: jobId,
 	relatedEntityType: 'JOB',
 });

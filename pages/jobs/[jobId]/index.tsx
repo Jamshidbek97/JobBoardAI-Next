@@ -236,7 +236,7 @@ const JobDetailPage: NextPage = () => {
 								)}
 							</div>
 							<div className={styles.companyInfo}>
-								<h1 className={styles.jobTitle}>{job.positionTitle}</h1>
+								<h1 className={styles.positionTitle}>{job.positionTitle}</h1>
 								<div className={styles.companyMeta}>
 									<BusinessIcon className={styles.metaIcon} />
 									<span className={styles.companyName}>{job.companyName || '—'}</span>
