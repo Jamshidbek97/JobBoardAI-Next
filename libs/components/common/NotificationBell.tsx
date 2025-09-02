@@ -88,7 +88,9 @@ const NotificationBell: React.FC = () => {
 	const [markAllAsRead] = useMutation(MARK_ALL_NOTIFICATIONS_AS_READ);
 	const [deleteNotifications] = useMutation(DELETE_NOTIFICATIONS);
 
-	const notifications = notificationsData?.getNotifications?.list || [];
+	// Filter to show only unread notifications when bell is opened
+	const allNotifications = notificationsData?.getNotifications?.list || [];
+	const notifications = allNotifications.filter((notification: Notification) => !notification.isRead);
 	const unreadCount = unreadCountData?.getUnreadNotificationsCount?.count || 0;
 
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -283,7 +285,7 @@ const NotificationBell: React.FC = () => {
 					{/* Debug Info */}
 					<Box sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText', mb: 2 }}>
 						<Typography variant="body2">
-							Debug: Unread: {unreadCount} | Notifications: {notifications.length} | Test: {testNotificationsData?.getNotifications?.list?.length || 0}
+							Debug: Unread: {unreadCount} | Showing: {notifications.length} | Total: {allNotifications.length} | Test: {testNotificationsData?.getNotifications?.list?.length || 0}
 						</Typography>
 					</Box>
 					
@@ -302,8 +304,11 @@ const NotificationBell: React.FC = () => {
 						</Box>
 					) : notifications.length === 0 ? (
 						<Box sx={{ p: 3, textAlign: 'center' }}>
-							<Typography color="text.secondary">
-								{t('No new notifications')}
+							<Typography color="text.secondary" sx={{ mb: 1 }}>
+								{t('No unread notifications')}
+							</Typography>
+							<Typography variant="caption" color="text.secondary">
+								You have {allNotifications.length} total notifications
 							</Typography>
 						</Box>
 					) : (
@@ -417,7 +422,7 @@ const NotificationBell: React.FC = () => {
 								router.push('/mypage/notifications');
 							}}
 						>
-							{t('View All Notifications')}
+							{t('View All Notifications')} ({allNotifications.length})
 						</Button>
 					</Box>
 				)}
