@@ -74,12 +74,15 @@ const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({
 
 	const config = getStatusConfig(status);
 
+	// Map large size to medium since Chip only supports small and medium
+	const chipSize = size === 'large' ? 'medium' : size;
+
 	return (
 		<Chip
 			label={config.label}
 			icon={config.icon}
 			color={config.color}
-			size={size}
+			size={chipSize}
 			variant={variant}
 			sx={{
 				backgroundColor: variant === 'filled' ? config.bgColor : 'transparent',
