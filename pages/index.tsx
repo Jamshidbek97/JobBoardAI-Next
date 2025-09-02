@@ -21,8 +21,9 @@ const Home: NextPage = () => {
 		<Stack className={'home-page'}>
 			<FeaturedJobs />
 			<FeaturedHiringManagers />
-			<FeaturedArticles />
 			<JobBoardAIHomeHero />
+			<FeaturedArticles />
+			
 			{/* <Advertisement /> */}
 			{/* <TopProperties /> */}
 			{/* <TopAgents /> */}
