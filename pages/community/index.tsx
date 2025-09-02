@@ -165,7 +165,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 		}
 	};
 
-	const categoryInfo = getCategoryInfo(searchCommunity.search.articleCategory);
+	const categoryInfo = getCategoryInfo(searchCommunity.search.articleCategory || 'FREE');
 
 	if (device === 'mobile') {
 		return <h1>COMMUNITY PAGE MOBILE</h1>;
@@ -281,7 +281,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 							}}>
 								<Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
 									<Avatar 
-										src="/img/logo/logoText.svg"
+										src="/img/logo/logoText.png"
 										sx={{ width: 50, height: 50 }}
 									/>
 									<Box>
@@ -294,7 +294,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 									</Box>
 								</Stack>
 
-								<TabContext value={searchCommunity.search.articleCategory}>
+								<TabContext value={searchCommunity.search.articleCategory || 'FREE'}>
 									<TabList
 										orientation="vertical"
 										aria-label="community categories"
@@ -365,7 +365,7 @@ const Community: NextPage = ({ initialInput, ...props }: T) => {
 
 						{/* Main Content Area */}
 						<Box sx={{ flex: 1 }}>
-							<TabContext value={searchCommunity.search.articleCategory}>
+							<TabContext value={searchCommunity.search.articleCategory || 'FREE'}>
 								{/* Loading State */}
 								{boardArticlesLoading && (
 									<Box sx={{ 
