@@ -57,6 +57,7 @@ export interface AgentJobsInquiry {
 interface ALJISearch {
 	jobStatus?: JobStatus;
 	jobLocation?: JobLocation[];
+	text?: string;
 }
 
 export interface AllJobsInquiry {
