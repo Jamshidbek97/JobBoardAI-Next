@@ -1,0 +1,55 @@
+# Build stage
+FROM node:20.11.0-alpine AS builder
+
+# Install dependencies for node-gyp
+RUN apk add --no-cache python3 make g++
+
+# Set working directory
+WORKDIR /usr/src/jobBoardAi-next
+
+# Copy package files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install --frozen-lockfile --production=false
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN yarn run build
+
+# Production stage
+FROM node:20.11.0-alpine AS production
+
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Set working directory
+WORKDIR /usr/src/jobBoardAi-next
+
+# Copy package files
+COPY package.json yarn.lock ./
+
+# Install only production dependencies
+RUN yarn install --frozen-lockfile --production=true
+
+# Copy built application from builder stage
+COPY --from=builder /usr/src/jobBoardAi-next/.next ./.next
+COPY --from=builder /usr/src/jobBoardAi-next/public ./public
+COPY --from=builder /usr/src/jobBoardAi-next/next.config.js ./
+COPY --from=builder /usr/src/jobBoardAi-next/next-i18next.config.js ./
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Change ownership of the app directory
+RUN chown -R nextjs:nodejs /usr/src/jobBoardAi-next
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Start production server
+CMD ["yarn", "start"]
