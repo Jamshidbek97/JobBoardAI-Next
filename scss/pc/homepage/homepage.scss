@@ -77,84 +77,49 @@
 					}
 				}
 
-				/* Carousel + nav */
-				.jobs-carousel-container {
+				/* Grid + pagination */
+				.jobs-grid-container {
 					position: relative;
-					padding: 0 60px;
+					padding: 0 20px;
 
-					.swiper {
-						.swiper-slide {
-							width: 320px !important;
-							height: 400px !important;
-						}
+
+
+					// Responsive grid adjustments
+					@media (max-width: 1200px) {
+						padding: 0 16px;
 					}
 
-					.navigation-buttons {
-						position: absolute;
-						top: 50%;
-						left: -30px;
-						right: -30px;
-						transform: translateY(-50%);
-						display: flex;
-						justify-content: space-between;
-						z-index: 10;
-						pointer-events: none;
+					@media (max-width: 768px) {
+						padding: 0 12px;
 
-						button {
-							pointer-events: all;
-							width: 50px;
-							height: 50px;
-							border-radius: 50%;
-							background: #fff;
-							border: 1px solid #eaeef5;
-							color: #1a2a4f;
-							display: grid;
-							place-items: center;
-							box-shadow: 0 8px 24px rgba(2, 8, 23, 0.08);
-							cursor: pointer;
-							transition: transform 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
-
-							&:hover {
-								background: #1890ff;
-								color: #fff;
-								transform: scale(1.06);
-								box-shadow: 0 12px 28px rgba(24, 144, 255, 0.35);
-							}
-						}
-
-						.fj-prev,
-						.fj-next {
-							background: #f3f4f6;
-							color: #475569;
-							/* uses same button styles above */
-						}
-					}
-
-					.swiper {
-						gap: 40px;
-						padding: 20px 5px 56px;
-
-						.swiper-slide {
-							width: 320px !important;
-							height: 400px !important;
+						.pagination-container {
+							gap: 20px;
 						}
 					}
 				}
 
+
+
 				/* Card */
 						.featured-job-card {
-			position: relative;
-			background: #fff;
-			border-radius: 16px;
-			border: 1px solid #eef2f7;
-			padding: 20px;
-			display: flex;
-			flex-direction: column;
-			height: 100%;
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-			transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
-			cursor: pointer;
-			overflow: hidden;
+					position: relative;
+					background: #fff;
+					border-radius: 16px;
+					border: 1px solid #eef2f7;
+					padding: 20px;
+					display: flex;
+					flex-direction: column;
+					height: 100%;
+					min-height: 480px;
+					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+					transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
+					cursor: pointer;
+					overflow: hidden;
+
+					@media (max-width: 768px) {
+						min-height: 440px;
+						padding: 16px;
+					}
 
 					&:hover {
 						transform: translateY(-6px);
@@ -1003,51 +968,98 @@
 			}
 		}
 
-		.hiring-managers-carousel-container {
+		.hiring-managers-grid-container {
 			position: relative;
-			padding: 0 60px;
+			padding: 0 20px;
 
-			.navigation-buttons {
-				position: absolute;
-				top: 50%;
-				left: -30px;
-				right: -30px;
-				transform: translateY(-50%);
+			.pagination-container {
 				display: flex;
-				justify-content: space-between;
-				z-index: 10;
-				pointer-events: none;
+				flex-direction: column;
+				align-items: center;
+				gap: 24px;
+				margin-top: 40px;
+				padding: 20px 0;
 
-				button {
-					pointer-events: all;
-					width: 50px;
-					height: 50px;
-					border-radius: 50%;
-					background: rgba(255, 255, 255, 0.9);
-					border: 1px solid rgba(255, 255, 255, 0.2);
-					color: #667eea;
-					display: grid;
-					place-items: center;
-					box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-					cursor: pointer;
-					transition: transform 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+				.pagination-info {
+					.pagination-text {
+						color: rgba(255, 255, 255, 0.9);
+						font-size: 14px;
+						font-weight: 500;
+					}
+				}
 
-					&:hover {
-						background: #fff;
-						color: #667eea;
-						transform: scale(1.06);
-						box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+				.pagination-controls {
+					display: flex;
+					align-items: center;
+					gap: 16px;
+
+					.pagination-nav-button {
+						width: 40px;
+						height: 40px;
+						border: 1px solid rgba(255, 255, 255, 0.2);
+						border-radius: 8px;
+						transition: all 0.2s;
+
+						&:hover:not(:disabled) {
+							background: rgba(255, 255, 255, 0.1);
+							border-color: rgba(255, 255, 255, 0.4);
+							transform: scale(1.05);
+						}
+
+						&:disabled {
+							border-color: rgba(255, 255, 255, 0.1);
+							cursor: not-allowed;
+						}
+					}
+
+					// Custom pagination styling
+					.MuiPagination-root {
+						.MuiPagination-ul {
+							gap: 8px;
+						}
+
+						.MuiPaginationItem-root {
+							min-width: 36px;
+							height: 36px;
+							border-radius: 8px;
+							font-weight: 500;
+							transition: all 0.2s;
+
+							&:hover {
+								background: rgba(255, 255, 255, 0.15);
+								transform: translateY(-1px);
+							}
+
+							&.Mui-selected {
+								background: rgba(255, 255, 255, 0.25);
+								color: #fff;
+								font-weight: 600;
+								box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+							}
+						}
 					}
 				}
 			}
 
-			.hiring-managers-swiper {
-				gap: 24px;
-				padding: 0px 5px 0px;
+			// Responsive grid adjustments
+			@media (max-width: 1200px) {
+				padding: 0 16px;
+			}
 
-				.swiper-slide {
-					width: 320px !important;
-					height: 400px !important;
+			@media (max-width: 768px) {
+				padding: 0 12px;
+
+				.pagination-container {
+					gap: 20px;
+
+					.pagination-controls {
+						gap: 12px;
+
+						.pagination-nav-button {
+							width: 36px;
+							height: 36px;
+						}
+					}
 				}
 			}
 		}
@@ -1061,6 +1073,7 @@
 			display: flex;
 			flex-direction: column;
 			height: 100%;
+			min-height: 380px;
 			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 			transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, border-color 0.25s;
 			cursor: pointer;
@@ -1070,6 +1083,11 @@
 				transform: translateY(-6px);
 				box-shadow: 0 18px 48px rgba(0, 0, 0, 0.15);
 				border-color: rgba(255, 255, 255, 0.4);
+			}
+
+			@media (max-width: 768px) {
+				min-height: 350px;
+				padding: 16px;
 			}
 
 			.card-header {
@@ -1106,16 +1124,22 @@
 						display: flex;
 						flex-direction: column;
 						gap: 8px;
+						z-index: 2;
 
 						.like-button, .follow-button {
 							background: rgba(102, 126, 234, 0.1);
 							color: #667eea;
 							border-radius: 8px;
 							transition: all 0.2s;
+							min-width: 40px;
+							height: 40px;
+							box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
 							&:hover {
 								background: #667eea;
 								color: #fff;
+								transform: scale(1.05);
+								box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 							}
 
 							&.liked, &.followed {
@@ -1160,7 +1184,8 @@
 				display: grid;
 				grid-template-columns: 1fr 1fr;
 				gap: 12px;
-				margin-bottom: 20px;
+				margin-bottom: 16px;
+				flex-grow: 1;
 
 				.stat-item {
 					display: flex;
@@ -1177,6 +1202,15 @@
 						color: #667eea;
 					}
 				}
+
+				@media (max-width: 768px) {
+					gap: 8px;
+					
+					.stat-item {
+						padding: 6px 8px;
+						font-size: 11px;
+					}
+				}
 			}
 
 			.card-footer {
@@ -1184,7 +1218,8 @@
 				align-items: center;
 				justify-content: space-between;
 				margin-top: auto;
-				padding-top: 12px;
+				padding-top: 16px;
+				border-top: 1px solid rgba(102, 126, 234, 0.1);
 
 				.joined-time {
 					font-size: 12px;
@@ -1200,6 +1235,21 @@
 
 					&:hover {
 						background: #5a6fd8;
+					}
+				}
+
+				@media (max-width: 768px) {
+					flex-direction: column;
+					gap: 12px;
+					align-items: stretch;
+					text-align: center;
+
+					.joined-time {
+						font-size: 11px;
+					}
+
+					.view-profile-button {
+						width: 100%;
 					}
 				}
 			}
@@ -1299,51 +1349,98 @@
 			}
 		}
 
-		.articles-carousel-container {
+		.articles-grid-container {
 			position: relative;
-			padding: 0 60px;
+			padding: 0 20px;
 
-			.navigation-buttons {
-				position: absolute;
-				top: 50%;
-				left: -30px;
-				right: -30px;
-				transform: translateY(-50%);
+			.pagination-container {
 				display: flex;
-				justify-content: space-between;
-				z-index: 10;
-				pointer-events: none;
+				flex-direction: column;
+				align-items: center;
+				gap: 24px;
+				margin-top: 40px;
+				padding: 20px 0;
 
-				button {
-					pointer-events: all;
-					width: 50px;
-					height: 50px;
-					border-radius: 50%;
-					background: rgba(255, 255, 255, 0.9);
-					border: 1px solid rgba(255, 255, 255, 0.2);
-					color: #f5576c;
-					display: grid;
-					place-items: center;
-					box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-					cursor: pointer;
-					transition: transform 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+				.pagination-info {
+					.pagination-text {
+						color: rgba(255, 255, 255, 0.9);
+						font-size: 14px;
+						font-weight: 500;
+					}
+				}
 
-					&:hover {
-						background: #fff;
-						color: #f5576c;
-						transform: scale(1.06);
-						box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+				.pagination-controls {
+					display: flex;
+					align-items: center;
+					gap: 16px;
+
+					.pagination-nav-button {
+						width: 40px;
+						height: 40px;
+						border: 1px solid rgba(255, 255, 255, 0.2);
+						border-radius: 8px;
+						transition: all 0.2s;
+
+						&:hover:not(:disabled) {
+							background: rgba(255, 255, 255, 0.1);
+							border-color: rgba(255, 255, 255, 0.4);
+							transform: scale(1.05);
+						}
+
+						&:disabled {
+							border-color: rgba(255, 255, 255, 0.1);
+							cursor: not-allowed;
+						}
+					}
+
+					// Custom pagination styling
+					.MuiPagination-root {
+						.MuiPagination-ul {
+							gap: 8px;
+						}
+
+						.MuiPaginationItem-root {
+							min-width: 36px;
+							height: 36px;
+							border-radius: 8px;
+							font-weight: 500;
+							transition: all 0.2s;
+
+							&:hover {
+								background: rgba(255, 255, 255, 0.15);
+								transform: translateY(-1px);
+							}
+
+							&.Mui-selected {
+								background: rgba(255, 255, 255, 0.25);
+								color: #fff;
+								font-weight: 600;
+								box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+							}
+						}
 					}
 				}
 			}
 
-			.articles-swiper {
-				gap: 24px;
-				padding: 20px 5px 56px;
+			// Responsive grid adjustments
+			@media (max-width: 1200px) {
+				padding: 0 16px;
+			}
 
-				.swiper-slide {
-					width: 320px !important;
-					height: 400px !important;
+			@media (max-width: 768px) {
+				padding: 0 12px;
+
+				.pagination-container {
+					gap: 20px;
+
+					.pagination-controls {
+						gap: 12px;
+
+						.pagination-nav-button {
+							width: 36px;
+							height: 36px;
+						}
+					}
 				}
 			}
 		}
@@ -1355,6 +1452,7 @@
 			border: 1px solid rgba(255, 255, 255, 0.2);
 			overflow: hidden;
 			height: 100%;
+			min-height: 420px;
 			display: flex;
 			flex-direction: column;
 			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -1365,6 +1463,10 @@
 				transform: translateY(-6px);
 				box-shadow: 0 18px 48px rgba(0, 0, 0, 0.15);
 				border-color: rgba(255, 255, 255, 0.4);
+			}
+
+			@media (max-width: 768px) {
+				min-height: 380px;
 			}
 
 			.article-image-container {
@@ -1423,12 +1525,26 @@
 					color: #1a2a4f;
 					margin-bottom: 12px;
 					line-height: 1.4;
+					font-size: 16px;
 				}
 
 				.article-excerpt {
 					color: #5a6a85;
 					line-height: 1.6;
 					margin-bottom: 16px;
+					flex-grow: 1;
+				}
+
+				@media (max-width: 768px) {
+					padding: 16px;
+
+					.article-title {
+						font-size: 15px;
+					}
+
+					.article-excerpt {
+						font-size: 14px;
+					}
 				}
 
 				.article-meta {
@@ -1473,6 +1589,8 @@
 					align-items: center;
 					justify-content: space-between;
 					margin-top: auto;
+					padding-top: 16px;
+					border-top: 1px solid rgba(240, 147, 251, 0.1);
 
 					.posted-time {
 						font-size: 12px;
@@ -1488,6 +1606,21 @@
 
 						&:hover {
 							background: linear-gradient(135deg, #e085e8 0%, #e04a5f 100%);
+						}
+					}
+
+					@media (max-width: 768px) {
+						flex-direction: column;
+						gap: 12px;
+						align-items: stretch;
+						text-align: center;
+
+						.posted-time {
+							font-size: 11px;
+						}
+
+						.read-more-button {
+							width: 100%;
 						}
 					}
 				}
