@@ -88,7 +88,7 @@ const JobList: NextPage = ({ initialInput, ...props }: any) => {
 
 			await sweetTopSmallSuccessAlert('success', 800);
 		} catch (err: any) {
-			console.log('ERROR, LikeTargetProperty', err.message);
+			console.log('ERROR, LikeTargetJob', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};

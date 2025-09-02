@@ -88,7 +88,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/security.svg" alt="" />
 							</div>
 							<div className={'text-box'}>
-								<span>Property Management</span>
+								<span>Hiring Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
@@ -97,7 +97,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/keywording.svg" alt="" />
 							</div>
 							<div className={'text_-box'}>
-								<span>Property Management</span>
+								<span>Hiring Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
@@ -106,7 +106,7 @@ const About: NextPage = () => {
 								<img src="/img/icons/investment.svg" alt="" />
 							</div>
 							<div className={'text-box'}>
-								<span>Property Management</span>
+								<span>Job Management</span>
 								<p>Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.</p>
 							</div>
 						</Stack>
