@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination, Stack, Typography } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { PropertyCard } from './PropertyCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { T } from '../../types/common';
 import { userVar } from '../../../apollo/store';
@@ -16,7 +14,7 @@ import { JobStatus } from '../../enums/job.enum';
 import { UPDATE_JOB } from '../../../apollo/user/mutation';
 
 const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
+
 	const [searchFilter, setSearchFilter] = useState<AgentJobsInquiry>(initialInput || {
 		page: 1,
 		limit: 10,
@@ -94,9 +92,6 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 		router.back();
 	}
 
-	if (device === 'mobile') {
-		return <div>JobBoardAI PROPERTIES MOBILE</div>;
-	} else {
 		return (
 			<div id="my-property-page" style={{ width: '100%', padding: '20px' }}>
 				<Stack className="main-title-box" style={{ marginBottom: '30px' }}>
@@ -438,7 +433,6 @@ const MyProperties: NextPage = ({ initialInput, ...props }: any) => {
 			</div>
 		);
 	}
-};
 
 MyProperties.defaultProps = {
 	initialInput: {
