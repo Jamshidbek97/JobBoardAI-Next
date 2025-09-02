@@ -17,7 +17,7 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 			memberImage
 			memberAddress
 			memberDesc
-			memberProperties
+			memberPostedJobs
 			memberRank
 			memberArticles
 			memberPoints
@@ -34,61 +34,53 @@ export const UPDATE_MEMBER_BY_ADMIN = gql`
 `;
 
 /**************************
- *        PROPERTY        *
+ *           JOB          *
  *************************/
 
-export const UPDATE_PROPERTY_BY_ADMIN = gql`
-	mutation UpdatePropertyByAdmin($input: PropertyUpdate!) {
-		updatePropertyByAdmin(input: $input) {
+export const UPDATE_JOB_BY_ADMIN = gql`
+	mutation UpdateJobByAdmin($input: JobUpdate!) {
+		updateJobByAdmin(input: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			jobType
+			jobStatus
+			jobLocation
+			jobAddress
+			positionTitle
+			companyName
+			jobSalary
+			jobDescription
+			jobRequirements
+			jobViews
+			jobLikes
+			companyLogo
 			memberId
-			soldAt
+			closedAt
 			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
 		}
 	}
 `;
 
-export const REMOVE_PROPERTY_BY_ADMIN = gql`
-	mutation RemovePropertyByAdmin($input: String!) {
-		removePropertyByAdmin(propertyId: $input) {
+export const REMOVE_JOB_BY_ADMIN = gql`
+	mutation RemoveJobByAdmin($input: String!) {
+		removeJobByAdmin(jobId: $input) {
 			_id
-			propertyType
-			propertyStatus
-			propertyLocation
-			propertyAddress
-			propertyTitle
-			propertyPrice
-			propertySquare
-			propertyBeds
-			propertyRooms
-			propertyViews
-			propertyLikes
-			propertyImages
-			propertyDesc
-			propertyBarter
-			propertyRent
+			jobType
+			jobStatus
+			jobLocation
+			jobAddress
+			positionTitle
+			companyName
+			jobSalary
+			jobDescription
+			jobRequirements
+			jobViews
+			jobLikes
+			companyLogo
 			memberId
-			soldAt
+			closedAt
 			deletedAt
-			constructedAt
 			createdAt
 			updatedAt
 		}

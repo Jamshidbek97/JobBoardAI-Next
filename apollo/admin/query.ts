@@ -20,7 +20,7 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 				memberDesc
 				memberWarnings
 				memberBlocks
-				memberProperties
+				memberPostedJobs
 				memberRank
 				memberArticles
 				memberPoints
@@ -42,61 +42,38 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
  *        PROPERTY        *
  *************************/
 
-export const GET_ALL_PROPERTIES_BY_ADMIN = gql`
-	query GetAllPropertiesByAdmin($input: AllPropertiesInquiry!) {
-		getAllPropertiesByAdmin(input: $input) {
-			list {
-				_id
-				propertyType
-				propertyStatus
-				propertyLocation
-				propertyAddress
-				propertyTitle
-				propertyPrice
-				propertySquare
-				propertyBeds
-				propertyRooms
-				propertyViews
-				propertyLikes
-				propertyImages
-				propertyDesc
-				propertyBarter
-				propertyRent
-				memberId
-				soldAt
-				deletedAt
-				constructedAt
-				createdAt
-				updatedAt
-				memberData {
-					_id
-					memberType
-					memberStatus
-					memberAuthType
-					memberPhone
-					memberNick
-					memberFullName
-					memberImage
-					memberAddress
-					memberDesc
-					memberWarnings
-					memberBlocks
-					memberProperties
-					memberRank
-					memberPoints
-					memberLikes
-					memberViews
-					deletedAt
-					createdAt
-					updatedAt
-					accessToken
-				}
-			}
-			metaCounter {
-				total
-			}
-		}
-	}
+export const GET_ALL_JOBS_BY_ADMIN = gql`
+	query GetAllJobsByAdmin($input: AllJobsInquiry!) {
+    getAllJobsByAdmin(input: $input) {
+        metaCounter {
+            total
+        }
+        list {
+            _id
+            jobType
+            jobStatus
+            jobLocation
+            positionTitle
+            jobSalary
+            skillsRequired
+            experienceYears
+            educationLevel
+            jobViews
+            jobLikes
+            jobComments
+            jobRank
+            jobImages
+            companyLogo
+            jobDesc
+            memberId
+            closedAt
+            deletedAt
+            createdAt
+            updatedAt
+        }
+    }
+}
+
 `;
 
 /**************************
@@ -131,7 +108,7 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberPostedJobs
 					memberRank
 					memberPoints
 					memberLikes
@@ -178,7 +155,7 @@ export const GET_COMMENTS = gql`
 					memberDesc
 					memberWarnings
 					memberBlocks
-					memberProperties
+					memberPostedJobs
 					memberRank
 					memberPoints
 					memberLikes
