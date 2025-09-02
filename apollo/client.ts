@@ -21,11 +21,33 @@ function getHeaders() {
 const tokenRefreshLink = new TokenRefreshLink({
 	accessTokenField: 'accessToken',
 	isTokenValidOrUndefined: () => {
-		return true;
-	}, // @ts-ignore
-	fetchAccessToken: () => {
-		// execute refresh token
-		return null;
+		const token = getJwtToken();
+		return !token || token.length > 0;
+	}, 
+	fetchAccessToken: async () => {
+		try {
+			// Implement your token refresh logic here
+			// This should make a request to your refresh endpoint
+			const response = await fetch('/api/auth/refresh', {
+				method: 'POST',
+				credentials: 'include',
+			});
+			
+			if (response.ok) {
+				const data = await response.json();
+				return data.accessToken;
+			}
+			return null;
+		} catch (error) {
+			console.error('Token refresh failed:', error);
+			return null;
+		}
+	},
+	handleFetch: (accessToken: string) => {
+		// Store the new access token
+		if (accessToken) {
+			localStorage.setItem('accessToken', accessToken);
+		}
 	},
 });
 

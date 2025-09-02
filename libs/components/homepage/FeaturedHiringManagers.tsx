@@ -95,7 +95,7 @@ const FeaturedHiringManagers = ({
 
 	// Check if member is followed by current user
 	const isMemberFollowed = (member: Member | undefined) => {
-		return Array.isArray(member?.meFollowed) && member.meFollowed.length > 0 && member.meFollowed[0]?.myFollowing === true;
+		return member?.meFollowed && Array.isArray(member.meFollowed) && member.meFollowed.length > 0 && member.meFollowed[0]?.myFollowing === true;
 	};
 
 	// Helper function to get time ago
