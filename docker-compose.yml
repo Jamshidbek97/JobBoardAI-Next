@@ -14,4 +14,8 @@ services:
     networks:
       - client-network
 
-    command:
+    command: bash -c "yarn install && yarn build && yarn run start"
+
+networks:
+  client-network:
+    driver: bridge
