@@ -1046,6 +1046,23 @@ export const GET_NOTIFICATIONS = gql`
 					memberFullName
 					memberImage
 				}
+				recipientData {
+					_id
+					memberNick
+					memberFullName
+					memberImage
+				}
+				jobData {
+					_id
+					jobTitle
+					companyName
+					companyLogo
+				}
+				articleData {
+					_id
+					articleTitle
+					articleImage
+				}
 			}
 			metaCounter {
 				total

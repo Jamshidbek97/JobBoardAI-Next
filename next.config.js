@@ -7,6 +7,9 @@ const nextConfig = {
 		REACT_APP_API_URL: process.env.REACT_APP_API_URL,
 		REACT_APP_API_GRAPHQL_URL: process.env.REACT_APP_API_GRAPHQL_URL,
 		REACT_APP_API_WS: process.env.REACT_APP_API_WS,
+		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+		NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+		NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
 	},
 	i18n,
 	// async rewrites() {

@@ -37,7 +37,7 @@ const NotificationBell: React.FC = () => {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
 
-	const { data: notificationsData, loading, refetch } = useQuery(GET_NOTIFICATIONS, {
+	const { data: notificationsData, loading, refetch, error: notificationsError } = useQuery(GET_NOTIFICATIONS, {
 		variables: {
 			input: {
 				page: 1,
@@ -49,11 +49,23 @@ const NotificationBell: React.FC = () => {
 		},
 		skip: !user?._id,
 		pollInterval: 30000, // Poll every 30 seconds
+		onError: (error) => {
+			console.error('NotificationBell - GET_NOTIFICATIONS error:', error);
+		},
+		onCompleted: (data) => {
+			console.log('NotificationBell - GET_NOTIFICATIONS completed:', data);
+		}
 	});
 
-	const { data: unreadCountData, refetch: refetchCount } = useQuery(GET_UNREAD_NOTIFICATIONS_COUNT, {
+	const { data: unreadCountData, refetch: refetchCount, error: unreadCountError } = useQuery(GET_UNREAD_NOTIFICATIONS_COUNT, {
 		skip: !user?._id,
 		pollInterval: 30000,
+		onError: (error) => {
+			console.error('NotificationBell - GET_UNREAD_NOTIFICATIONS_COUNT error:', error);
+		},
+		onCompleted: (data) => {
+			console.log('NotificationBell - GET_UNREAD_NOTIFICATIONS_COUNT completed:', data);
+		}
 	});
 
 	const [markAsRead] = useMutation(MARK_NOTIFICATIONS_AS_READ);
@@ -148,6 +160,15 @@ const NotificationBell: React.FC = () => {
 
 
 
+	// Debug logging
+	useEffect(() => {
+		console.log('NotificationBell - User:', user);
+		console.log('NotificationBell - Notifications data:', notificationsData);
+		console.log('NotificationBell - Unread count data:', unreadCountData);
+		console.log('NotificationBell - Notifications error:', notificationsError);
+		console.log('NotificationBell - Unread count error:', unreadCountError);
+	}, [user, notificationsData, unreadCountData, notificationsError, unreadCountError]);
+
 	if (!user) return null;
 
 	return (
@@ -205,6 +226,15 @@ const NotificationBell: React.FC = () => {
 				</Box>
 
 				<Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+					{/* Error Display */}
+					{(notificationsError || unreadCountError) && (
+						<Box sx={{ p: 2, bgcolor: 'error.light', color: 'error.contrastText', mb: 2 }}>
+							<Typography variant="body2">
+								Error loading notifications. Check console for details.
+							</Typography>
+						</Box>
+					)}
+					
 					{loading ? (
 						<Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
 							<CircularProgress size={24} />
