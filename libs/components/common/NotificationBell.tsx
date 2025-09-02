@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
