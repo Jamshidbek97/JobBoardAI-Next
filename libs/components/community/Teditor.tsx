@@ -3,7 +3,7 @@ import { Box, Button, FormControl, MenuItem, Stack, Typography, Select, TextFiel
 import { BoardArticleCategory } from '../../enums/board-article.enum';
 import { Editor } from '@toast-ui/react-editor';
 import { getJwtToken } from '../../auth';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { T } from '../../types/common';
@@ -69,9 +69,8 @@ const TuiEditor = () => {
 
 			// Use the correct API URL with fallbacks
 			const apiUrl = process.env.NEXT_PUBLIC_API_GRAPHQL_URL || 
-						  process.env.REACT_APP_API_GRAPHQL_URL || 
-						  `${REACT_APP_API_URL}/graphql` ||
-						  'http://localhost:4000/graphql'; // Fallback for development
+						  `${NEXT_PUBLIC_API_URL}/graphql` ||
+						  'http://localhost:4001/graphql'; // Fallback for development
 			
 			console.log('Uploading to:', apiUrl);
 			console.log('Token available:', !!token);
@@ -102,7 +101,7 @@ const TuiEditor = () => {
 			// Return the full URL
 			const fullImageUrl = responseImage.startsWith('http') 
 				? responseImage 
-				: `${REACT_APP_API_URL}/${responseImage}`;
+				: `${NEXT_PUBLIC_API_URL}/${responseImage}`;
 			
 			console.log('Full image URL:', fullImageUrl);
 			return fullImageUrl;

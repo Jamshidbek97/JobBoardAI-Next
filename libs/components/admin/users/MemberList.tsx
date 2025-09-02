@@ -17,7 +17,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
 import { Member } from '../../../types/member/member';
-import { REACT_APP_API_URL } from '../../../config';
+import { NEXT_PUBLIC_API_URL } from '../../../config';
 import { MemberStatus, MemberType } from '../../../enums/member.enum';
 
 interface Data {
@@ -161,7 +161,7 @@ export const MemberPanelList = (props: MemberPanelListType) => {
 								// Enhanced default image handling with fallbacks
 								const getMemberImage = (member: Member) => {
 									if (member.memberImage) {
-										return `${REACT_APP_API_URL}/${member.memberImage}`;
+										return `${NEXT_PUBLIC_API_URL}/${member.memberImage}`;
 									}
 									
 									// Different default images based on member type

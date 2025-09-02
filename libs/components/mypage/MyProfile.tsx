@@ -72,7 +72,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 
 			// Use the correct API URL with fallbacks
 			const apiUrl = process.env.NEXT_PUBLIC_API_GRAPHQL_URL || 
-						  process.env.REACT_APP_API_GRAPHQL_URL || 
+						  		process.env.NEXT_PUBLIC_GRAPHQL_URL || 
 						  `${REACT_APP_API_URL}/graphql` ||
 						  'http://localhost:4000/graphql';
 

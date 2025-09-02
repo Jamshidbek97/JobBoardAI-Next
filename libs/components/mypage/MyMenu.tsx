@@ -29,7 +29,7 @@ import {
 } from '@mui/icons-material';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { logOut } from '../../auth';
 import { sweetConfirmAlert } from '../../sweetAlert';
 
@@ -111,7 +111,7 @@ const MyMenu: React.FC = () => {
 			<Box sx={{ p: 3, borderBottom: '1px solid #f0f0f0' }}>
 				<Stack direction="row" alignItems="center" spacing={2}>
 					<Avatar 
-						src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/defaultMember.jpg'}
+						src={user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user?.memberImage}` : '/img/defaultMember.jpg'}
 						sx={{ 
 							width: 64, 
 							height: 64,

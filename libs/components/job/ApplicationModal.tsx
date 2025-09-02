@@ -28,7 +28,7 @@ import {
 } from '@mui/icons-material';
 import { useMutation } from '@apollo/client';
 import { CREATE_APPLICATION, UPLOAD_RESUME } from '../../../apollo/user/mutation';
-import { REACT_APP_API_URL } from '../../../libs/config';
+import { NEXT_PUBLIC_API_URL } from '../../../libs/config';
 import { useCreateNotification, createJobApplicationNotification } from '../../../libs/utils/notificationService';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
@@ -322,7 +322,7 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ open, onClose, job 
 					<Stack direction="row" spacing={2} alignItems="center" mb={2}>
 						{job.companyLogo ? (
 							<Image
-								src={`${REACT_APP_API_URL}/${job.companyLogo}`}
+								src={`${NEXT_PUBLIC_API_URL}/${job.companyLogo}`}
 								alt={`${job.companyName} logo`}
 								width={60}
 								height={60}

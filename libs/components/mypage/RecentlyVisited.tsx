@@ -133,7 +133,7 @@ const RecentlyVisited: NextPage = () => {
 										gap: 2
 									}}>
 										<Avatar 
-											src={job.companyLogo ? `${process.env.REACT_APP_API_URL}/${job.companyLogo}` : '/img/defaultCompany.jpg'}
+											src={job.companyLogo ? `${process.env.NEXT_PUBLIC_API_URL}/${job.companyLogo}` : '/img/defaultCompany.jpg'}
 											sx={{ 
 												width: 60, 
 												height: 60,

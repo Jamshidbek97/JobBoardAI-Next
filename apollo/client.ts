@@ -103,12 +103,12 @@ function createIsomorphicLink() {
 
 		// @ts-ignore
 		const link = new createUploadLink({
-			uri: process.env.REACT_APP_API_GRAPHQL_URL || process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:3001/graphql',
+			uri: process.env.NEXT_PUBLIC_GRAPHQL_URL || 'http://localhost:4001/graphql',
 		});
 
 		/* WEBSOCKET SUBSCRIPTION LINK */
 		// Only create WebSocket link if we're in browser and have WS URL
-		const wsUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.REACT_APP_API_WS;
+		const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
 		let wsLink = null;
 		
 		if (wsUrl && typeof window !== 'undefined') {

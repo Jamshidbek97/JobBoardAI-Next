@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
-import { REACT_APP_API_URL } from '../config';
+import { NEXT_PUBLIC_API_URL } from '../config';
 import NotificationBell from './common/NotificationBell';
 
 const Top = () => {
@@ -115,7 +115,7 @@ const Top = () => {
 					{user?._id ? (
 						<div className="user-profile" onClick={handleUserMenuOpen}>
 							<Avatar
-								src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/defaultMember.jpg'}
+								src={user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/defaultMember.jpg'}
 								className="avatar"
 							/>
 							<span className="user-name">{user.memberNick}</span>

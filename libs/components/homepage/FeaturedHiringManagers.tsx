@@ -17,7 +17,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_AGENTS } from '../../../apollo/user/query';
 import { T } from '../../types/common';
 import Image from 'next/image';
-import { REACT_APP_API_URL } from '../../config';
+import { NEXT_PUBLIC_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 
 interface FeaturedHiringManagersProps {
@@ -134,7 +134,7 @@ const FeaturedHiringManagers = ({
 								}
 								
 								// Otherwise, prepend the API URL
-								return `${REACT_APP_API_URL}/${member.memberImage}`;
+								return `${NEXT_PUBLIC_API_URL}/${member.memberImage}`;
 							})()}
 							className="member-avatar"
 							sx={{ width: 80, height: 80 }}

@@ -32,7 +32,7 @@ import {
 } from '@mui/icons-material';
 import { GET_JOB, GET_SIMILAR_JOBS } from '../../../apollo/user/query';
 import { LIKE_TARGET_JOB } from '../../../apollo/user/mutation';
-import { REACT_APP_API_URL } from '../../../libs/config';
+import { NEXT_PUBLIC_API_URL } from '../../../libs/config';
 import withLayoutBasic from '../../../libs/components/layout/LayoutBasic';
 import { T } from '../../../libs/types/common';
 import Image from 'next/image';
@@ -193,7 +193,7 @@ const JobDetailPage: NextPage = () => {
 		);
 	}
 
-	const logo = job.companyLogo ? `${REACT_APP_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
+	const logo = job.companyLogo ? `${NEXT_PUBLIC_API_URL}/${job.companyLogo}` : '/img/brands/g.png';
 
 	return (
 		<>
@@ -391,7 +391,7 @@ const JobDetailPage: NextPage = () => {
 		<div className={styles.similarGrid}>
 			{similarJobs.map((s: Job) => {
 				const sLogo = s.companyLogo
-					? `${REACT_APP_API_URL}/${s.companyLogo}`
+					? `${NEXT_PUBLIC_API_URL}/${s.companyLogo}`
 					: '/img/brands/g.png';
 				return (
 					<Link key={s._id} href={`/jobs/${s._id}`} className={styles.similarCard}>
@@ -440,7 +440,7 @@ const JobDetailPage: NextPage = () => {
 								<div className={styles.memberAvatar}>
 									{job.memberData.memberAvatar ? (
 										<Image
-											src={`${REACT_APP_API_URL}/${job.memberData.memberAvatar}`}
+											src={`${NEXT_PUBLIC_API_URL}/${job.memberData.memberAvatar}`}
 											alt="Member avatar"
 											width={60}
 											height={60}
