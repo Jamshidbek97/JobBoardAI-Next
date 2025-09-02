@@ -33,23 +33,32 @@ class LoggingWebSocket {
 	private socket: WebSocket;
 
 	constructor(url: string) {
-		this.socket = new WebSocket(`${url}?token=${getJwtToken()}`);
+		// Don't add token to URL for security
+		this.socket = new WebSocket(url);
 		socketVar(this.socket);
 
 		this.socket.onopen = () => {
-			console.log('websocket Connection');
+			console.log('WebSocket connected successfully');
 		};
 		this.socket.onmessage = (msg) => {
-			console.log('WebSocket message: ', msg.data);
+			console.log('WebSocket message received:', msg.data);
 		};
 
 		this.socket.onerror = (error) => {
-			console.log('WebSocket message: ', error);
+			console.error('WebSocket error:', error);
+		};
+
+		this.socket.onclose = (event) => {
+			console.log('WebSocket closed:', event.code, event.reason);
 		};
 	}
 
 	send(data: string | ArrayBuffer | SharedArrayBuffer | Blob | ArrayBufferView) {
-		this.socket.send(data);
+		if (this.socket.readyState === WebSocket.OPEN) {
+			this.socket.send(data);
+		} else {
+			console.warn('WebSocket not ready, cannot send data');
+		}
 	}
 
 	close() {
@@ -76,17 +85,33 @@ function createIsomorphicLink() {
 		});
 
 		/* WEBSOCKET SUBSCRIPTION LINK */
-		const wsLink = new WebSocketLink({
-			uri: process.env.REACT_APP_API_URL ?? 'ws://localhost:3001',
-			options: {
-				reconnect: false,
-				timeout: 30000,
-				connectionParams: () => {
-					return { headers: getHeaders() };
-				},
-			},
-			webSocketImpl: LoggingWebSocket,
-		});
+		// Only create WebSocket link if we're in browser and have WS URL
+		const wsUrl = process.env.NEXT_PUBLIC_WS_URL || process.env.REACT_APP_API_WS;
+		let wsLink = null;
+		
+		if (wsUrl && typeof window !== 'undefined') {
+			try {
+				wsLink = new WebSocketLink({
+					uri: wsUrl,
+					options: {
+						reconnect: true,
+						reconnectionAttempts: 5,
+						timeout: 30000,
+						connectionParams: () => {
+							return { 
+								headers: getHeaders(),
+								// Don't expose token in URL, send it in connection params
+								authToken: getJwtToken()
+							};
+						},
+					},
+					webSocketImpl: LoggingWebSocket,
+				});
+			} catch (error) {
+				console.warn('WebSocket connection failed:', error);
+				wsLink = null;
+			}
+		}
 
 		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
 			if (graphQLErrors) {
@@ -101,15 +126,27 @@ function createIsomorphicLink() {
 			}
 		});
 
-		const splitLink = split(
-			({ query }) => {
-				const definition = getMainDefinition(query);
-				return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-			},
-			wsLink,
-			authLink.concat(link),
-		);
+		// Create split link only if WebSocket is available
+		let splitLink;
+		if (wsLink) {
+			splitLink = split(
+				({ query }) => {
+					const definition = getMainDefinition(query);
+					return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+				},
+				wsLink,
+				authLink.concat(link),
+			);
+		} else {
+			// If no WebSocket, just use HTTP link
+			splitLink = authLink.concat(link);
+		}
 
+		// If WebSocket fails, fall back to HTTP-only
+		if (!wsLink) {
+			console.warn('WebSocket not available, using HTTP-only mode');
+		}
+		
 		return from([errorLink, tokenRefreshLink, splitLink]);
 	}
 }
