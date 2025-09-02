@@ -1,34 +1,21 @@
-version: '3.8'
-
 services:
   job-board-ai-next:
     container_name: job-board-ai-next
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile.prod
-    ports:
-      - "3000:3000"
+    restart: always
+    image: node:20.11.0
+    ports: 
+      - 4000:3000
     environment:
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+
     volumes:
-      - ./logs:/usr/src/jobBoardAi-next/logs
-      - ./uploads:/usr/src/jobBoardAi-next/public/uploads
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 512M
+      - ./:/usr/src/jobBoardAi-next
+    working_dir: /usr/src/jobBoardAi-next
+    networks:
+      - client-network
 
+    command: bash -c "yarn install && yarn build && yarn run start"
 
-
+networks:
+  client-network:
+    driver: bridge
