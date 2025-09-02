@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Skeleton, Typography, Chip, Avatar } from '@mui/material';
+import { Box, Button, Skeleton, Typography, Chip, Avatar, Grid } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import EastIcon from '@mui/icons-material/East';
-import WestIcon from '@mui/icons-material/West';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -32,7 +28,7 @@ interface FeaturedJobsProps {
 	initialInput?: AllJobsInquiry;
 }
 
-const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', direction: Direction.DESC, search: {} } }: FeaturedJobsProps) => {
+const FeaturedJobs = ({ initialInput = { page: 1, limit: 4, sort: 'createdAt', direction: Direction.DESC, search: {} } }: FeaturedJobsProps) => {
 	const { t } = useTranslation('common');
 	const [featuredJobs, setFeaturedJobs] = useState<Job[]>([]);
 	const [applicationModalOpen, setApplicationModalOpen] = useState(false);
@@ -50,7 +46,9 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => setFeaturedJobs(data?.getJobs?.list),
+		onCompleted: (data: T) => {
+			setFeaturedJobs(data?.getJobs?.list || []);
+		},
 	});
 
 	const toggleLikeJob = async (e: React.MouseEvent, jobId: string) => {
@@ -143,10 +141,10 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 				onClick={() => handleCardClick(job._id)}
 				style={{ cursor: 'pointer' }}
 			>
-									<div className="featured-badge">
-						<StarIcon fontSize="small" />
-						<span>{isClient ? t('Featured') : ''}</span>
-					</div>
+				<div className="featured-badge">
+					<StarIcon fontSize="small" />
+					<span>{isClient ? t('Latest') : ''}</span>
+				</div>
 
 				<div className="card-header">
 					<div className="company-logo">
@@ -186,7 +184,7 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 					<div className="job-title">{job.positionTitle}</div>
 
 					<div className="company-info">
-						<div className="company-name">{job.companyName || job.memberData?.memberNick || (isClient ? t('Company') : '')}</div>
+						<div className="company-name">{job.companyName || job.memberData?.memberNick || (isClient ? t('Company') : '')}</div> 
 						{job.memberData?.memberFullName && (
 							<div className="poster-name">
 								<PersonOutlineIcon fontSize="small" />
@@ -296,46 +294,29 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 				<div className="featured-jobs-container">
 					<Box className="section-header">
 						<Typography variant="h3" className="section-title">
-							{isClient ? t('Featured Job Opportunities') : ''}
+							{isClient ? t('Latest Job Opportunities') : ''}
 						</Typography>
-						<Typography className="section-subtitle">{isClient ? t('Discover top positions from leading companies') : ''}</Typography>
+						<Typography className="section-subtitle">{isClient ? t('Discover the most recent positions from leading companies') : ''}</Typography>
 					</Box>
 
-					<Box className="jobs-carousel-container">
-						<div className="navigation-buttons">
-							<button className="fj-prev" aria-label="Previous jobs">
-								<WestIcon />
-							</button>
-							<button className="fj-next" aria-label="Next jobs">
-								<EastIcon />
-							</button>
-						</div>
-
-						<Swiper
-							modules={[Navigation, Pagination, Autoplay]}
-							spaceBetween={24}
-							slidesPerView={1}
-							navigation={{ prevEl: '.fj-prev', nextEl: '.fj-next' }}
-							pagination={{ clickable: true, dynamicBullets: true }}
-							autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-							loop={true}
-							breakpoints={{
-								320: { slidesPerView: 1, spaceBetween: 16 },
-								480: { slidesPerView: 1, spaceBetween: 20 },
-								640: { slidesPerView: 2, spaceBetween: 24 },
-								768: { slidesPerView: 2, spaceBetween: 28 },
-								960: { slidesPerView: 3, spaceBetween: 32 },
-								1200: { slidesPerView: 3, spaceBetween: 36 },
-								1400: { slidesPerView: 4, spaceBetween: 40 },
-							}}
-							className="featured-jobs-swiper"
-						>
-							{getJobsLoading
-								? Array.from({ length: 6 }).map((_, i) => <SwiperSlide key={i}>{renderSkeleton()}</SwiperSlide>)
-								: featuredJobs.map((job: any, index: any) => (
-										<SwiperSlide key={job._id || index}>{renderJobCard(job, index)}</SwiperSlide>
-								  ))}
-						</Swiper>
+					<Box className="jobs-grid-container">
+						{getJobsLoading ? (
+							<Grid container spacing={3}>
+								{Array.from({ length: 4 }).map((_, index) => (
+									<Grid item xs={12} sm={6} md={3} key={index}>
+										{renderSkeleton()}
+									</Grid>
+								))}
+							</Grid>
+						) : (
+							<Grid container spacing={3}>
+								{featuredJobs.map((job: any, index: any) => (
+									<Grid item xs={12} sm={6} md={3} key={job._id || index}>
+										{renderJobCard(job, index)}
+									</Grid>
+								))}
+							</Grid>
+						)}
 					</Box>
 
 					<Box className="view-all-container">
@@ -343,7 +324,6 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 8, sort: 'jobRank', dir
 							variant="outlined" 
 							className="view-all-button"
 							onClick={() => router.push('/jobs')}
-							endIcon={<EastIcon className="arrow-icon" />}
 						>
 							{isClient ? t('View All Jobs') : ''}
 						</Button>
