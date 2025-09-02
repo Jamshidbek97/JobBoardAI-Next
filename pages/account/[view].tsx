@@ -95,7 +95,7 @@ const AuthView: NextPage = () => {
 					<Paper elevation={0} className="auth__card">
 						{/* Logo */}
 						<Box className="auth__logo">
-							<img src="/img/logo/logoText.svg" alt="JobBoardAI" />
+							<img src="/img/logo/logoText.png" alt="JobBoardAI" />
 							<span>JobBoardAI</span>
 						</Box>
 

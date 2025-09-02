@@ -391,7 +391,7 @@ const CommunityDetail: NextPage = ({ initialInput, ...props }: T) => {
 							}}>
 								<Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
 									<Avatar 
-										src="/img/logo/logoText.svg"
+										src="/img/logo/logoText.png"
 										sx={{ width: 50, height: 50 }}
 									/>
 									<Box>
