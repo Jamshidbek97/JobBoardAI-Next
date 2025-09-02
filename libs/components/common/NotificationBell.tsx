@@ -106,15 +106,19 @@ const NotificationBell: React.FC = () => {
 	const handleNotificationClick = async (notification: Notification) => {
 		if (!notification.isRead) {
 			try {
-				await markAsRead({
+				const result = await markAsRead({
 					variables: {
 						input: {
 							notificationIds: [notification._id],
 						},
 					},
 				});
-				refetch();
-				refetchCount();
+				
+				if (result.data?.markNotificationsAsRead) {
+					console.log('Notification marked as read successfully');
+					refetch();
+					refetchCount();
+				}
 			} catch (error) {
 				console.error('Error marking notification as read:', error);
 			}
@@ -142,9 +146,13 @@ const NotificationBell: React.FC = () => {
 
 	const handleMarkAllAsRead = async () => {
 		try {
-			await markAllAsRead();
-			refetch();
-			refetchCount();
+			const result = await markAllAsRead();
+			
+			if (result.data?.markAllNotificationsAsRead) {
+				console.log('All notifications marked as read successfully');
+				refetch();
+				refetchCount();
+			}
 		} catch (error) {
 			console.error('Error marking all notifications as read:', error);
 		}
@@ -154,16 +162,20 @@ const NotificationBell: React.FC = () => {
 		if (selectedNotifications.length === 0) return;
 
 		try {
-			await deleteNotifications({
+			const result = await deleteNotifications({
 				variables: {
 					input: {
 						notificationIds: selectedNotifications,
 					},
 				},
 			});
-			setSelectedNotifications([]);
-			refetch();
-			refetchCount();
+			
+			if (result.data?.deleteNotifications) {
+				console.log('Notifications deleted successfully');
+				setSelectedNotifications([]);
+				refetch();
+				refetchCount();
+			}
 		} catch (error) {
 			console.error('Error deleting notifications:', error);
 		}

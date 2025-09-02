@@ -509,27 +509,18 @@ export const UPDATE_NOTIFICATION = gql`
 
 export const MARK_NOTIFICATIONS_AS_READ = gql`
 	mutation MarkNotificationsAsRead($input: MarkNotificationsAsReadInput!) {
-		markNotificationsAsRead(input: $input) {
-			success
-			updatedCount
-		}
+		markNotificationsAsRead(input: $input)
 	}
 `;
 
 export const DELETE_NOTIFICATIONS = gql`
 	mutation DeleteNotifications($input: DeleteNotificationsInput!) {
-		deleteNotifications(input: $input) {
-			success
-			deletedCount
-		}
+		deleteNotifications(input: $input)
 	}
 `;
 
 export const MARK_ALL_NOTIFICATIONS_AS_READ = gql`
 	mutation MarkAllNotificationsAsRead {
-		markAllNotificationsAsRead {
-			success
-			updatedCount
-		}
+		markAllNotificationsAsRead
 	}
 `;
