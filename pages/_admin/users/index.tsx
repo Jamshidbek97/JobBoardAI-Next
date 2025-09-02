@@ -162,114 +162,239 @@ const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
 	};
 
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Member List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'BLOCK')}
-									value="BLOCK"
-									className={value === 'BLOCK' ? 'li on' : 'li'}
-								>
-									Blocked
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Deleted
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<OutlinedInput
-									value={searchText}
-									onChange={(e: any) => textHandler(e.target.value)}
-									sx={{ width: '100%' }}
-									className={'search'}
-									placeholder="Search user name"
-									onKeyDown={(event) => {
-										if (event.key == 'Enter') searchTextHandler();
-									}}
-									endAdornment={
-										<>
-											{searchText && (
-												<CancelRoundedIcon
-													style={{ cursor: 'pointer' }}
-													onClick={async () => {
-														setSearchText('');
-														setMembersInquiry({
-															...membersInquiry,
-															search: {
-																...membersInquiry.search,
-																text: '',
-															},
-														});
-														await getMembersRefetch({ input: membersInquiry });
-													}}
-												/>
-											)}
-											<InputAdornment position="end" onClick={() => searchTextHandler()}>
-												<img src="/img/icons/search_icon.png" alt={'searchIcon'} />
-											</InputAdornment>
-										</>
-									}
-								/>
-								<Select sx={{ width: '160px', ml: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										All
-									</MenuItem>
-									<MenuItem value={'USER'} onClick={() => searchTypeHandler('USER')}>
-										User
-									</MenuItem>
-									<MenuItem value={'AGENT'} onClick={() => searchTypeHandler('AGENT')}>
-										Agent
-									</MenuItem>
-									<MenuItem value={'ADMIN'} onClick={() => searchTypeHandler('ADMIN')}>
-										Admin
-									</MenuItem>
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<MemberPanelList
-							members={members}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateMemberHandler={updateMemberHandler}
-						/>
+		<Box component={'div'} className={'content'} sx={{ p: 3, backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+			{/* Header Section */}
+			<Box sx={{ mb: 4 }}>
+				<Typography 
+					variant={'h3'} 
+					sx={{ 
+						fontWeight: 700, 
+						color: '#1a237e',
+						mb: 1,
+						display: 'flex',
+						alignItems: 'center',
+						gap: 2
+					}}
+				>
+					👥 User Management Dashboard
+				</Typography>
+				<Typography variant={'body1'} sx={{ color: '#666', fontSize: '1.1rem' }}>
+					Monitor and manage all user accounts across the platform
+				</Typography>
+			</Box>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={membersTotal}
-							rowsPerPage={membersInquiry?.limit}
-							page={membersInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
+			{/* Stats Cards */}
+			<Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3, mb: 4 }}>
+				<Box sx={{ 
+					bg: 'white', 
+					p: 3, 
+					borderRadius: 3, 
+					boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+					border: '1px solid #e0e0e0',
+					textAlign: 'center'
+				}}>
+					<Typography variant={'h4'} sx={{ color: '#4caf50', fontWeight: 700, mb: 1 }}>
+						{members?.filter(member => member.memberStatus === 'ACTIVE').length || 0}
+					</Typography>
+					<Typography variant={'body2'} sx={{ color: '#666' }}>Active Users</Typography>
+				</Box>
+				<Box sx={{ 
+					bg: 'white', 
+					p: 3, 
+					borderRadius: 3, 
+					boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+					border: '1px solid #e0e0e0',
+					textAlign: 'center'
+				}}>
+					<Typography variant={'h4'} sx={{ color: '#ff9800', fontWeight: 700, mb: 1 }}>
+						{members?.filter(member => member.memberStatus === 'BLOCK').length || 0}
+					</Typography>
+					<Typography variant={'body2'} sx={{ color: '#666' }}>Blocked Users</Typography>
+				</Box>
+				<Box sx={{ 
+					bg: 'white', 
+					p: 3, 
+					borderRadius: 3, 
+					boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+					border: '1px solid #e0e0e0',
+					textAlign: 'center'
+				}}>
+					<Typography variant={'h4'} sx={{ color: '#f44336', fontWeight: 700, mb: 1 }}>
+						{members?.filter(member => member.memberStatus === 'DELETE').length || 0}
+					</Typography>
+					<Typography variant={'body2'} sx={{ color: '#666' }}>Deleted Users</Typography>
+				</Box>
+				<Box sx={{ 
+					bg: 'white', 
+					p: 3, 
+					borderRadius: 3, 
+					boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+					border: '1px solid #e0e0e0',
+					textAlign: 'center'
+				}}>
+					<Typography variant={'h4'} sx={{ color: '#2196f3', fontWeight: 700, mb: 1 }}>
+						{membersTotal || 0}
+					</Typography>
+					<Typography variant={'body2'} sx={{ color: '#666' }}>Total Users</Typography>
+				</Box>
+			</Box>
+
+			{/* Main Content Card */}
+			<Box sx={{ 
+				bg: 'white', 
+				borderRadius: 4, 
+				boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+				overflow: 'hidden',
+				border: '1px solid #e0e0e0'
+			}}>
+				{/* Tab Navigation */}
+				<Box sx={{ 
+					borderBottom: '2px solid #f0f0f0',
+					backgroundColor: '#fafafa'
+				}}>
+					<Box sx={{ display: 'flex', gap: 0 }}>
+						{[
+							{ value: 'ALL', label: 'All Users', color: '#666' },
+							{ value: 'ACTIVE', label: 'Active', color: '#4caf50' },
+							{ value: 'BLOCK', label: 'Blocked', color: '#ff9800' },
+							{ value: 'DELETE', label: 'Deleted', color: '#f44336' }
+						].map((tab) => (
+							<Box
+								key={tab.value}
+								onClick={(e: any) => tabChangeHandler(e, tab.value)}
+								sx={{
+									flex: 1,
+									p: 3,
+									cursor: 'pointer',
+									borderBottom: value === tab.value ? `3px solid ${tab.color}` : '3px solid transparent',
+									backgroundColor: value === tab.value ? 'white' : 'transparent',
+									transition: 'all 0.3s ease',
+									'&:hover': {
+										backgroundColor: value === tab.value ? 'white' : '#f5f5f5'
+									}
+								}}
+							>
+								<Typography 
+									sx={{ 
+										color: value === tab.value ? tab.color : '#666',
+										fontWeight: value === tab.value ? 600 : 400,
+										textAlign: 'center',
+										fontSize: '1rem'
+									}}
+								>
+									{tab.label}
+								</Typography>
+							</Box>
+						))}
+					</Box>
+				</Box>
+
+				{/* Search and Filter Section */}
+				<Box sx={{ p: 3, borderBottom: '1px solid #f0f0f0' }}>
+					<Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+						<OutlinedInput
+							value={searchText}
+							onChange={(e: any) => textHandler(e.target.value)}
+							sx={{ 
+								flex: 1, 
+								minWidth: '300px',
+								'& .MuiOutlinedInput-root': {
+									borderRadius: 2,
+									'&:hover .MuiOutlinedInput-notchedOutline': {
+										borderColor: '#2196f3'
+									}
+								}
+							}}
+							placeholder="Search user name, email, or phone..."
+							onKeyDown={(event: any) => {
+								if (event.key == 'Enter') searchTextHandler();
+							}}
+							endAdornment={
+								<>
+									{searchText && (
+										<CancelRoundedIcon
+											style={{ cursor: 'pointer', color: '#999' }}
+											onClick={async () => {
+												setSearchText('');
+												setMembersInquiry({
+													...membersInquiry,
+													search: {
+														...membersInquiry.search,
+														text: '',
+													},
+												});
+												await getMembersRefetch({ input: membersInquiry });
+											}}
+										/>
+									)}
+									<InputAdornment position="end" onClick={() => searchTextHandler()}>
+										<img src="/img/icons/search_icon.png" alt={'searchIcon'} style={{ cursor: 'pointer' }} />
+									</InputAdornment>
+								</>
+							}
 						/>
-					</TabContext>
+						<Select 
+							value={searchType}
+							sx={{ 
+								minWidth: '160px',
+								'& .MuiOutlinedInput-root': {
+									borderRadius: 2
+								}
+							}}
+						>
+							<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
+								All Types
+							</MenuItem>
+							<MenuItem value={'USER'} onClick={() => searchTypeHandler('USER')}>
+								Regular Users
+							</MenuItem>
+							<MenuItem value={'AGENT'} onClick={() => searchTypeHandler('AGENT')}>
+								Agents
+							</MenuItem>
+							<MenuItem value={'ADMIN'} onClick={() => searchTypeHandler('ADMIN')}>
+								Administrators
+							</MenuItem>
+						</Select>
+					</Box>
+				</Box>
+
+				{/* Users Table */}
+				<Box sx={{ p: 0 }}>
+					<MemberPanelList
+						members={members}
+						anchorEl={anchorEl}
+						menuIconClickHandler={menuIconClickHandler}
+						menuIconCloseHandler={menuIconCloseHandler}
+						updateMemberHandler={updateMemberHandler}
+					/>
+				</Box>
+
+				{/* Pagination */}
+				<Box sx={{ 
+					p: 3, 
+					borderTop: '1px solid #f0f0f0',
+					backgroundColor: '#fafafa',
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center'
+				}}>
+					<Typography variant={'body2'} sx={{ color: '#666' }}>
+						Showing {members?.length || 0} of {membersTotal || 0} users
+					</Typography>
+					<TablePagination
+						rowsPerPageOptions={[10, 20, 50, 100]}
+						component="div"
+						count={membersTotal}
+						rowsPerPage={membersInquiry?.limit}
+						page={membersInquiry?.page - 1}
+						onPageChange={changePageHandler}
+						onRowsPerPageChange={changeRowsPerPageHandler}
+						sx={{
+							'& .MuiTablePagination-select': {
+								borderRadius: 1
+							}
+						}}
+					/>
 				</Box>
 			</Box>
 		</Box>
