@@ -234,7 +234,7 @@ const NotificationBell: React.FC = () => {
 										'&:hover': {
 											backgroundColor: 'action.selected',
 										},
-									}}
+									} as const}
 								>
 									<Stack direction="row" spacing={2} sx={{ width: '100%' }}>
 										{/* Notification Icon */}
@@ -250,7 +250,7 @@ const NotificationBell: React.FC = () => {
 												color: icon.color,
 												fontSize: 20,
 												flexShrink: 0,
-											}}
+											} as const}
 										>
 											{icon.icon}
 										</Box>
@@ -263,7 +263,7 @@ const NotificationBell: React.FC = () => {
 													fontWeight: notification.isRead ? 400 : 600,
 													mb: 0.5,
 													lineHeight: 1.3,
-												}}
+												} as const}
 											>
 												{notification.title}
 											</Typography>
@@ -276,7 +276,7 @@ const NotificationBell: React.FC = () => {
 													WebkitBoxOrient: 'vertical',
 													overflow: 'hidden',
 													lineHeight: 1.2,
-												}}
+												} as const}
 											>
 												{notification.message}
 											</Typography>
@@ -298,7 +298,7 @@ const NotificationBell: React.FC = () => {
 											}}
 											sx={{
 												color: isSelected ? 'primary.main' : 'text.secondary',
-											}}
+											} as const}
 										>
 											<MoreIcon fontSize="small" />
 										</IconButton>
