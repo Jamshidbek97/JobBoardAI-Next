@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Skeleton, Typography, Chip, Avatar, Paper } from '@mui/material';
+import { Box, Button, Skeleton, Typography, Chip, Avatar, Paper, Grid } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import EastIcon from '@mui/icons-material/East';
-import WestIcon from '@mui/icons-material/West';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -31,8 +27,8 @@ interface FeaturedHiringManagersProps {
 const FeaturedHiringManagers = ({ 
 	initialInput = { 
 		page: 1, 
-		limit: 6, 
-		sort: 'memberRank', 
+		limit: 4, 
+		sort: 'createdAt', 
 		direction: Direction.DESC, 
 		search: {} 
 	} 
@@ -54,7 +50,9 @@ const FeaturedHiringManagers = ({
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => setFeaturedHiringManagers(data?.getAgents?.list),
+		onCompleted: (data: T) => {
+			setFeaturedHiringManagers(data?.getAgents?.list || []);
+		},
 	});
 
 	const toggleLikeMember = async (e: React.MouseEvent, memberId: string) => {
@@ -146,14 +144,14 @@ const FeaturedHiringManagers = ({
 					<div className="action-buttons">
 						<Button
 							className={`like-button ${isMemberLiked(member) ? 'liked' : ''}`}
-							onClick={(e) => toggleLikeMember(e, member._id)}
+							onClick={(e: any) => toggleLikeMember(e, member._id)}
 							sx={{ minWidth: 'auto', p: 1 }}
 						>
 							{isMemberLiked(member) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
 						</Button>
 						<Button
 							className={`follow-button ${isMemberFollowed(member) ? 'followed' : ''}`}
-							onClick={(e) => toggleFollowMember(e, member._id)}
+							onClick={(e: any) => toggleFollowMember(e, member._id)}
 							sx={{ minWidth: 'auto', p: 1 }}
 						>
 							<PersonAddIcon />
@@ -257,60 +255,31 @@ const FeaturedHiringManagers = ({
 			<div className="featured-hiring-managers-container">
 				<div className="section-header">
 					<Typography className="section-title" variant="h3">
-						{isClient ? t('Featured Hiring Managers') : ''}
+						{isClient ? t('Latest Hiring Managers') : ''}
 					</Typography>
 					<Typography className="section-subtitle" variant="body1">
-						{isClient ? t('Connect with top recruiters and hiring managers') : ''}
+						{isClient ? t('Connect with the most recent recruiters and hiring managers') : ''}
 					</Typography>
 				</div>
 
-				<div className="hiring-managers-carousel-container">
-					<div className="navigation-buttons">
-						<button className="hm-prev">
-							<WestIcon />
-						</button>
-						<button className="hm-next">
-							<EastIcon />
-						</button>
-					</div>
-
-					<Swiper
-						modules={[Navigation, Pagination, Autoplay]}
-						spaceBetween={24}
-						slidesPerView={1}
-						navigation={{
-							prevEl: '.hm-prev',
-							nextEl: '.hm-next',
-						}}
-						pagination={{
-							clickable: true,
-							el: '.hm-pagination',
-						}}
-						autoplay={{
-							delay: 5000,
-							disableOnInteraction: false,
-						}}
-						breakpoints={{
-							320: { slidesPerView: 1, spaceBetween: 16 },
-							480: { slidesPerView: 1, spaceBetween: 20 },
-							640: { slidesPerView: 2, spaceBetween: 24 },
-							768: { slidesPerView: 2, spaceBetween: 28 },
-							960: { slidesPerView: 3, spaceBetween: 32 },
-							1200: { slidesPerView: 3, spaceBetween: 36 },
-							1400: { slidesPerView: 4, spaceBetween: 40 },
-						}}
-						className="hiring-managers-swiper"
-					>
-						{getAgentsLoading
-							? Array.from({ length: 6 }).map((_, index) => (
-								<SwiperSlide key={index}>{renderSkeleton()}</SwiperSlide>
-							))
-							: featuredHiringManagers.map((member) => (
-								<SwiperSlide key={member._id}>{renderHiringManagerCard(member)}</SwiperSlide>
+				<div className="hiring-managers-grid-container">
+					{getAgentsLoading ? (
+						<Grid container spacing={3}>
+							{Array.from({ length: 4 }).map((_, index) => (
+								<Grid item xs={12} sm={6} md={3} key={index}>
+									{renderSkeleton()}
+								</Grid>
 							))}
-					</Swiper>
-
-					<div className="hm-pagination"></div>
+						</Grid>
+					) : (
+						<Grid container spacing={3}>
+							{featuredHiringManagers.map((member) => (
+								<Grid item xs={12} sm={6} md={3} key={member._id}>
+									{renderHiringManagerCard(member)}
+								</Grid>
+							))}
+						</Grid>
+					)}
 				</div>
 
 				<div className="view-all-section">
@@ -320,7 +289,6 @@ const FeaturedHiringManagers = ({
 						onClick={() => router.push('/agent')}
 					>
 						{isClient ? t('View All Hiring Managers') : ''}
-						<EastIcon />
 					</Button>
 				</div>
 			</div>
