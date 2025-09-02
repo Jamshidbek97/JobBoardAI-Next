@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Skeleton, Typography, Chip, Avatar, Paper } from '@mui/material';
+import { Box, Button, Skeleton, Typography, Chip, Avatar, Paper, Grid } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import EastIcon from '@mui/icons-material/East';
-import WestIcon from '@mui/icons-material/West';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -33,8 +29,8 @@ interface FeaturedArticlesProps {
 const FeaturedArticles = ({ 
 	initialInput = { 
 		page: 1, 
-		limit: 6, 
-		sort: 'articleViews', 
+		limit: 4, 
+		sort: 'createdAt', 
 		direction: Direction.DESC, 
 		search: {} 
 	} 
@@ -54,7 +50,9 @@ const FeaturedArticles = ({
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => setFeaturedArticles(data?.getBoardArticles?.list),
+		onCompleted: (data: T) => {
+			setFeaturedArticles(data?.getBoardArticles?.list || []);
+		},
 	});
 
 	const toggleLikeArticle = async (e: React.MouseEvent, articleId: string) => {
@@ -123,6 +121,43 @@ const FeaturedArticles = ({
 		}
 	};
 
+	// Helper function to get article image with fallback
+	const getArticleImage = (article: BoardArticle) => {
+		// Check if articleImage exists and is valid
+		if (!article.articleImage || 
+			article.articleImage === 'undefined' || 
+			article.articleImage === 'null' ||
+			article.articleImage.trim() === '') {
+			return '/img/community/articleImg.png';
+		}
+		
+		// Check if it's an article URL (contains /en-us/news/ or similar patterns)
+		if (article.articleImage.includes('/en-us/news/') || 
+			article.articleImage.includes('/news/') ||
+			article.articleImage.includes('?ocid=') ||
+			article.articleImage.includes('&pc=') ||
+			article.articleImage.includes('&cvid=') ||
+			article.articleImage.includes('&ei=')) {
+			return '/img/community/articleImg.png';
+		}
+		
+		// Check if it's already a full URL (starts with http/https)
+		if (article.articleImage.startsWith('http://') || article.articleImage.startsWith('https://')) {
+			// Additional check: ensure it looks like an image URL
+			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+			const hasImageExtension = imageExtensions.some(ext => 
+				article.articleImage.toLowerCase().includes(ext)
+			);
+			if (!hasImageExtension) {
+				return '/img/community/articleImg.png';
+			}
+			return article.articleImage;
+		}
+		
+		// Otherwise, prepend the API URL
+		return `${REACT_APP_API_URL}/${article.articleImage}`;
+	};
+
 	const renderArticleCard = (article: BoardArticle) => {
 		const categoryInfo = getCategoryInfo(article.articleCategory);
 		
@@ -130,41 +165,7 @@ const FeaturedArticles = ({
 			<div className="featured-article-card" onClick={() => handleCardClick(article._id, article.articleCategory)}>
 				<div className="article-image-container">
 					<Image 
-						src={(() => {
-							// Check if articleImage exists and is valid
-							if (!article.articleImage || 
-								article.articleImage === 'undefined' || 
-								article.articleImage === 'null' ||
-								article.articleImage.trim() === '') {
-								return '/img/community/articleImg.png';
-							}
-							
-							// Check if it's an article URL (contains /en-us/news/ or similar patterns)
-							if (article.articleImage.includes('/en-us/news/') || 
-								article.articleImage.includes('/news/') ||
-								article.articleImage.includes('?ocid=') ||
-								article.articleImage.includes('&pc=') ||
-								article.articleImage.includes('&cvid=') ||
-								article.articleImage.includes('&ei=')) {
-								return '/img/community/articleImg.png';
-							}
-							
-							// Check if it's already a full URL (starts with http/https)
-							if (article.articleImage.startsWith('http://') || article.articleImage.startsWith('https://')) {
-								// Additional check: ensure it looks like an image URL
-								const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
-								const hasImageExtension = imageExtensions.some(ext => 
-									article.articleImage.toLowerCase().includes(ext)
-								);
-								if (!hasImageExtension) {
-									return '/img/community/articleImg.png';
-								}
-								return article.articleImage;
-							}
-							
-							// Otherwise, prepend the API URL
-							return `${REACT_APP_API_URL}/${article.articleImage}`;
-						})()}
+						src={getArticleImage(article)}
 						alt={article.articleTitle}
 						width={400}
 						height={200}
@@ -303,60 +304,31 @@ const FeaturedArticles = ({
 			<div className="featured-articles-container">
 				<div className="section-header">
 					<Typography className="section-title" variant="h3">
-						{isClient ? t('Featured Articles') : ''}
+						{isClient ? t('Latest Articles') : ''}
 					</Typography>
 					<Typography className="section-subtitle" variant="body1">
-						{isClient ? t('Discover trending stories and insights from our community') : ''}
+						{isClient ? t('Discover the most recent stories and insights from our community') : ''}
 					</Typography>
 				</div>
 
-				<div className="articles-carousel-container">
-					<div className="navigation-buttons">
-						<button className="art-prev">
-							<WestIcon />
-						</button>
-						<button className="art-next">
-							<EastIcon />
-						</button>
-					</div>
-
-					<Swiper
-						modules={[Navigation, Pagination, Autoplay]}
-						spaceBetween={24}
-						slidesPerView={1}
-						navigation={{
-							prevEl: '.art-prev',
-							nextEl: '.art-next',
-						}}
-						pagination={{
-							clickable: true,
-							el: '.art-pagination',
-						}}
-						autoplay={{
-							delay: 6000,
-							disableOnInteraction: false,
-						}}
-						breakpoints={{
-							320: { slidesPerView: 1, spaceBetween: 16 },
-							480: { slidesPerView: 1, spaceBetween: 20 },
-							640: { slidesPerView: 2, spaceBetween: 24 },
-							768: { slidesPerView: 2, spaceBetween: 28 },
-							960: { slidesPerView: 3, spaceBetween: 32 },
-							1200: { slidesPerView: 3, spaceBetween: 36 },
-							1400: { slidesPerView: 4, spaceBetween: 40 },
-						}}
-						className="articles-swiper"
-					>
-						{getArticlesLoading
-							? Array.from({ length: 6 }).map((_, index) => (
-								<SwiperSlide key={index}>{renderSkeleton()}</SwiperSlide>
-							))
-							: featuredArticles.map((article) => (
-								<SwiperSlide key={article._id}>{renderArticleCard(article)}</SwiperSlide>
+				<div className="articles-grid-container">
+					{getArticlesLoading ? (
+						<Grid container spacing={3}>
+							{Array.from({ length: 4 }).map((_, index) => (
+								<Grid item xs={12} sm={6} md={3} key={index}>
+									{renderSkeleton()}
+								</Grid>
 							))}
-					</Swiper>
-
-					<div className="art-pagination"></div>
+						</Grid>
+					) : (
+						<Grid container spacing={3}>
+							{featuredArticles.map((article) => (
+								<Grid item xs={12} sm={6} md={3} key={article._id}>
+									{renderArticleCard(article)}
+								</Grid>
+							))}
+						</Grid>
+					)}
 				</div>
 
 				<div className="view-all-section">
@@ -366,7 +338,6 @@ const FeaturedArticles = ({
 						onClick={() => router.push('/community?articleCategory=FREE')}
 					>
 						{isClient ? t('View All Articles') : ''}
-						<EastIcon />
 					</Button>
 				</div>
 			</div>
