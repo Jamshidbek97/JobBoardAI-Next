@@ -116,8 +116,8 @@ const Top = () => {
 							console.log('🔥 Mobile menu button clicked!');
 							setMobileMenuOpen(true);
 						}}
-						style={{
-							display: 'flex',
+						sx={{
+							display: { xs: 'flex', sm: 'flex', md: 'none' },
 							color: '#1890ff',
 							backgroundColor: '#fff',
 							borderRadius: '8px',
@@ -169,29 +169,6 @@ const Top = () => {
 							</Link>
 						</div>
 					)}
-
-					{/* Mobile Menu Toggle - AT THE END */}
-					<IconButton 
-						className="mobile-menu-toggle"
-						onClick={() => {
-							console.log('🔥 Mobile menu button clicked!');
-							setMobileMenuOpen(true);
-						}}
-						style={{
-							display: 'flex',
-							color: '#1890ff',
-							backgroundColor: '#fff',
-							borderRadius: '8px',
-							padding: '12px',
-							border: '2px solid #1890ff',
-							boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
-							minWidth: '48px',
-							height: '48px',
-							marginLeft: '16px',
-						}}
-					>
-						<MenuIcon style={{ fontSize: 24 }} />
-					</IconButton>
 				</div>
 			</div>
 

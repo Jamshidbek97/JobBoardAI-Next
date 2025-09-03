@@ -306,13 +306,8 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 
 	return (
 		<>
-			{/* Desktop Filter - Hidden on Mobile */}
-			<Box sx={{ 
-				display: { xs: 'none', md: 'block' },
-				'@media (max-width: 900px)': {
-					display: 'none !important',
-				}
-			}}>
+			{/* Temporarily hide desktop filter until layout is refactored */}
+			<Box sx={{ display: 'none' }}>
 				<Stack className="header-filter">
 					<Stack className="filter-container">
 						<Stack className="filter-row">

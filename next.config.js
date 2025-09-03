@@ -4,9 +4,6 @@ const { i18n } = require('./next-i18next.config');
 const nextConfig = {
 	reactStrictMode: true,
 	env: {
-		REACT_APP_API_URL: process.env.REACT_APP_API_URL,
-		REACT_APP_API_GRAPHQL_URL: process.env.REACT_APP_API_GRAPHQL_URL,
-		REACT_APP_API_WS: process.env.REACT_APP_API_WS,
 		NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 		NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL,
 		NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
@@ -17,17 +14,24 @@ const nextConfig = {
 	// },
 	// Optional: if you use next/image with external hosts
 	images: {
+		unoptimized: true, // Disable image optimization for external images
 		remotePatterns: [
 			{
 				protocol: 'http',
 				hostname: 'localhost',
-				port: '3001',
+				port: '4001',
 				pathname: '/**',
 			},
 			{
 				protocol: 'http',
 				hostname: '127.0.0.1',
-				port: '3001',
+				port: '4001',
+				pathname: '/**',
+			},
+			{
+				protocol: 'http',
+				hostname: '212.85.27.30',
+				port: '4001',
 				pathname: '/**',
 			},
 			{
@@ -75,6 +79,7 @@ const nextConfig = {
 		domains: [
 			'localhost',
 			'127.0.0.1',
+			'212.85.27.30',
 			'www.msn.com',
 			'msn.com',
 			'microsoft.com',
