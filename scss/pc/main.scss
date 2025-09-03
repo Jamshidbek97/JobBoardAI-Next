@@ -321,7 +321,7 @@ body::-webkit-scrollbar {
 	}
 	.header-main {
 		position: relative;
-		overflow: hidden;
+		overflow: visible;
 		background-color: linear-gradient(to top right, #fff7ed, $indigo-50);
 		background: url('/img/background.jpg');
 		background-size: cover;
@@ -1122,6 +1122,71 @@ body::-webkit-scrollbar {
 							font-size: 14px;
 						}
 					}
+				}
+			}
+
+			/* HeaderFilter desktop layout */
+			.header-filter {
+				position: relative;
+				z-index: 5;
+				margin-top: 16px;
+				.filter-container {
+					background: #ffffff;
+					border: 1px solid rgba(15, 23, 42, 0.06);
+					border-radius: 14px;
+					box-shadow: 0 8px 28px rgba(2, 8, 23, 0.06);
+					padding: 14px;
+					overflow: visible;
+				}
+				.filter-row {
+					display: grid;
+					grid-template-columns: 1.2fr 1.2fr 1fr auto auto;
+					gap: 12px;
+					align-items: stretch;
+				}
+				.filter-item { min-width: 0; position: relative; }
+				.filter-label {
+					font-size: 12px;
+					font-weight: 700;
+					color: #64748b;
+					margin-bottom: 6px;
+				}
+				.filter-input {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 10px;
+					padding: 10px 12px;
+					border: 1px solid #e2e8f0;
+					border-radius: 10px;
+					background: #fff;
+					cursor: pointer;
+					min-height: 44px;
+				}
+				/* Dropdown overlay styles */
+				.filter-dropdown {
+					position: absolute;
+					top: calc(100% + 8px);
+					left: 0;
+					width: 100%;
+					background: #fff;
+					border: 1px solid #e2e8f0;
+					border-radius: 12px;
+					box-shadow: 0 12px 30px rgba(2, 8, 23, 0.12);
+					z-index: 1001;
+				}
+				.filter-dropdown .dropdown-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #eef2f7; }
+				.filter-dropdown .dropdown-title { font-weight: 700; color: #0f172a; }
+				.filter-dropdown .dropdown-content { max-height: 240px; overflow: auto; padding: 8px; }
+				.filter-dropdown .dropdown-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; color: #334155; font-weight: 500; }
+				.filter-dropdown .dropdown-item:hover { background: #f8fafc; }
+				.filter-dropdown .dropdown-item.selected { background: #e6f0ff; color: #1d4ed8; }
+				.search-button .search-btn,
+				.advanced-filter .advanced-filter-btn {
+					white-space: nowrap;
+					height: 44px;
+					border-radius: 10px;
+					text-transform: none;
 				}
 			}
 			.job-search-container {

@@ -832,6 +832,9 @@
 			/* Logos */
 			.jb-logos-wrap {
 				margin-top: 3rem;
+				@media (max-width: 768px) {
+					display: none;
+				}
 			}
 			.jb-social-proof {
 				color: $slate-700;
