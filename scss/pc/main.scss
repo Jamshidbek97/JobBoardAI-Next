@@ -2622,7 +2622,7 @@ body::-webkit-scrollbar {
 }
 
 /* Mobile Responsiveness for Navbar */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 	#pc-wrap {
 		#top {
 			.navbar {
@@ -2658,8 +2658,16 @@ body::-webkit-scrollbar {
 					}
 				}
 
+				.container {
+					display: flex !important;
+					justify-content: space-between !important;
+					align-items: center !important;
+				}
+
 				.user-actions {
 					gap: 15px;
+					display: flex !important;
+					align-items: center !important;
 
 					.user-profile {
 						.user-name {
@@ -2674,6 +2682,12 @@ body::-webkit-scrollbar {
 							font-size: 14px;
 							padding: 6px 12px;
 						}
+					}
+
+					/* Make sure mobile toggle is always visible */
+					.mobile-menu-toggle {
+						display: flex !important;
+						margin-left: 16px !important;
 					}
 				}
 			}
@@ -2727,9 +2741,79 @@ body::-webkit-scrollbar {
 	}
 }
 
-/* Hide job-search-container on mobile */
-@media (max-width: 768px) {
+/* Mobile responsive styles - Updated for real mobile devices */
+@media (max-width: 900px) {
 	.job-search-container {
+		display: none !important;
+	}
+	
+	/* Reduce header area height on mobile */
+	.header-main {
+		height: auto !important;
+		min-height: auto !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		display: none !important; /* Hide the entire header-main section on mobile */
+		
+		.container {
+			height: auto !important;
+			min-height: auto !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+	}
+	
+	/* Fix any large containers causing empty space */
+	.ha-background,
+	div[class*="ha-background"],
+	div[class*="background"] {
+		height: 200px !important;
+		max-height: 200px !important;
+	}
+	
+	/* Also hide any other filter containers that might exist */
+	.header-main .container .job-search-container,
+	.header-main .job-search-container,
+	div[class*="job-search"],
+	div[class*="filter"] {
+		display: none !important;
+	}
+	
+	/* Force background grid height */
+	.ha-bg-grid,
+	div[class*="ha-bg-grid"],
+	div[class*="bg-grid"] {
+		height: 200px !important;
+		max-height: 200px !important;
+	}
+	
+	/* Mobile menu toggle styling - SUPER VISIBLE */
+	.mobile-menu-toggle {
+		display: flex !important;
+		background: #fff !important;
+		border: 2px solid #1890ff !important;
+		border-radius: 8px !important;
+		padding: 12px !important;
+		color: #1890ff !important;
+		box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3) !important;
+		min-width: 48px !important;
+		height: 48px !important;
+		position: relative !important;
+		z-index: 1000 !important;
+		
+		&:hover {
+			background: rgba(24, 144, 255, 0.1) !important;
+			transform: scale(1.05) !important;
+			box-shadow: 0 6px 16px rgba(24, 144, 255, 0.4) !important;
+		}
+		
+		svg {
+			font-size: 24px !important;
+		}
+	}
+	
+	/* Hide desktop navigation */
+	.main-nav {
 		display: none !important;
 	}
 }

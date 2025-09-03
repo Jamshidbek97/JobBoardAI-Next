@@ -307,7 +307,12 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	return (
 		<>
 			{/* Desktop Filter - Hidden on Mobile */}
-			<Box sx={{ display: { xs: 'none', md: 'block' } }}>
+			<Box sx={{ 
+				display: { xs: 'none', md: 'block' },
+				'@media (max-width: 900px)': {
+					display: 'none !important',
+				}
+			}}>
 				<Stack className="header-filter">
 					<Stack className="filter-container">
 						<Stack className="filter-row">
@@ -488,11 +493,22 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 			</Box>
 
 			{/* Mobile Filter - Simple Search Button */}
-			<Box sx={{ display: { xs: 'block', md: 'none' }, p: 2 }}>
+			<Box sx={{ 
+				display: { xs: 'block', sm: 'block', md: 'none' }, 
+				p: 2,
+				marginTop: 0,
+				marginBottom: 0,
+				'@media (max-width: 900px)': {
+					display: 'block !important',
+				}
+			}}>
 				<Button
 					variant="contained"
 					fullWidth
-					onClick={() => advancedFilterHandler(true)}
+					onClick={() => {
+						console.log('🔥 Mobile search button clicked!');
+						advancedFilterHandler(true);
+					}}
 					sx={{
 						backgroundColor: '#1890ff',
 						color: 'white',

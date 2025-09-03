@@ -108,6 +108,30 @@ const Top = () => {
 					</Link>
 				</div>
 
+				{/* Mobile Menu Toggle - ALWAYS VISIBLE ON MOBILE */}
+				<div className="mobile-menu-toggle-wrapper" style={{ marginLeft: 'auto' }}>
+					<IconButton 
+						className="mobile-menu-toggle"
+						onClick={() => {
+							console.log('🔥 Mobile menu button clicked!');
+							setMobileMenuOpen(true);
+						}}
+						style={{
+							display: 'flex',
+							color: '#1890ff',
+							backgroundColor: '#fff',
+							borderRadius: '8px',
+							padding: '12px',
+							border: '2px solid #1890ff',
+							boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
+							minWidth: '48px',
+							height: '48px',
+						}}
+					>
+						<MenuIcon style={{ fontSize: 24 }} />
+					</IconButton>
+				</div>
+
 				<nav className="main-nav">
 					{isClient && navItems.map((item) => (
 						<Link key={item.path} href={item.path} className={router.pathname === item.path ? 'active' : ''}>
@@ -115,15 +139,6 @@ const Top = () => {
 						</Link>
 					))}
 				</nav>
-
-				{/* Mobile Menu Toggle */}
-				<IconButton 
-					className="mobile-menu-toggle"
-					onClick={() => setMobileMenuOpen(true)}
-					sx={{ display: { xs: 'flex', md: 'none' } }}
-				>
-					<MenuIcon />
-				</IconButton>
 
 				<div className="user-actions">
 					{user?._id && <NotificationBell />}
@@ -154,6 +169,29 @@ const Top = () => {
 							</Link>
 						</div>
 					)}
+
+					{/* Mobile Menu Toggle - AT THE END */}
+					<IconButton 
+						className="mobile-menu-toggle"
+						onClick={() => {
+							console.log('🔥 Mobile menu button clicked!');
+							setMobileMenuOpen(true);
+						}}
+						style={{
+							display: 'flex',
+							color: '#1890ff',
+							backgroundColor: '#fff',
+							borderRadius: '8px',
+							padding: '12px',
+							border: '2px solid #1890ff',
+							boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
+							minWidth: '48px',
+							height: '48px',
+							marginLeft: '16px',
+						}}
+					>
+						<MenuIcon style={{ fontSize: 24 }} />
+					</IconButton>
 				</div>
 			</div>
 
