@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Box, Menu, MenuItem, Button, Avatar, Badge, Divider } from '@mui/material';
+import { Box, Menu, MenuItem, Button, Avatar, Badge, Divider, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import { CaretDown } from 'phosphor-react';
+import MenuIcon from '@mui/icons-material/Menu';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
 import { Logout } from '@mui/icons-material';
 import { NEXT_PUBLIC_API_URL } from '../config';
 import NotificationBell from './common/NotificationBell';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Top = () => {
 	const user = useReactiveVar(userVar);
@@ -32,6 +34,7 @@ const Top = () => {
 	const [scrolled, setScrolled] = useState(false);
 	const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
 	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	// Navigation items - moved inside render to ensure translations update
 	const navItems = [
@@ -177,6 +180,111 @@ const Top = () => {
 					{isClient ? t('Logout') : ''}
 				</MenuItem>
 			</Menu>
+
+			{/* Mobile Menu Drawer */}
+			<Drawer
+				anchor="left"
+				open={mobileMenuOpen}
+				onClose={() => setMobileMenuOpen(false)}
+				sx={{
+					'& .MuiDrawer-paper': {
+						width: '280px',
+						padding: '20px',
+						backgroundColor: '#fff',
+					},
+				}}
+			>
+				<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+					<div className="logo">
+						<Link href="/" onClick={() => setMobileMenuOpen(false)}>
+							<span>
+								JobBoard<span className="ai">AI</span>
+							</span>
+						</Link>
+					</div>
+					<IconButton onClick={() => setMobileMenuOpen(false)}>
+						<CloseIcon />
+					</IconButton>
+				</Box>
+
+				<List>
+					{isClient && navItems.map((item) => (
+						<ListItem 
+							key={item.path} 
+							button 
+							component={Link}
+							href={item.path}
+							onClick={() => setMobileMenuOpen(false)}
+							sx={{
+								borderRadius: '8px',
+								mb: 1,
+								backgroundColor: router.pathname === item.path ? '#f0f8ff' : 'transparent',
+								color: router.pathname === item.path ? '#1890ff' : '#333',
+								'&:hover': {
+									backgroundColor: '#f5f5f5',
+								},
+							}}
+						>
+							<ListItemText primary={item.label} />
+						</ListItem>
+					))}
+				</List>
+
+				<Divider sx={{ my: 2 }} />
+
+				{/* Mobile User Actions */}
+				<Box sx={{ mt: 'auto' }}>
+					{user?._id ? (
+						<Box>
+							<Box sx={{ display: 'flex', alignItems: 'center', mb: 2, p: 2, backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+								<Avatar
+									src={user?.memberImage ? `${NEXT_PUBLIC_API_URL}/${user.memberImage}` : '/img/defaultMember.jpg'}
+									className="avatar"
+									sx={{ mr: 2 }}
+								/>
+								<Box>
+									<Box sx={{ fontWeight: 600, color: '#333' }}>{user.memberNick}</Box>
+									<Box sx={{ fontSize: '14px', color: '#666' }}>Member</Box>
+								</Box>
+							</Box>
+							<Button 
+								fullWidth 
+								variant="outlined" 
+								onClick={() => { router.push('/mypage'); setMobileMenuOpen(false); }}
+								sx={{ mb: 1 }}
+							>
+								{isClient ? t('My Profile') : ''}
+							</Button>
+							<Button 
+								fullWidth 
+								variant="contained" 
+								onClick={handleLogout}
+								color="error"
+							>
+								{isClient ? t('Logout') : ''}
+							</Button>
+						</Box>
+					) : (
+						<Box>
+							<Button 
+								fullWidth 
+								variant="outlined" 
+								onClick={() => { router.push('/account/login'); setMobileMenuOpen(false); }}
+								sx={{ mb: 1 }}
+							>
+								{isClient ? t('Login') : ''}
+							</Button>
+							<Button 
+								fullWidth 
+								variant="contained" 
+								onClick={() => { router.push('/account/join'); setMobileMenuOpen(false); }}
+							>
+								{isClient ? t('Register') : ''}
+							</Button>
+						</Box>
+					)}
+				</Box>
+			</Drawer>
 		</header>
 	);
 };

@@ -2620,3 +2620,96 @@ body::-webkit-scrollbar {
 	border-radius: 2px;
 	margin-right: 8px;
 }
+
+/* Mobile Responsiveness for Navbar */
+@media (max-width: 768px) {
+	#pc-wrap {
+		#top {
+			.navbar {
+				padding: 15px 0;
+
+				&.scrolled {
+					padding: 10px 0;
+				}
+
+				.container {
+					padding: 0 20px;
+				}
+
+				.logo {
+					font-size: 24px;
+				}
+
+				.main-nav {
+					display: none; /* Hide desktop navigation on mobile */
+				}
+
+				.mobile-menu-toggle {
+					display: flex !important;
+					color: #1890ff;
+					background: rgba(24, 144, 255, 0.1);
+					border-radius: 8px;
+					padding: 8px;
+					transition: all 0.3s ease;
+
+					&:hover {
+						background: rgba(24, 144, 255, 0.2);
+						transform: scale(1.05);
+					}
+				}
+
+				.user-actions {
+					gap: 15px;
+
+					.user-profile {
+						.user-name {
+							display: none; /* Hide username on mobile */
+						}
+					}
+
+					.auth-buttons {
+						gap: 10px;
+
+						.MuiButton-root {
+							font-size: 14px;
+							padding: 6px 12px;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	#pc-wrap {
+		#top {
+			.navbar {
+				padding: 12px 0;
+
+				&.scrolled {
+					padding: 8px 0;
+				}
+
+				.container {
+					padding: 0 16px;
+				}
+
+				.logo {
+					font-size: 22px;
+				}
+
+				.user-actions {
+					gap: 12px;
+
+					.auth-buttons {
+						.MuiButton-root {
+							font-size: 13px;
+							padding: 5px 10px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

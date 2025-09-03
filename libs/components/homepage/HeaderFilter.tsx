@@ -298,176 +298,216 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 
 	return (
 		<>
-			<div className="job-search-container">
-				<div className="job-search-card">
-					<div className="search-filters">
-						<div
-							className={`filter-item location-filter ${openLocation ? 'active' : ''}`}
-							onClick={locationStateChangeHandler}
-							ref={locationRef}
-						>
-							<div className="filter-content">
-								<div className="filter-icon">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-										<path
-											d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-											stroke="currentColor"
-											strokeWidth="2"
-											fill="none"
-										/>
-										<circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" fill="none" />
-									</svg>
-								</div>
-								<div className="filter-text">
-									<span className="filter-label">{t('Location')}</span>
-									<span className="filter-value">
-										{searchFilter?.search?.locationList?.length
-											? searchFilter.search.locationList[0]
+			{/* Desktop Filter - Hidden on Mobile */}
+			<Box sx={{ display: { xs: 'none', md: 'block' } }}>
+				<Stack className="header-filter">
+					<Stack className="filter-container">
+						<Stack className="filter-row">
+							<Stack className="filter-item location-filter">
+								<div className="filter-label">{t('LOCATION')}</div>
+								<div className="filter-input" ref={locationRef} onClick={locationStateChangeHandler}>
+									<div className="filter-icon">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path
+												d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+											<circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" fill="none" />
+										</svg>
+									</div>
+									<div className="filter-text">
+										{searchFilter.search.locationList.length > 0
+											? searchFilter.search.locationList.join(', ')
 											: t('Any location')}
-									</span>
+									</div>
+									<div className="filter-arrow">
+										<ExpandMoreIcon />
+									</div>
 								</div>
-							</div>
-							<ExpandMoreIcon className="expand-icon" />
-						</div>
 
-						<div
-							className={`filter-item type-filter ${openType ? 'active' : ''}`}
-							onClick={typeStateChangeHandler}
-							ref={typeRef}
-						>
-							<div className="filter-content">
-								<div className="filter-icon">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-										<rect
-											x="3"
-											y="4"
-											width="18"
-											height="18"
-											rx="2"
-											ry="2"
-											stroke="currentColor"
-											strokeWidth="2"
-											fill="none"
-										/>
-										<line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
-										<line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
-										<line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
-									</svg>
-								</div>
-								<div className="filter-text">
-									<span className="filter-label">{t('Job Type')}</span>
-									<span className="filter-value">
-										{searchFilter?.search?.typeList?.length ? searchFilter.search.typeList[0] : t('Any type')}
-									</span>
-								</div>
-							</div>
-							<ExpandMoreIcon className="expand-icon" />
-						</div>
+								{openLocation && (
+									<div className="filter-dropdown" ref={locationMenuRef}>
+										<div className="dropdown-header">
+											<div className="dropdown-title">{t('Select Location')}</div>
+											<div className="dropdown-close" onClick={() => setOpenLocation(false)}>
+												<CloseIcon />
+											</div>
+										</div>
+										<div className="dropdown-content">
+											{jobLocations.map((location) => (
+												<div
+													key={location}
+													className={`dropdown-item ${
+														searchFilter.search.locationList.includes(location) ? 'selected' : ''
+													}`}
+													onClick={() => jobLocationSelectHandler(location)}
+												>
+													{location}
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</Stack>
 
-						<div
-							className={`filter-item salary-filter ${openSalary ? 'active' : ''}`}
-							onClick={salaryStateChangeHandler}
-							ref={salaryRef}
-						>
-							<div className="filter-content">
-								<div className="filter-icon">
-									<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-										<line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" strokeWidth="2" />
-										<path
-											d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-											stroke="currentColor"
-											strokeWidth="2"
-											fill="none"
-										/>
-									</svg>
+							<Stack className="filter-item type-filter">
+								<div className="filter-label">{t('JOB TYPE')}</div>
+								<div className="filter-input" ref={typeRef} onClick={typeStateChangeHandler}>
+									<div className="filter-icon">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2" fill="none" />
+											<line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2" />
+											<line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2" />
+											<line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2" />
+										</svg>
+									</div>
+									<div className="filter-text">
+										{searchFilter.search.typeList.length > 0
+											? searchFilter.search.typeList.join(', ')
+											: t('Any type')}
+									</div>
+									<div className="filter-arrow">
+										<ExpandMoreIcon />
+									</div>
 								</div>
-								<div className="filter-text">
-									<span className="filter-label">{t('Salary')}</span>
-									<span className="filter-value">
-										{searchFilter?.search?.salaryRange
+
+								{openType && (
+									<div className="filter-dropdown" ref={typeMenuRef}>
+										<div className="dropdown-header">
+											<div className="dropdown-title">{t('Select Job Type')}</div>
+											<div className="dropdown-close" onClick={() => setOpenType(false)}>
+												<CloseIcon />
+											</div>
+										</div>
+										<div className="dropdown-content">
+											{jobTypes.map((type) => (
+												<div
+													key={type}
+													className={`dropdown-item ${
+														searchFilter.search.typeList.includes(type) ? 'selected' : ''
+													}`}
+													onClick={() => jobTypeSelectHandler(type)}
+												>
+													{type}
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</Stack>
+
+							<Stack className="filter-item salary-filter">
+								<div className="filter-label">{t('SALARY')}</div>
+								<div className="filter-input" ref={salaryRef} onClick={salaryStateChangeHandler}>
+									<div className="filter-icon">
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<path
+												d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+												stroke="currentColor"
+												strokeWidth="2"
+												fill="none"
+											/>
+										</svg>
+									</div>
+									<div className="filter-text">
+										{searchFilter.search.salaryRange.start > 0
 											? `$${searchFilter.search.salaryRange.start.toLocaleString()}+`
-											: t('Any salary')}
-									</span>
+											: '$0+'}
+									</div>
+									<div className="filter-arrow">
+										<ExpandMoreIcon />
+									</div>
 								</div>
-							</div>
-							<ExpandMoreIcon className="expand-icon" />
-						</div>
-					</div>
 
-					<div className="action-buttons">
-						<button className="advanced-filter-btn" onClick={() => advancedFilterHandler(true)}>
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-								<polygon
-									points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"
-									stroke="currentColor"
-									strokeWidth="2"
-									fill="none"
-								/>
-							</svg>
-							<span>{t('Filters')}</span>
-						</button>
-						<button className="search-btn" onClick={pushSearchHandler}>
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-								<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
-								<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
-							</svg>
-							<span>{t('Search')}</span>
-						</button>
-					</div>
+								{openSalary && (
+									<div className="filter-dropdown" ref={salaryMenuRef}>
+										<div className="dropdown-header">
+											<div className="dropdown-title">{t('Select Salary Range')}</div>
+											<div className="dropdown-close" onClick={() => setOpenSalary(false)}>
+												<CloseIcon />
+											</div>
+										</div>
+										<div className="dropdown-content">
+											{salaryOptions.map((salary) => (
+												<div
+													key={salary}
+													className={`dropdown-item ${
+														searchFilter.search.salaryRange.start === salary ? 'selected' : ''
+													}`}
+													onClick={() => salarySelectHandler(salary)}
+												>
+													{salary > 0 ? `$${salary.toLocaleString()}+` : '$0+'}
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</Stack>
 
-					{/* DROPDOWN MENUS */}
-					{openLocation && (
-						<div className="dropdown-menu location-dropdown show" ref={locationMenuRef}>
-							{jobLocations.map((location) => (
-								<div
-									key={location}
-									className="dropdown-item"
-									onClick={() => {
-										console.log('Location clicked:', location);
-										jobLocationSelectHandler(location);
-									}}
+							<Stack className="filter-item search-button">
+								<Button
+									className="search-btn"
+									onClick={pushSearchHandler}
+									startIcon={
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+											<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
+										</svg>
+									}
 								>
-									<span>{location}</span>
-								</div>
-							))}
-						</div>
-					)}
+									{t('Search')}
+								</Button>
+							</Stack>
 
-					{openType && (
-						<div className="dropdown-menu type-dropdown show" ref={typeMenuRef}>
-							{jobTypes.map((type) => (
-								<div
-									key={type}
-									className="dropdown-item"
-									onClick={() => {
-										console.log('Type clicked:', type);
-										jobTypeSelectHandler(type);
-									}}
+							<Stack className="filter-item advanced-filter">
+								<Button
+									className="advanced-filter-btn"
+									onClick={() => advancedFilterHandler(true)}
+									startIcon={
+										<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+											<polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46 22,3" stroke="currentColor" strokeWidth="2" fill="none" />
+										</svg>
+									}
 								>
-									<span>{type}</span>
-								</div>
-							))}
-						</div>
-					)}
+									{t('Filters')}
+								</Button>
+							</Stack>
+						</Stack>
+					</Stack>
+				</Stack>
+			</Box>
 
-					{openSalary && (
-						<div className="dropdown-menu salary-dropdown show" ref={salaryMenuRef}>
-							{salaryOptions.map((salary) => (
-								<div
-									key={salary}
-									className="dropdown-item"
-									onClick={() => {
-										console.log('Salary clicked:', salary);
-										salarySelectHandler(salary);
-									}}
-								>
-									<span>${salary.toLocaleString()}+</span>
-								</div>
-							))}
-						</div>
-					)}
-				</div>
-			</div>
+			{/* Mobile Filter - Simple Search Button */}
+			<Box sx={{ display: { xs: 'block', md: 'none' }, p: 2 }}>
+				<Button
+					variant="contained"
+					fullWidth
+					onClick={() => advancedFilterHandler(true)}
+					sx={{
+						backgroundColor: '#1890ff',
+						color: 'white',
+						py: 1.5,
+						borderRadius: '12px',
+						fontWeight: 600,
+						textTransform: 'none',
+						boxShadow: '0 4px 12px rgba(24, 144, 255, 0.3)',
+						'&:hover': {
+							backgroundColor: '#096dd9',
+							boxShadow: '0 6px 16px rgba(24, 144, 255, 0.4)',
+						},
+					}}
+					startIcon={
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+							<circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+							<path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" />
+						</svg>
+					}
+				>
+					{t('Search Jobs')}
+				</Button>
+			</Box>
 
 			<Modal
 				open={openAdvancedFilter}

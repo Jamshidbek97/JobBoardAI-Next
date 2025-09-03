@@ -4,15 +4,21 @@ services:
     restart: always
     image: node:20.11.0
     ports: 
-      - 4000:3000
+      - 4000:3010
     environment:
-      - PORT=3000
-      - NEXT_PUBLIC_API_URL=http://localhost:4001
-      - NEXT_PUBLIC_GRAPHQL_URL=http://localhost:4001/graphql
-      - NEXT_PUBLIC_WS_URL=ws://localhost:4001
+      - PORT=3010
+      - NEXT_PUBLIC_API_URL=http://212.85.27.30:4001
+      - NEXT_PUBLIC_GRAPHQL_URL=http://212.85.27.30:4001/graphql
+      - NEXT_PUBLIC_WS_URL=ws://212.85.27.30:4001
+      - NEXT_PUBLIC_BATCH_URL=http://212.85.27.30:4002
     volumes:
       - ./:/usr/src/jobBoardAi-next
     working_dir: /usr/src/jobBoardAi-next
-    network_mode: host
+    networks:
+      - client-network
 
     command: bash -c "yarn install && yarn build && yarn run start"
+
+networks:
+  client-network:
+    driver: bridge

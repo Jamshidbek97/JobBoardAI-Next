@@ -1649,3 +1649,265 @@
 		}
 	}
 }
+
+/* Global Mobile Responsiveness for HomePage */
+@media (max-width: 768px) {
+	.home-page {
+		.featured-job {
+			padding: 40px 0;
+
+			.featured-jobs-container {
+				.section-header {
+					margin-bottom: 24px;
+					padding: 0 16px;
+
+					.section-title {
+						font-size: 24px;
+						margin-bottom: 8px;
+
+						&::after {
+							width: 60px;
+							height: 3px;
+							bottom: -8px;
+						}
+					}
+
+					.section-subtitle {
+						font-size: 15px;
+						margin-top: 16px;
+					}
+				}
+
+				.jobs-carousel-container {
+					padding: 0 16px;
+
+					.swiper {
+						.swiper-slide {
+							width: 90% !important;
+						}
+					}
+				}
+
+				.jobs-grid-container {
+					padding: 0 16px;
+				}
+
+				.view-all-container {
+					margin-top: 20px;
+
+					.view-all-button {
+						padding: 12px 24px;
+						font-size: 14px;
+					}
+				}
+			}
+		}
+
+		.featured-hiring-managers {
+			padding: 40px 0;
+
+			.featured-hiring-managers-container {
+				.section-header {
+					margin-bottom: 24px;
+					padding: 0 16px;
+
+					.section-title {
+						font-size: 24px;
+						margin-bottom: 8px;
+
+						&::after {
+							width: 60px;
+							height: 3px;
+							bottom: -8px;
+						}
+					}
+
+					.section-subtitle {
+						font-size: 15px;
+						margin-top: 16px;
+					}
+				}
+
+				.hiring-managers-grid-container {
+					padding: 0 16px;
+				}
+
+				.view-all-section {
+					margin-top: 30px;
+				}
+			}
+		}
+
+		.jobboardai-home-hero {
+			padding-top: 3rem;
+			padding-bottom: 2rem;
+
+			.jb-inner {
+				gap: 2rem;
+			}
+
+			.jb-title {
+				font-size: 2rem;
+			}
+
+			.jb-subtitle {
+				font-size: 1rem;
+			}
+
+			.jb-cta-row {
+				flex-direction: column;
+				gap: 1rem;
+				align-items: stretch;
+			}
+
+			.jb-cta-primary,
+			.jb-cta-secondary {
+				width: 100%;
+				text-align: center;
+			}
+
+			.jb-logos-wrap {
+				margin-top: 2rem;
+
+				.jb-logo-row {
+					grid-template-columns: repeat(4, 1fr);
+					gap: 0.5rem;
+				}
+			}
+		}
+
+		.featured-articles {
+			padding: 40px 0;
+
+			.featured-articles-container {
+				.section-header {
+					margin-bottom: 24px;
+					padding: 0 16px;
+
+					.section-title {
+						font-size: 24px;
+						margin-bottom: 8px;
+
+						&::after {
+							width: 60px;
+							height: 3px;
+							bottom: -8px;
+						}
+					}
+
+					.section-subtitle {
+						font-size: 15px;
+						margin-top: 16px;
+					}
+				}
+
+				.articles-grid-container {
+					padding: 0 16px;
+				}
+
+				.view-all-section {
+					margin-top: 30px;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.home-page {
+		.featured-job {
+			padding: 30px 0;
+
+			.featured-jobs-container {
+				.section-header {
+					padding: 0 12px;
+
+					.section-title {
+						font-size: 22px;
+					}
+
+					.section-subtitle {
+						font-size: 14px;
+					}
+				}
+
+				.jobs-carousel-container {
+					padding: 0 12px;
+
+					.swiper {
+						.swiper-slide {
+							width: 95% !important;
+						}
+					}
+				}
+
+				.jobs-grid-container {
+					padding: 0 12px;
+				}
+			}
+		}
+
+		.featured-hiring-managers {
+			padding: 30px 0;
+
+			.featured-hiring-managers-container {
+				.section-header {
+					padding: 0 12px;
+
+					.section-title {
+						font-size: 22px;
+					}
+
+					.section-subtitle {
+						font-size: 14px;
+					}
+				}
+
+				.hiring-managers-grid-container {
+					padding: 0 12px;
+				}
+			}
+		}
+
+		.jobboardai-home-hero {
+			padding-top: 2rem;
+			padding-bottom: 1.5rem;
+
+			.jb-title {
+				font-size: 1.75rem;
+			}
+
+			.jb-subtitle {
+				font-size: 0.9rem;
+			}
+
+			.jb-logos-wrap {
+				.jb-logo-row {
+					grid-template-columns: repeat(3, 1fr);
+				}
+			}
+		}
+
+		.featured-articles {
+			padding: 30px 0;
+
+			.featured-articles-container {
+				.section-header {
+					padding: 0 12px;
+
+					.section-title {
+						font-size: 22px;
+					}
+
+					.section-subtitle {
+						font-size: 14px;
+					}
+				}
+
+				.articles-grid-container {
+					padding: 0 12px;
+				}
+			}
+		}
+	}
+}
