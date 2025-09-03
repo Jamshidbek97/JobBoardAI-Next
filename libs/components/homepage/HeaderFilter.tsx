@@ -58,6 +58,14 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const [jobLocations, setJobLocations] = useState<JobLocation[]>(Object.values(JobLocation));
 	const [jobTypes, setJobTypes] = useState<JobType[]>(Object.values(JobType));
 
+	// Debug logging
+	useEffect(() => {
+		console.log('🔍 HeaderFilter Debug:');
+		console.log('- Window width:', window.innerWidth);
+		console.log('- Should show desktop filter:', window.innerWidth > 768);
+		console.log('- Should show mobile filter:', window.innerWidth <= 768);
+	}, []);
+
 	// NEW
 	const locationMenuRef = useRef<HTMLDivElement | null>(null);
 	const typeMenuRef = useRef<HTMLDivElement | null>(null);

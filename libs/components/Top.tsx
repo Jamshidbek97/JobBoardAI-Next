@@ -36,6 +36,15 @@ const Top = () => {
 	const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+	// Debug logging
+	useEffect(() => {
+		console.log('🔍 Top Component Debug:');
+		console.log('- Window width:', window.innerWidth);
+		console.log('- Mobile menu state:', mobileMenuOpen);
+		console.log('- Is client:', isClient);
+		console.log('- Should show mobile toggle:', window.innerWidth <= 768);
+	}, [mobileMenuOpen, isClient]);
+
 	// Navigation items - moved inside render to ensure translations update
 	const navItems = [
 		{ label: t ? t('Home') : 'Home', path: '/' },
@@ -106,6 +115,15 @@ const Top = () => {
 						</Link>
 					))}
 				</nav>
+
+				{/* Mobile Menu Toggle */}
+				<IconButton 
+					className="mobile-menu-toggle"
+					onClick={() => setMobileMenuOpen(true)}
+					sx={{ display: { xs: 'flex', md: 'none' } }}
+				>
+					<MenuIcon />
+				</IconButton>
 
 				<div className="user-actions">
 					{user?._id && <NotificationBell />}

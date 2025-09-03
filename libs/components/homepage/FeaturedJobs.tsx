@@ -294,7 +294,8 @@ const FeaturedJobs = ({ initialInput = { page: 1, limit: 4, sort: 'createdAt', d
 				<div className="featured-jobs-container">
 					<Box className="section-header">
 						<Typography variant="h3" className="section-title">
-							{isClient ? t('Latest Job Opportunities') : ''}
+							{isClient ? t('Latest Job Opportunities debug') : ''}
+
 						</Typography>
 						<Typography className="section-subtitle">{isClient ? t('Discover the most recent positions from leading companies') : ''}</Typography>
 					</Box>

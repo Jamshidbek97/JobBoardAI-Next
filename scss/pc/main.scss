@@ -2713,3 +2713,23 @@ body::-webkit-scrollbar {
 		}
 	}
 }
+
+/* Additional Mobile Styles for ha-bg-grid */
+@media (max-width: 768px) {
+	.ha-bg-grid {
+		height: 200px !important; /* Much shorter on mobile */
+	}
+}
+
+@media (max-width: 480px) {
+	.ha-bg-grid {
+		height: 150px !important; /* Even shorter on small mobile */
+	}
+}
+
+/* Hide job-search-container on mobile */
+@media (max-width: 768px) {
+	.job-search-container {
+		display: none !important;
+	}
+}
